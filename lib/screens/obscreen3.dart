@@ -16,7 +16,7 @@ class OnboardingScreen3 extends ConsumerWidget {
       description: 'Making your content legible has never been easier.',
       currentPage: currentPage,
       onNext: () {
-       context.go('/NotesScreen');
+       context.go('/LoginScreen');
       },
       onBack: () {
         ref

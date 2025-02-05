@@ -32,11 +32,13 @@ final GoRouter _router = GoRouter(
       path: '/',
       builder: (context, state) => OnboardingScreens(),
     ),
-    GoRoute(path: '/LoginScreen',
-    builder: (context, state) => LoginScreen(),
+    GoRoute(
+      path: '/LoginScreen',
+      builder: (context, state) => LoginScreen(),
     ),
-    GoRoute(path: '/NotesScreen', 
-    builder: (context, state) => NotesScreen(),
+    GoRoute(
+      path: '/NotesScreen',
+      builder: (context, state) => NotesScreen(),
     ),
   ],
 );

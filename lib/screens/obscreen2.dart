@@ -27,7 +27,7 @@ class OnboardingScreen2 extends ConsumerWidget {
             .goToPage(0); // Navigate to previous screen
       },
       onSkip: () {
-        context.go('/NotesScreen');
+        context.go('/LoginScreen');
       },
     );
   }
