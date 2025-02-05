@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../page_notifier.dart';
+import '../providers/page_notifier.dart';
 import 'obscreen1.dart';
 import 'obscreen2.dart';
 import 'obscreen3.dart';

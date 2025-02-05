@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:notetakingapp1/widgets/reusable_ob_layout.dart';
-import '../page_notifier.dart';
+import '../providers/page_notifier.dart';
 
 class OnboardingScreen3 extends ConsumerWidget {
   const OnboardingScreen3({super.key});
@@ -15,15 +16,12 @@ class OnboardingScreen3 extends ConsumerWidget {
       description: 'Making your content legible has never been easier.',
       currentPage: currentPage,
       onNext: () {
-       //Add Next action
+       context.go('/NotesScreen');
       },
       onBack: () {
         ref
             .read(pageNotifierProvider.notifier)
             .goToPage(1); // Navigate to previous screen
-      },
-      onSkip: () {
-        // Add skip action
       },
     );
   }

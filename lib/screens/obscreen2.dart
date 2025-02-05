@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/reusable_ob_layout.dart';
 import 'package:go_router/go_router.dart';
-import '../page_notifier.dart';
+import '../providers/page_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OnboardingScreen2 extends ConsumerWidget {
@@ -27,7 +27,7 @@ class OnboardingScreen2 extends ConsumerWidget {
             .goToPage(0); // Navigate to previous screen
       },
       onSkip: () {
-        // Add skip action
+        context.go('/NotesScreen');
       },
     );
   }
