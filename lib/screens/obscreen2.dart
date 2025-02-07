@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/reusable_ob_layout.dart';
+import '../widgets/reusable_obscreen_layout.dart';
 import 'package:go_router/go_router.dart';
-import '../providers/page_notifier.dart';
+import '../providers/page_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OnboardingScreen2 extends ConsumerWidget {

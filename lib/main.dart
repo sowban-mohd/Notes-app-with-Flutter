@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'screens/login_screen.dart';
 import 'screens/obscreens.dart';
+import 'screens/signup_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/notesscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -39,6 +40,10 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/NotesScreen',
       builder: (context, state) => NotesScreen(),
+    ),
+    GoRoute(
+      path: '/SignUpScreen',
+      builder: (context, state) => SignUpScreen(),
     ),
   ],
 );

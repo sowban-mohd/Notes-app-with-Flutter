@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/reusable_ob_layout.dart';
+import '../widgets/reusable_obscreen_layout.dart';
 import 'package:go_router/go_router.dart';
-import '../providers/page_notifier.dart';
+import '../providers/page_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OnboardingScreen1 extends ConsumerWidget {
@@ -9,7 +9,7 @@ class OnboardingScreen1 extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-        final currentPage = ref.watch(pageNotifierProvider);
+    final currentPage = ref.watch(pageNotifierProvider);
 
     return OnboardingLayout(
       image: Image.asset('assets/images/forobscreen1.png'),
@@ -17,7 +17,9 @@ class OnboardingScreen1 extends ConsumerWidget {
       description: 'A completely easy way to manage and customize your notes.',
       currentPage: currentPage,
       onNext: () {
-        ref.read(pageNotifierProvider.notifier).goToPage(1); // Navigate to next screen
+        ref
+            .read(pageNotifierProvider.notifier)
+            .goToPage(1); // Navigate to second screen
       },
       onSkip: () {
         context.go('/LoginScreen');
