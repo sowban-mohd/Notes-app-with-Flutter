@@ -99,5 +99,5 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
 }
 
 
-final signupStateProvider = StateNotifierProvider<AuthStateNotifier, AuthState>(
+final authStateProvider = StateNotifierProvider<AuthStateNotifier, AuthState>(
     (ref) => AuthStateNotifier());

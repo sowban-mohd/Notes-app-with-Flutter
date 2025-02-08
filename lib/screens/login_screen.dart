@@ -4,17 +4,16 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:notetakingapp1/widgets/reusable_authscreen_layout.dart';
 import '../providers/auth_state_provider.dart';
-import '../providers/login_screen_controllers.dart';
+import '../providers/controllers_provider.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final loginState = ref.watch(signupStateProvider);
-    final loginNotifier = ref.read(signupStateProvider.notifier);
-    final emailController = ref.watch(emailControllerProvider);
-    final passwordController = ref.watch(passwordControllerProvider);
+    final loginState = ref.watch(authStateProvider);
+    final loginNotifier = ref.read(authStateProvider.notifier);
+    final controllers = ref.watch(controllersProvider).loginControllers;
     final isPasswordHidden = ref.watch(passwordVisibilityProvider);
 
     if (loginState.generalError != null || loginState.successMessage != null) {
@@ -29,8 +28,8 @@ class LoginScreen extends ConsumerWidget {
     }
 
     return AuthScreenLayout(
-        emailController: emailController,
-        passwordController: passwordController,
+        emailController: controllers.emailController,
+        passwordController: controllers.passwordController,
         title: 'Ready to get productive? Login',
         emailError: loginState.emailError,
         passwordError: loginState.passwordError,
@@ -68,9 +67,9 @@ class LoginScreen extends ConsumerWidget {
                   color: Colors.white,
                 ),
               ),
-        onSubmit: () async {
-          loginNotifier.authenticate(
-              emailController.text.trim(), passwordController.text.trim());
+        onSubmit: () {
+          loginNotifier.authenticate(controllers.emailController.text.trim(),
+              controllers.passwordController.text.trim());
         },
         bottomText: 'Don\'t have an account?',
         toggleText: 'Sign Up',

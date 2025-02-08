@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:notetakingapp1/widgets/reusable_authscreen_layout.dart';
-import '../providers/signup_screen_controllers.dart';
+import '../providers/controllers_provider.dart';
 import '../providers/password_strength_provider.dart';
 import '../providers/auth_state_provider.dart';
 
@@ -12,13 +12,12 @@ class SignUpScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final signUpState = ref.watch(signupStateProvider);
-    final signUpStateNotifier = ref.read(signupStateProvider.notifier);
+    final signUpState = ref.watch(authStateProvider);
+    final signUpStateNotifier = ref.read(authStateProvider.notifier);
     final passwordStrengthState = ref.watch(passwordStrengthProvider);
     final passwordStrengthNotifier =
         ref.read(passwordStrengthProvider.notifier);
-    final emailController = ref.watch(emailControllerProvider);
-    final passwordController = ref.watch(passwordControllerProvider);
+    final controllers = ref.watch(controllersProvider).signUpControllers;
     final isPasswordHidden = ref.watch(passwordVisibilityProvider);
     if (signUpState.generalError != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -30,7 +29,7 @@ class SignUpScreen extends ConsumerWidget {
       });
     }
 
-    ref.listen(signupStateProvider, (previous, next) {
+    ref.listen(authStateProvider, (previous, next) {
       if (next.successMessage != null) {
         // Navigate to login screen on successful signup
         context.go('/LoginScreen');
@@ -38,8 +37,8 @@ class SignUpScreen extends ConsumerWidget {
     });
 
     return AuthScreenLayout(
-      emailController: emailController,
-      passwordController: passwordController,
+      emailController: controllers.emailController,
+      passwordController: controllers.passwordController,
       title: 'Begin your notes taking adventure with us! Sign Up',
       emailError: signUpState.emailError,
       passwordError: signUpState.passwordError,
@@ -71,25 +70,26 @@ class SignUpScreen extends ConsumerWidget {
               : const SizedBox.shrink()
           : const SizedBox.shrink(),
       buttonWidget: signUpState.isLoading
-            ? SizedBox(
-          width: 20,
-          height: 20,
-          child: CircularProgressIndicator(
-            color: Colors.white,
-            strokeWidth: 2,
-          ),
-        )
-            : Text(
-                'Sign Up',
-                style: GoogleFonts.nunitoSans(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
+          ? SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2,
               ),
+            )
+          : Text(
+              'Sign Up',
+              style: GoogleFonts.nunitoSans(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
       onSubmit: () {
         signUpStateNotifier.authenticate(
-            emailController.text.trim(), passwordController.text.trim(),
+            controllers.emailController.text.trim(),
+            controllers.passwordController.text.trim(),
             isSignup: true);
       },
       bottomText: 'Already have an account?',
