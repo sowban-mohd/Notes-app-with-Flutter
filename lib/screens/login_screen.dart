@@ -27,6 +27,12 @@ class LoginScreen extends ConsumerWidget {
       });
     }
 
+    ref.listen(authStateProvider,(previous, next){
+      if(next.successMessage == 'Login is successful') {
+        loginNotifier.clearError();
+        context.go('/home');
+    }});
+
     return AuthScreenLayout(
         emailController: controllers.emailController,
         passwordController: controllers.passwordController,
@@ -41,7 +47,7 @@ class LoginScreen extends ConsumerWidget {
         },
         belowPassword: TextButton(
           onPressed: () {
-            //Navigate to forgot password screen
+            context.go('/password-reset');
           },
           child: Text('Forgot Password?',
               style: GoogleFonts.nunito(
@@ -75,7 +81,7 @@ class LoginScreen extends ConsumerWidget {
         toggleText: 'Sign Up',
         onToggle: () {
           loginNotifier.clearError();
-          context.go('/SignUpScreen');
+          context.go('/signup');
         });
   }
 }

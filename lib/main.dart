@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:notetakingapp1/screens/access_confirmation_screen.dart';
+import 'package:notetakingapp1/screens/forgot_password_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/obscreens.dart';
 import 'screens/signup_screen.dart';
@@ -34,16 +36,23 @@ final GoRouter _router = GoRouter(
       builder: (context, state) => OnboardingScreens(),
     ),
     GoRoute(
-      path: '/LoginScreen',
+      path: '/login',
       builder: (context, state) => LoginScreen(),
     ),
     GoRoute(
-      path: '/NotesScreen',
+      path: '/home',
       builder: (context, state) => NotesScreen(),
     ),
     GoRoute(
-      path: '/SignUpScreen',
+      path: '/signup',
       builder: (context, state) => SignUpScreen(),
+    ),
+    GoRoute(
+      path: '/password-reset',
+      builder: (context, state) => ForgotPasswordScreen(),
+      ),
+      GoRoute(path: '/access-confirm',
+      builder: (context, state) => AccessConfirmationScreen(),
     ),
   ],
 );

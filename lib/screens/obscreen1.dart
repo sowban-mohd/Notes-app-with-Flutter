@@ -22,7 +22,7 @@ class OnboardingScreen1 extends ConsumerWidget {
             .goToPage(1); // Navigate to second screen
       },
       onSkip: () {
-        context.go('/LoginScreen');
+        context.go('/login');
       },
     );
   }

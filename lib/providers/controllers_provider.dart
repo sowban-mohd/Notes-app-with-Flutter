@@ -4,10 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class Controllers {
   final LoginControllers loginControllers;
   final SignUpControllers signUpControllers;
+  final ForgotPasswordController forgotPasswordController;
 
   Controllers({
     required this.loginControllers,
     required this.signUpControllers,
+    required this.forgotPasswordController,
   });
 }
 
@@ -37,6 +39,16 @@ class SignUpControllers {
   }
 }
 
+class ForgotPasswordController {
+  final TextEditingController emailController;
+
+  const ForgotPasswordController({required this.emailController});
+
+  void dispose(){
+    emailController.dispose();
+  }
+}
+
 final controllersProvider = Provider.autoDispose((ref) {
   final loginControllers = LoginControllers(
       emailController: TextEditingController(),
@@ -45,14 +57,19 @@ final controllersProvider = Provider.autoDispose((ref) {
       emailController: TextEditingController(),
       passwordController: TextEditingController());
 
+  final forgotPasswordController = ForgotPasswordController(
+      emailController: TextEditingController());
+
   ref.onDispose(() {
     loginControllers.dispose();
     signupControllers.dispose();
+    forgotPasswordController.dispose();
   });
 
   return Controllers(
     loginControllers: loginControllers,
     signUpControllers: signupControllers,
+    forgotPasswordController: forgotPasswordController,
   );
 });
 

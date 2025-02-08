@@ -28,7 +28,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
 
   Future<void> authenticate(String email, String password,
       {bool isSignup = false}) async {
-        state = AuthState(isLoading: true);
+    state = AuthState(isLoading: true);
     if (email.isEmpty || password.isEmpty) {
       state = AuthState(
         emailError: email.isEmpty ? 'Email cannot be empty.' : null,
@@ -42,12 +42,30 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       if (isSignup) {
         await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
-        state = AuthState(successMessage: 'Sign up is successful, Now login', isLoading: false);
+        state = AuthState(
+            successMessage: 'Sign up is successful, Now login',
+            isLoading: false);
       } else {
         await _auth.signInWithEmailAndPassword(
             email: email, password: password);
-        clearError();
+        state = AuthState(successMessage: 'Login is successful', isLoading: false);
       }
+    } on FirebaseAuthException catch (e) {
+      _handleAuthError(e);
+    }
+  }
+
+  void passwordreset(String email) async {
+    state = AuthState(isLoading: true);
+    if (email.isEmpty) {
+      state = AuthState(emailError: 'Email cannot be empty.', isLoading: false);
+      return;
+    }
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      state = AuthState(
+          successMessage: 'Password reset email sent',
+          isLoading: false);
     } on FirebaseAuthException catch (e) {
       _handleAuthError(e);
     }
@@ -97,7 +115,6 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     );
   }
 }
-
 
 final authStateProvider = StateNotifierProvider<AuthStateNotifier, AuthState>(
     (ref) => AuthStateNotifier());

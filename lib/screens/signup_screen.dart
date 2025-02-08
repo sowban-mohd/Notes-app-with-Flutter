@@ -19,6 +19,7 @@ class SignUpScreen extends ConsumerWidget {
         ref.read(passwordStrengthProvider.notifier);
     final controllers = ref.watch(controllersProvider).signUpControllers;
     final isPasswordHidden = ref.watch(passwordVisibilityProvider);
+    
     if (signUpState.generalError != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -32,7 +33,7 @@ class SignUpScreen extends ConsumerWidget {
     ref.listen(authStateProvider, (previous, next) {
       if (next.successMessage != null) {
         // Navigate to login screen on successful signup
-        context.go('/LoginScreen');
+        context.go('/login');
       }
     });
 
@@ -95,7 +96,7 @@ class SignUpScreen extends ConsumerWidget {
       toggleText: 'Login',
       onToggle: () {
         signUpStateNotifier.clearError();
-        context.go('/LoginScreen');
+        context.go('/login');
       },
     );
   }
