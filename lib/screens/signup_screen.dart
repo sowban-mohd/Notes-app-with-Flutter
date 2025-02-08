@@ -50,24 +50,23 @@ class SignUpScreen extends ConsumerWidget {
       strengthEvaluateFunction: (password) {
         passwordStrengthNotifier.evaluate(password);
       },
-      belowPassword: signUpState.passwordError == null
-          ? passwordStrengthState.passwordStrength != null
-              ? Text.rich(
+      belowPassword: signUpState.passwordError == null &&
+              passwordStrengthState.passwordStrength != null
+          ? Text.rich(
+              TextSpan(
+                children: [
                   TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Strength : ',
-                        style: GoogleFonts.nunitoSans(color: Colors.black),
-                      ),
-                      TextSpan(
-                        text: passwordStrengthState.passwordStrength!,
-                        style: GoogleFonts.nunito(
-                            color: passwordStrengthState.passwordStrengthColor),
-                      ),
-                    ],
+                    text: 'Strength : ',
+                    style: GoogleFonts.nunitoSans(color: Colors.black),
                   ),
-                )
-              : const SizedBox.shrink()
+                  TextSpan(
+                    text: passwordStrengthState.passwordStrength!,
+                    style: GoogleFonts.nunito(
+                        color: passwordStrengthState.passwordStrengthColor),
+                  ),
+                ],
+              ),
+            )
           : const SizedBox.shrink(),
       buttonWidget: signUpState.isLoading
           ? SizedBox(
