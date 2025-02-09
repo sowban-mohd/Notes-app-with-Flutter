@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notetakingapp1/screens/access_confirmation_screen.dart';
 import 'package:notetakingapp1/screens/forgot_password_screen.dart';
+import 'package:notetakingapp1/screens/loading_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/obscreens.dart';
 import 'screens/signup_screen.dart';
@@ -30,9 +31,14 @@ class NoteApp extends StatelessWidget {
 }
 
 final GoRouter _router = GoRouter(
+  initialLocation: '/',
   routes: [
     GoRoute(
       path: '/',
+      builder: (context, state) => LoadingScreen(),
+    ),
+    GoRoute(
+      path: '/welcome',
       builder: (context, state) => OnboardingScreens(),
     ),
     GoRoute(
@@ -50,8 +56,9 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/password-reset',
       builder: (context, state) => ForgotPasswordScreen(),
-      ),
-      GoRoute(path: '/access-confirm',
+    ),
+    GoRoute(
+      path: '/access-confirm',
       builder: (context, state) => AccessConfirmationScreen(),
     ),
   ],

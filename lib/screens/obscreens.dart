@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notetakingapp1/providers/initial_screen_provider.dart';
 import '../providers/page_provider.dart';
 import 'obscreen1.dart';
 import 'obscreen2.dart';
@@ -10,6 +11,7 @@ class OnboardingScreens extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pageNotifier = ref.read(pageNotifierProvider.notifier);
+    ref.read(initialLocationProvider.notifier).setInitialLocation('/login');
 
     return Scaffold(
       body: PageView(
