@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class IntialScreenNotifier extends AsyncNotifier<String> {
+class IntialLocationNotifier extends AsyncNotifier<String> {
   @override
   Future<String> build() async {
     final prefs = await SharedPreferences.getInstance();
@@ -14,7 +14,7 @@ class IntialScreenNotifier extends AsyncNotifier<String> {
   }
 }
   final initialLocationProvider =
-      AsyncNotifierProvider<IntialScreenNotifier, String>(
-    () => IntialScreenNotifier(),
+      AsyncNotifierProvider<IntialLocationNotifier, String>(
+    () => IntialLocationNotifier(),
   );
 

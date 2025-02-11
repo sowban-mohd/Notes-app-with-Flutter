@@ -9,9 +9,11 @@ class PasswordStrength {
   PasswordStrength({this.passwordStrength, this.passwordStrengthColor});
 }
 
-// StateNotifier for password strength
-class PasswordStrengthNotifier extends StateNotifier<PasswordStrength> {
-  PasswordStrengthNotifier() : super(PasswordStrength());
+// Notifier for password strength
+class PasswordStrengthNotifier extends Notifier<PasswordStrength> {
+
+  @override
+  PasswordStrength build() => PasswordStrength();
 
   void evaluate(String password) {
     if (password.isEmpty) {
@@ -35,11 +37,11 @@ class PasswordStrengthNotifier extends StateNotifier<PasswordStrength> {
     }
 
     state = PasswordStrength(
-        passwordStrength: passwordStrength, passwordStrengthColor: passwordStrengthColor);
+        passwordStrength: passwordStrength,
+        passwordStrengthColor: passwordStrengthColor);
   }
 }
 
 final passwordStrengthProvider =
-    StateNotifierProvider.autoDispose<PasswordStrengthNotifier, PasswordStrength>(
-  (ref) => PasswordStrengthNotifier(),
-);
+    NotifierProvider<PasswordStrengthNotifier, PasswordStrength>(
+        PasswordStrengthNotifier.new);

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Notifier to manage current page and control the PageController
-class PageNotifier extends StateNotifier<int> {
-  final PageController pageController;
+class PageNotifier extends Notifier<int> {
+  final PageController pageController = PageController();
 
-  PageNotifier(this.pageController) : super(0);
+  @override
+  int build() => 0;
 
   void goToPage(int index) {
     state = index; //Update State
@@ -18,6 +19,5 @@ class PageNotifier extends StateNotifier<int> {
 }
 
 // Riverpod provider for the PageNotifier
-final pageNotifierProvider = StateNotifierProvider<PageNotifier, int>((ref) {
-  return PageNotifier(PageController());
-});
+final pageNotifierProvider =
+    NotifierProvider<PageNotifier, int>(PageNotifier.new);
