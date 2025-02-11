@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:notetakingapp1/screens/access_confirmation_screen.dart';
 import 'package:notetakingapp1/screens/forgot_password_screen.dart';
 import 'package:notetakingapp1/screens/loading_screen.dart';
+import 'package:notetakingapp1/screens/noteeditingscreen.dart';
 import 'screens/login_screen.dart';
 import 'screens/obscreens.dart';
 import 'screens/signup_screen.dart';
@@ -46,10 +47,6 @@ final GoRouter _router = GoRouter(
       builder: (context, state) => LoginScreen(),
     ),
     GoRoute(
-      path: '/home',
-      builder: (context, state) => NotesScreen(),
-    ),
-    GoRoute(
       path: '/signup',
       builder: (context, state) => SignUpScreen(),
     ),
@@ -61,5 +58,13 @@ final GoRouter _router = GoRouter(
       path: '/access-confirm',
       builder: (context, state) => AccessConfirmationScreen(),
     ),
+    GoRoute(
+      path: '/home',
+      builder: (context, state) => NotesScreen(),
+    ),
+    GoRoute(
+      path: '/note',
+      builder: (context, state) => NoteEditingscreen(),
+    )
   ],
 );

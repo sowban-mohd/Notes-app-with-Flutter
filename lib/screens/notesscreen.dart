@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -53,6 +54,19 @@ class NotesScreen extends StatelessWidget {
               ],
             ),
           ),
-        ));
+        ),
+        floatingActionButton: 
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12.0, right: 6.0),
+          child: FloatingActionButton(
+            onPressed: (){
+              context.go('/note');
+          },
+          elevation: 2.0,
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          child: const Icon(Icons.edit),
+          ),
+        ),);
   }
 }
