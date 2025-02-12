@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:notetakingapp1/providers/initial_location_provider.dart';
-import 'package:notetakingapp1/widgets/reusable_authscreen_layout.dart';
-import '../providers/auth_state_provider.dart';
-import '../providers/controllers_provider.dart';
+import 'package:notetakingapp1/logic/providers/initial_location_provider.dart';
+import '../../widgets/reusable_authscreen_layout.dart';
+import '../../../logic/providers/auth_screen_providers/auth_state_provider.dart';
+import '../../../logic/providers/controllers_provider.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});

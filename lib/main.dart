@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:notetakingapp1/screens/access_confirmation_screen.dart';
-import 'package:notetakingapp1/screens/forgot_password_screen.dart';
-import 'package:notetakingapp1/screens/loading_screen.dart';
-import 'package:notetakingapp1/screens/noteeditingscreen.dart';
-import 'screens/login_screen.dart';
-import 'screens/obscreens.dart';
-import 'screens/signup_screen.dart';
+import 'package:notetakingapp1/ui/screens/auth_screens/access_confirmation_screen.dart';
+import 'package:notetakingapp1/ui/screens/auth_screens/forgot_password_screen.dart';
+import 'package:notetakingapp1/ui/screens/loading_screen.dart';
+import 'package:notetakingapp1/ui/screens/notes_screens/noteeditingscreen.dart';
+import 'ui/screens/auth_screens/login_screen.dart';
+import 'ui/screens/ob_screens/obscreens.dart';
+import 'ui/screens/auth_screens/signup_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'screens/notesscreen.dart';
+import 'ui/screens/notes_screens/notesscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 

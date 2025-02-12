@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../providers/controllers_provider.dart';
+import '../../../logic/providers/controllers_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/save_note_provider.dart';
+import '../../../logic/providers/notes_screen_providers/save_note_provider.dart';
 
 class NoteEditingscreen extends ConsumerWidget {
   const NoteEditingscreen({super.key});
