@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:notetakingapp1/logic/providers/auth_screen_providers/auth_state_provider.dart';
-import 'package:notetakingapp1/logic/providers/controllers_provider.dart';
+import '../../../providers/auth_screen_providers/auth_state_provider.dart';
+import '../../../providers/controllers_provider.dart';
 
 class ForgotPasswordScreen extends ConsumerWidget {
   const ForgotPasswordScreen({super.key});
@@ -47,7 +47,7 @@ class ForgotPasswordScreen extends ConsumerWidget {
                       alignment: Alignment.topLeft,
                       child: TextButton.icon(
                         onPressed: () {
-                          authNotifier.clearError();
+                          authNotifier.clearState();
                           context.go('/login');
                         },
                         icon: const Icon(Icons.arrow_back_ios_new,
@@ -105,7 +105,7 @@ class ForgotPasswordScreen extends ConsumerWidget {
                               child: TextField(
                                 controller: emailController,
                                 keyboardType: TextInputType.emailAddress,
-                                onTap: authNotifier.clearError,
+                                onTap: authNotifier.clearState,
                                 decoration: InputDecoration(
                                   hintText: 'Email address',
                                   hintStyle: GoogleFonts.nunito(),

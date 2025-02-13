@@ -23,7 +23,7 @@ class AuthStateNotifier extends Notifier<AuthState> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  void clearError() {
+  void clearState() {
     state = AuthState(isLoading: false);
   }
 

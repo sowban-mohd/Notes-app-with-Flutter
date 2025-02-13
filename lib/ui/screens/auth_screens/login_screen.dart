@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:notetakingapp1/logic/providers/initial_location_provider.dart';
+import '../../../providers/initial_location_provider.dart';
 import '../../widgets/reusable_authscreen_layout.dart';
-import '../../../logic/providers/auth_screen_providers/auth_state_provider.dart';
-import '../../../logic/providers/controllers_provider.dart';
+import '../../../providers/auth_screen_providers/auth_state_provider.dart';
+import '../../../providers/controllers_provider.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -31,7 +31,7 @@ class LoginScreen extends ConsumerWidget {
 
     ref.listen(authStateProvider,(previous, next){
       if(next.successMessage == 'Login is successful') {
-        loginNotifier.clearError();
+        loginNotifier.clearState();
         initialLocationNotifier.setInitialLocation('/home');
         context.go('/home');
     }});
@@ -42,7 +42,7 @@ class LoginScreen extends ConsumerWidget {
         title: 'Ready to get productive? Login',
         emailError: loginState.emailError,
         passwordError: loginState.passwordError,
-        clearErrorFunction: loginNotifier.clearError,
+        clearErrorFunction: loginNotifier.clearState,
         isPasswordHidden: isPasswordHidden,
         visibilityOnPressed: () {
           ref.read(passwordVisibilityProvider.notifier).state =
@@ -83,7 +83,7 @@ class LoginScreen extends ConsumerWidget {
         bottomText: 'Don\'t have an account?',
         toggleText: 'Sign Up',
         onToggle: () {
-          loginNotifier.clearError();
+          loginNotifier.clearState();
           context.go('/signup');
         });
   }

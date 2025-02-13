@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../widgets/reusable_authscreen_layout.dart';
-import '../../../logic/providers/controllers_provider.dart';
-import '../../../logic/providers/auth_screen_providers/password_strength_provider.dart';
-import '../../../logic/providers/auth_screen_providers/auth_state_provider.dart';
+import '../../../providers/controllers_provider.dart';
+import '../../../providers/auth_screen_providers/password_strength_provider.dart';
+import '../../../providers/auth_screen_providers/auth_state_provider.dart';
 
 class SignUpScreen extends ConsumerWidget {
   const SignUpScreen({super.key});
@@ -43,7 +43,7 @@ class SignUpScreen extends ConsumerWidget {
       title: 'Begin your notes taking adventure with us! Sign Up',
       emailError: signUpState.emailError,
       passwordError: signUpState.passwordError,
-      clearErrorFunction: signUpStateNotifier.clearError,
+      clearErrorFunction: signUpStateNotifier.clearState,
       isPasswordHidden: isPasswordHidden,
       visibilityOnPressed: () {
         ref.read(passwordVisibilityProvider.notifier).state = !isPasswordHidden;
@@ -95,7 +95,7 @@ class SignUpScreen extends ConsumerWidget {
       bottomText: 'Already have an account?',
       toggleText: 'Login',
       onToggle: () {
-        signUpStateNotifier.clearError();
+        signUpStateNotifier.clearState();
         context.go('/login');
       },
     );

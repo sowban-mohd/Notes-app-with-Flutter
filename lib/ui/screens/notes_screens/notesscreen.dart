@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:notetakingapp1/logic/providers/notes_screen_providers/note_selection_provider.dart';
-import 'package:notetakingapp1/logic/providers/notes_screen_providers/notes_provider.dart';
+import '../../../providers/notes_screen_providers/note_controllers.dart';
+import '../../../providers/notes_screen_providers/note_selection_provider.dart';
+import '../../../providers/notes_screen_providers/notes_provider.dart';
 
 class NotesScreen extends StatelessWidget {
   const NotesScreen({super.key});
@@ -94,7 +95,8 @@ class NotesScreen extends StatelessWidget {
                               itemCount: notes.length,
                               itemBuilder: (context, index) {
                                 final note = notes[index];
-                                final String title = (note['title'] ?? '');
+                                final String? noteId = note['noteId'];
+                                final String title = note['title'];
                                 final bool hasTitle = title.trim().isNotEmpty;
                                 final selectionState =
                                     ref.watch(selectionProvider);
@@ -102,6 +104,13 @@ class NotesScreen extends StatelessWidget {
                                     selectionState[index] ?? false;
 
                                 return GestureDetector(
+                                  onTap: () {
+                                    final controllers = ref.read(notesControllersProvider);
+                                    controllers.titleController.text = note['title'];
+                                    controllers.contentController.text = note['content'];
+
+                                    context.go('/note?noteId=$noteId');
+                                  },
                                   onLongPress: () => ref
                                       .read(selectionProvider.notifier)
                                       .toggleSelection(index),
@@ -195,7 +204,7 @@ class NotesScreen extends StatelessWidget {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 12.0, right: 6.0),
         child: FloatingActionButton(
-          tooltip: 'Create new notes',
+          tooltip: 'Create a new note',
           onPressed: () {
             context.go('/note');
           },

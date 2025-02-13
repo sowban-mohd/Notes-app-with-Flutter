@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../logic/providers/controllers_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../logic/providers/notes_screen_providers/save_note_provider.dart';
+import '../../../providers/notes_screen_providers/note_controllers.dart';
+import '../../../providers/notes_screen_providers/save_note_provider.dart';
 
 class NoteEditingscreen extends ConsumerWidget {
   const NoteEditingscreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final titleController =
-        ref.watch(controllersProvider).notesController.titleController;
+    final titleController = ref.watch(notesControllersProvider).titleController;
     final contentController =
-        ref.watch(controllersProvider).notesController.contentController;
+        ref.watch(notesControllersProvider).contentController;
     final noteSaveState = ref.watch(saveNoteProvider);
     final noteSaveNotifier = ref.read(saveNoteProvider.notifier);
     final isLoading = noteSaveState.isLoading;
+    final noteId = GoRouterState.of(context).uri.queryParameters['noteId'];
 
     if (noteSaveState.error != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -24,6 +24,14 @@ class NoteEditingscreen extends ConsumerWidget {
             .showSnackBar(SnackBar(content: Text(noteSaveState.error!)));
       });
     }
+
+    ref.listen(saveNoteProvider, (previous, next) {
+      if (next.success != null) {
+        noteSaveNotifier.clearState();
+        ref.invalidate(notesControllersProvider);
+        context.go('/home');
+      }
+    });
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -33,12 +41,14 @@ class NoteEditingscreen extends ConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                  left: 2.0, right: 10.0, top: 6.0, bottom: 18.0),
+                  left: 2.0, right: 10.0, top: 6.0, bottom: 24.0),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton.icon(
                       onPressed: () {
+                        noteSaveNotifier.clearState();
+                        ref.invalidate(notesControllersProvider);
                         context.go('/home');
                       },
                       icon: const Icon(Icons.arrow_back_ios_new,
@@ -55,9 +65,8 @@ class NoteEditingscreen extends ConsumerWidget {
                     ElevatedButton(
                         onPressed: () async {
                           await noteSaveNotifier.saveNote(
-                              titleController.text, contentController.text);
-                          if (!context.mounted) return;
-                          context.go('/home');
+                              titleController.text, contentController.text,
+                              noteId: noteId);
                         },
                         style: ElevatedButton.styleFrom(
                             elevation: 0.0,
@@ -68,8 +77,8 @@ class NoteEditingscreen extends ConsumerWidget {
                             )),
                         child: isLoading
                             ? SizedBox(
-                                width: 20,
-                                height: 20,
+                                width: 15,
+                                height: 15,
                                 child: CircularProgressIndicator(
                                   color: Colors.white,
                                   strokeWidth: 2,
@@ -131,7 +140,7 @@ class NoteEditingscreen extends ConsumerWidget {
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(
-                          left: 22.0, right: 22.0, top: 12.0, bottom: 20.0),
+                          left: 20.0, right: 20.0, top: 12.0, bottom: 20.0),
                       hintText: 'Notes goes here...',
                       hintStyle: GoogleFonts.nunitoSans(
                         fontWeight: FontWeight.normal,

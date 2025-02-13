@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notetakingapp1/logic/providers/initial_location_provider.dart';
-import '../../../logic/providers/ob_screen_providers/page_provider.dart';
+import '../../../providers/initial_location_provider.dart';
+import '../../../providers/ob_screen_providers/page_provider.dart';
 import 'obscreen1.dart';
 import 'obscreen2.dart';
 import 'obscreen3.dart';

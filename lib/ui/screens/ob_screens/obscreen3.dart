@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../widgets/reusable_obscreen_layout.dart';
-import '../../../logic/providers/ob_screen_providers/page_provider.dart';
+import '../../../providers/ob_screen_providers/page_provider.dart';
 
 class OnboardingScreen3 extends ConsumerWidget {
   const OnboardingScreen3({super.key});
