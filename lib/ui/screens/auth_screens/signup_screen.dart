@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../widgets/reusable_authscreen_layout.dart';
+import '../../widgets/authscreen_layout.dart';
 import '../../../providers/controllers_provider.dart';
 import '../../../providers/auth_screen_providers/password_strength_provider.dart';
 import '../../../providers/auth_screen_providers/auth_state_provider.dart';

@@ -89,7 +89,7 @@ class NotesScreen extends StatelessWidget {
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 6.0,
-                                mainAxisSpacing: 12.0,
+                                mainAxisSpacing: 6.0,
                                 childAspectRatio: 168 / 198,
                               ),
                               itemCount: notes.length,
@@ -108,7 +108,6 @@ class NotesScreen extends StatelessWidget {
                                     final controllers = ref.read(notesControllersProvider);
                                     controllers.titleController.text = note['title'];
                                     controllers.contentController.text = note['content'];
-
                                     context.go('/note?noteId=$noteId');
                                   },
                                   onLongPress: () => ref
