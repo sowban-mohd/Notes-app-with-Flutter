@@ -7,6 +7,12 @@ class SelectionNotifier extends Notifier<Map<int, bool>> {
   void toggleSelection(int index) {
     state = {...state, index: !(state[index] ?? false)};
   }
+
+  void clearSelection() {
+    state = {};
+  }
+
+  bool get isSelectionActive => state.containsValue(true);
 }
 
 final selectionProvider =
