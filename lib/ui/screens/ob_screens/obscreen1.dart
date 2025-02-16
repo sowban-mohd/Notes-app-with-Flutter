@@ -9,6 +9,8 @@ class OnboardingScreen1 extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    //Gets access to current page index
     final currentPage = ref.watch(pageNotifierProvider);
 
     return OnboardingLayout(

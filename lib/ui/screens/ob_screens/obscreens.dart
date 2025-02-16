@@ -10,7 +10,10 @@ class OnboardingScreens extends ConsumerWidget {
   const OnboardingScreens({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    //Gets access to the page notifier 
     final pageNotifier = ref.read(pageNotifierProvider.notifier);
+
+    //Sets the initial location to login screen
     ref.read(initialLocationProvider.notifier).setInitialLocation('/login');
 
     return Scaffold(

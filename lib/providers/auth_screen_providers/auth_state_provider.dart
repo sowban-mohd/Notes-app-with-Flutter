@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Manages the Authentication State
 class AuthState {
   final String? emailError;
   final String? passwordError;
@@ -23,13 +24,16 @@ class AuthStateNotifier extends Notifier<AuthState> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  /// Clears the Authentication State
   void clearState() {
     state = AuthState(isLoading: false);
   }
 
+  /// Logins or Signups(when the isSignUp is true) with given email and apssword
   Future<void> authenticate(String email, String password,
       {bool isSignup = false}) async {
     state = AuthState(isLoading: true);
+
     if (email.isEmpty || password.isEmpty) {
       state = AuthState(
         emailError: email.isEmpty ? 'Email cannot be empty.' : null,
@@ -57,12 +61,15 @@ class AuthStateNotifier extends Notifier<AuthState> {
     }
   }
 
+  /// Resets password for the given email
   Future<void> passwordreset(String email) async {
     state = AuthState(isLoading: true);
+
     if (email.isEmpty) {
       state = AuthState(emailError: 'Email cannot be empty.', isLoading: false);
       return;
     }
+
     try {
       await _auth.sendPasswordResetEmail(email: email);
       state = AuthState(
@@ -72,6 +79,7 @@ class AuthStateNotifier extends Notifier<AuthState> {
     }
   }
 
+  ///Handles Firebase related error
   void _handleAuthError(FirebaseAuthException e) {
     String? emailError;
     String? passwordError;
@@ -108,6 +116,7 @@ class AuthStateNotifier extends Notifier<AuthState> {
         generalError = 'Something went wrong. Please try again.';
     }
 
+    // Updates the State with errors if any
     state = AuthState(
       emailError: emailError,
       passwordError: passwordError,
@@ -117,5 +126,6 @@ class AuthStateNotifier extends Notifier<AuthState> {
   }
 }
 
+///Provider of AuthStateNotifier
 final authStateProvider =
     NotifierProvider<AuthStateNotifier, AuthState>(AuthStateNotifier.new);

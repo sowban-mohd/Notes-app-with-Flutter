@@ -9,6 +9,7 @@ class OnboardingScreen3 extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    //Gets access to current page index
     final currentPage = ref.watch(pageNotifierProvider);
     return OnboardingLayout(
       image: Image.asset('assets/images/forobscreen3.png'),
@@ -16,7 +17,7 @@ class OnboardingScreen3 extends ConsumerWidget {
       description: 'Making your content legible has never been easier.',
       currentPage: currentPage,
       onNext: () {
-       context.go('/login');
+        context.go('/login');
       },
       onBack: () {
         ref

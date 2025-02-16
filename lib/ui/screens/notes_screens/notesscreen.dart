@@ -13,11 +13,18 @@ class NotesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    //Formatted date
     final String formattedDate =
         DateFormat('d MMMM, yyyy').format(DateTime.now());
+
+    //Access to notes provider
     final notesAsync = ref.watch(notesProvider);
+
+    //Access to note selection state and notifier
     final selectionState = ref.watch(selectionProvider);
     final selectionNotifier = ref.read(selectionProvider.notifier);
+
+    //List of selected notes
     final List<String> noteIds = selectionNotifier.selectedNotes;
 
     return Scaffold(
@@ -83,7 +90,10 @@ class NotesScreen extends ConsumerWidget {
               children: [
                 Expanded(
                   child: notesAsync.when(
+
+                      //When notes are avaliable
                       data: (notes) {
+                        //If notes are empty
                         if (notes.isEmpty) {
                           return Center(
                               child: Column(
@@ -106,6 +116,8 @@ class NotesScreen extends ConsumerWidget {
                             ],
                           ));
                         }
+
+                        //Display notes
                         return GridView.builder(
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
@@ -116,6 +128,7 @@ class NotesScreen extends ConsumerWidget {
                             ),
                             itemCount: notes.length,
                             itemBuilder: (context, index) {
+                              //Essential values
                               final note = notes[index];
                               final String noteId = note['noteId'];
                               final String title = note['title'];
@@ -123,7 +136,9 @@ class NotesScreen extends ConsumerWidget {
                               final isSelected =
                                   selectionState[noteId] ?? false;
 
-                              return GestureDetector(
+                              //Note Card
+                              return InkWell(
+                                //When tapped
                                 onTap: () {
                                   final controllers =
                                       ref.read(notesControllersProvider);
@@ -133,8 +148,11 @@ class NotesScreen extends ConsumerWidget {
                                       note['content'];
                                   context.go('/note?noteId=$noteId');
                                 },
+
+                                //When long pressed
                                 onLongPress: () =>
                                     selectionNotifier.toggleSelection(noteId),
+
                                 child: Card(
                                   elevation: 1.0,
                                   shape: RoundedRectangleBorder(
@@ -183,10 +201,14 @@ class NotesScreen extends ConsumerWidget {
                               );
                             });
                       },
+
+                      //When notes are loading
                       loading: () => Center(
                               child: CircularProgressIndicator(
                             color: Colors.blue,
                           )),
+
+                      //When there is error
                       error: (error, stackTrace) {
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -229,7 +251,7 @@ class NotesScreen extends ConsumerWidget {
                     await ref
                         .read(deleteNoteProvider.notifier)
                         .deleteNote(noteIds);
-                      selectionNotifier.clearSelection();                  
+                    selectionNotifier.clearSelection();
                   },
                   elevation: 2.0,
                   backgroundColor: Colors.red,

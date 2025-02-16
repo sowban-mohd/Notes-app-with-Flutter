@@ -12,10 +12,16 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final controllers = ref.watch(controllersProvider).loginControllers;
+
+    //Gets access to authentication state and notifier
     final loginState = ref.watch(authStateProvider);
     final loginNotifier = ref.read(authStateProvider.notifier);
-    final controllers = ref.watch(controllersProvider).loginControllers;
+
+    //Gets access to bool value which indicates if the password is hidden
     final isPasswordHidden = ref.watch(passwordVisibilityProvider);
+
+    //Gets access to initial location value and notifier
     final initialLocationNotifier = ref.read(initialLocationProvider.notifier);
 
     if (loginState.generalError != null || loginState.successMessage != null) {
@@ -29,12 +35,14 @@ class LoginScreen extends ConsumerWidget {
       });
     }
 
-    ref.listen(authStateProvider,(previous, next){
-      if(next.successMessage == 'Login is successful') {
+    //Navigates to notes screen if login is successful
+    ref.listen(authStateProvider, (previous, next) {
+      if (next.successMessage == 'Login is successful') {
         loginNotifier.clearState();
         initialLocationNotifier.setInitialLocation('/home');
         context.go('/home');
-    }});
+      }
+    });
 
     return AuthScreenLayout(
         emailController: controllers.emailController,

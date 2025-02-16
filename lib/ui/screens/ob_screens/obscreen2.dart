@@ -9,10 +9,13 @@ class OnboardingScreen2 extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    //Gets access to current page index
     final currentPage = ref.watch(pageNotifierProvider);
 
     return OnboardingLayout(
-      image: Image.asset('assets/images/forobscreen2.png',),
+      image: Image.asset(
+        'assets/images/forobscreen2.png',
+      ),
       title: 'Organize your thoughts',
       description: 'Most beautiful note taking application.',
       currentPage: currentPage,

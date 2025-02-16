@@ -10,8 +10,11 @@ class AccessConfirmationScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    //Provides access to email controller from forgot password screen
     final emailController =
         ref.watch(controllersProvider).forgotPasswordController.emailController;
+
+    //Provides access to authentication state and notifier
     final authState = ref.watch(authStateProvider);
     final authNotifier = ref.read(authStateProvider.notifier);
 
@@ -23,6 +26,7 @@ class AccessConfirmationScreen extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              //Text
               Expanded(
                 child: SizedBox(
                   width: 320,
@@ -62,7 +66,10 @@ class AccessConfirmationScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+
               SizedBox(height: 32.0),
+
+              //Resend link button
               ElevatedButton(
                 onPressed: () {
                   authNotifier.passwordreset(emailController.text.trim());
@@ -92,7 +99,10 @@ class AccessConfirmationScreen extends ConsumerWidget {
                         ),
                       ),
               ),
+
               const SizedBox(height: 8.0),
+
+              //Textbuttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

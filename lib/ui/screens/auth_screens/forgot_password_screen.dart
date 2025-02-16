@@ -12,9 +12,11 @@ class ForgotPasswordScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final emailController =
         ref.watch(controllersProvider).forgotPasswordController.emailController;
+
+    //Gets Access to authentication state and notifier    
     final authState = ref.watch(authStateProvider);
     final authNotifier = ref.read(authStateProvider.notifier);
-
+    
     if (authState.generalError != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -87,13 +89,11 @@ class ForgotPasswordScreen extends ConsumerWidget {
 
                             SizedBox(height: 42.0),
 
-                            //Email label
                             Text('Email',
                                 style: GoogleFonts.nunito(
                                     fontSize: 14.0,
                                     fontWeight: FontWeight.w500)),
                             const SizedBox(height: 10.0),
-                            //Email Textfield
                             Theme(
                               data: ThemeData(
                                 textSelectionTheme: TextSelectionThemeData(

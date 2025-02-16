@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notetakingapp1/providers/controllers_provider.dart';
 
 class NoteControllers {
   final TextEditingController titleController;
   final TextEditingController contentController;
 
-  NoteControllers(this.titleController, this.contentController);
+  NoteControllers({required this.titleController, required this.contentController});
 }
 
-final notesControllersProvider = Provider((ref) => NotesController(
+final notesControllersProvider = Provider((ref) => NoteControllers(
     titleController: TextEditingController(),
     contentController: TextEditingController()));

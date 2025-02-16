@@ -117,7 +117,7 @@ class AuthScreenLayout extends StatelessWidget {
                                             const TextStyle(color: Colors.red))
                                     : const SizedBox.shrink(),
                                 const SizedBox(height: 16.0),
-                                //Pssword label
+                                //Password label
                                 Text('Password',
                                     style: GoogleFonts.nunito(
                                         fontSize: 14.0,

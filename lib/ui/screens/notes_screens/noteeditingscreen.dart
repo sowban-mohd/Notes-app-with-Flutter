@@ -10,14 +10,19 @@ class NoteEditingscreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    //Controllers
     final titleController = ref.watch(notesControllersProvider).titleController;
     final contentController =
         ref.watch(notesControllersProvider).contentController;
+
+    //Note saving state and notifier
     final noteSaveState = ref.watch(saveNoteProvider);
     final noteSaveNotifier = ref.read(saveNoteProvider.notifier);
-    final isLoading = noteSaveState.isLoading;
+
+    //Note Id from url
     final noteId = GoRouterState.of(context).uri.queryParameters['noteId'];
 
+    //Display error messages if any
     if (noteSaveState.error != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context)
@@ -25,6 +30,7 @@ class NoteEditingscreen extends ConsumerWidget {
       });
     }
 
+    //Navigates to notes screen if note saving is success
     ref.listen(saveNoteProvider, (previous, next) {
       if (next.success != null) {
         noteSaveNotifier.clearState();
@@ -39,6 +45,8 @@ class NoteEditingscreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            
+            //Back button and Save button on top
             Padding(
               padding: const EdgeInsets.only(
                   left: 2.0, right: 10.0, top: 6.0, bottom: 24.0),
@@ -75,7 +83,7 @@ class NoteEditingscreen extends ConsumerWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             )),
-                        child: isLoading
+                        child: noteSaveState.isLoading
                             ? SizedBox(
                                 width: 15,
                                 height: 15,
@@ -94,6 +102,8 @@ class NoteEditingscreen extends ConsumerWidget {
                               ))
                   ]),
             ),
+
+            //Title Field          
             Theme(
               data: ThemeData(
                 textSelectionTheme: TextSelectionThemeData(
@@ -121,6 +131,8 @@ class NoteEditingscreen extends ConsumerWidget {
                     )),
               ),
             ),
+            
+            //Content field
             Expanded(
               child: Theme(
                 data: ThemeData(
@@ -152,6 +164,7 @@ class NoteEditingscreen extends ConsumerWidget {
                 ),
               ),
             ),
+            
           ],
         ),
       ),

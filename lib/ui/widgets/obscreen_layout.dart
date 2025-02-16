@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class OnboardingLayout extends StatelessWidget {
+  // Properties for onboarding content and actions
   final Widget image;
   final String title;
   final String description;
@@ -28,13 +29,14 @@ class OnboardingLayout extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Top Bar
+            // Top navigation bar with Back and Skip buttons
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Back button (only if onBack is provided)
                   onBack != null
                       ? TextButton.icon(
                           onPressed: onBack,
@@ -50,6 +52,7 @@ class OnboardingLayout extends StatelessWidget {
                           ),
                         )
                       : const SizedBox.shrink(),
+                  // Skip button (only if onSkip is provided)
                   onSkip != null
                       ? TextButton(
                           onPressed: onSkip,
@@ -67,7 +70,7 @@ class OnboardingLayout extends StatelessWidget {
               ),
             ),
 
-            // Image Section
+            // Onboarding image section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: SizedBox(
@@ -77,7 +80,7 @@ class OnboardingLayout extends StatelessWidget {
               ),
             ),
 
-            // Progress Bar
+            // Progress indicator bar
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
@@ -87,8 +90,8 @@ class OnboardingLayout extends StatelessWidget {
                   width: 99,
                   decoration: BoxDecoration(
                     color: currentPage == index
-                        ? const Color.fromRGBO(58, 133, 247, 1)
-                        : const Color.fromRGBO(206, 203, 211, 1),
+                        ? const Color.fromRGBO(58, 133, 247, 1) // Active step
+                        : const Color.fromRGBO(206, 203, 211, 1), // Inactive steps
                     borderRadius: index == 0
                         ? const BorderRadius.only(
                             topLeft: Radius.circular(5),
@@ -106,7 +109,7 @@ class OnboardingLayout extends StatelessWidget {
             ),
             const SizedBox(height: 36),
 
-            // Text Section
+            // Title and description text
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 48.0),
               child: Column(
@@ -134,7 +137,7 @@ class OnboardingLayout extends StatelessWidget {
             ),
             const SizedBox(height: 30),
 
-            // Button Section
+            // Navigation button
             ElevatedButton(
               onPressed: onNext,
               style: ElevatedButton.styleFrom(
@@ -145,7 +148,7 @@ class OnboardingLayout extends StatelessWidget {
                 ),
               ),
               child: Text(
-                currentPage == 2 ? "Get Started" : 'Next',
+                currentPage == 2 ? "Get Started" : 'Next', // Last screen shows "Get Started"
                 style: GoogleFonts.nunitoSans(
                   fontSize: 17,
                   fontWeight: FontWeight.w700,
