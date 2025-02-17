@@ -45,7 +45,6 @@ class NoteEditingscreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
             //Back button and Save button on top
             Padding(
               padding: const EdgeInsets.only(
@@ -70,40 +69,33 @@ class NoteEditingscreen extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    ElevatedButton(
+                    TextButton(
                         onPressed: () async {
                           await noteSaveNotifier.saveNote(
                               titleController.text, contentController.text,
                               noteId: noteId);
                         },
-                        style: ElevatedButton.styleFrom(
-                            elevation: 0.0,
-                            minimumSize: const Size(60, 35),
-                            backgroundColor: Color.fromRGBO(31, 33, 36, 1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            )),
                         child: noteSaveState.isLoading
                             ? SizedBox(
                                 width: 15,
                                 height: 15,
                                 child: CircularProgressIndicator(
-                                  color: Colors.white,
+                                  color: Colors.blue,
                                   strokeWidth: 2,
                                 ),
                               )
                             : Text(
                                 'Save',
                                 style: GoogleFonts.nunitoSans(
-                                  color: Colors.white,
-                                  fontSize: 14.0,
+                                  color: Colors.blue,
+                                  fontSize: 16.0,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ))
                   ]),
             ),
 
-            //Title Field          
+            //Title Field
             Theme(
               data: ThemeData(
                 textSelectionTheme: TextSelectionThemeData(
@@ -116,22 +108,22 @@ class NoteEditingscreen extends ConsumerWidget {
                 controller: titleController,
                 style: GoogleFonts.nunitoSans(
                   fontWeight: FontWeight.w600,
-                  fontSize: 26.0,
+                  fontSize: 24.0,
                   color: Colors.black,
                 ),
                 decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding:
-                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                        EdgeInsets.symmetric(horizontal: 22.0, vertical: 8.0),
                     hintText: 'Page Title',
                     hintStyle: GoogleFonts.nunitoSans(
                       fontWeight: FontWeight.w700,
-                      fontSize: 26.0,
+                      fontSize: 24.0,
                       color: Color.fromRGBO(28, 33, 33, 0.3),
                     )),
               ),
             ),
-            
+
             //Content field
             Expanded(
               child: Theme(
@@ -152,7 +144,7 @@ class NoteEditingscreen extends ConsumerWidget {
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(
-                          left: 20.0, right: 20.0, top: 12.0, bottom: 20.0),
+                          left: 22.0, right: 22.0, top: 12.0, bottom: 20.0),
                       hintText: 'Notes goes here...',
                       hintStyle: GoogleFonts.nunitoSans(
                         fontWeight: FontWeight.normal,
@@ -164,7 +156,6 @@ class NoteEditingscreen extends ConsumerWidget {
                 ),
               ),
             ),
-            
           ],
         ),
       ),

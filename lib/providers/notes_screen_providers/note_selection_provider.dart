@@ -19,16 +19,16 @@ class SelectionNotifier extends Notifier<Map<String, bool>> {
     }
   }
 
-  // Clears selection
+  /// Clears selection
   void clearSelection() {
     state = {};
   }
 
-  //Stores all the selected noteIds
+  ///List of selected noteIds
   List<String> get selectedNotes => state.keys.toList();
 }
 
-//Provider of SelectionNotifier
+/// Provider of SelectionNotifier
 final selectionProvider =
     NotifierProvider<SelectionNotifier, Map<String, bool>>(
         SelectionNotifier.new);

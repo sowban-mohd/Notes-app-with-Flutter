@@ -35,7 +35,7 @@ class SaveNoteNotifier extends Notifier<SaveNoteState> {
     if (title.isEmpty && content.isEmpty) {
       state = SaveNoteState(
           isLoading: false,
-          error: 'Can\'t save an empty n0te');
+          error: 'Can\'t save an empty note');
       return;
     }
 

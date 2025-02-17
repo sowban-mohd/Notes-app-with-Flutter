@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:notetakingapp1/providers/notes_screen_providers/delete_note_provider.dart';
+import 'package:notetakingapp1/ui/utils/confirmaton_dialog.dart';
 import '../../../providers/notes_screen_providers/note_controllers.dart';
 import '../../../providers/notes_screen_providers/note_selection_provider.dart';
 import '../../../providers/notes_screen_providers/notes_provider.dart';
@@ -70,13 +71,14 @@ class NotesScreen extends ConsumerWidget {
                         ],
                       ),
                       IconButton(
+                        tooltip: 'Log Out',
                         onPressed: () {
                           //Icon function
                         },
                         icon: Icon(
-                          Icons.more_horiz,
+                          Icons.logout,
                         ),
-                        color: Color.fromRGBO(78, 148, 248, 1),
+                              color: Color.fromRGBO(60, 60, 67, 0.8),
                       ),
                     ],
                   ),
@@ -84,7 +86,8 @@ class NotesScreen extends ConsumerWidget {
               ),
         body: SafeArea(
           child: Padding(
-            padding: EdgeInsets.only(left: 18.0, right: 18.0, top: 10.0),
+            padding: EdgeInsets.only(
+                left: 18.0, right: 18.0, top: 10.0, bottom: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -135,9 +138,8 @@ class NotesScreen extends ConsumerWidget {
                               final bool hasTitle = title.trim().isNotEmpty;
                               final isSelected =
                                   selectionState[noteId] ?? false;
-
                               //Note Card
-                              return InkWell(
+                              return GestureDetector(
                                 //When tapped
                                 onTap: () {
                                   final controllers =
@@ -212,28 +214,31 @@ class NotesScreen extends ConsumerWidget {
                       error: (error, stackTrace) {
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              duration: Duration(seconds: 10),
                               content: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'An error occured',
-                                style: GoogleFonts.nunito(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                              TextButton(
-                                  onPressed: () => ref.refresh(notesProvider),
-                                  child: Text(
-                                    'Retry',
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'An error occured',
                                     style: GoogleFonts.nunito(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.normal,
                                       fontSize: 16.0,
                                     ),
-                                  ))
-                            ],
-                          )));
+                                  ),
+                                  TextButton(
+                                      onPressed: () =>
+                                          ref.refresh(notesProvider),
+                                      child: Text(
+                                        'Retry',
+                                        style: GoogleFonts.nunito(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0,
+                                        ),
+                                      ))
+                                ],
+                              )));
                         });
                         return SizedBox.shrink();
                       }),
@@ -243,15 +248,20 @@ class NotesScreen extends ConsumerWidget {
           ),
         ),
         floatingActionButton: selectionState.isNotEmpty
-            ? Padding(
+            ?
+            //Delete note button
+            Padding(
                 padding: const EdgeInsets.only(bottom: 12.0, right: 6.0),
                 child: FloatingActionButton(
                   tooltip: 'Delete note',
                   onPressed: () async {
+                    bool? confirmed = await showConfirmationDialog(context, type : 'Delete note'); 
+                    if(confirmed == true) {
                     await ref
                         .read(deleteNoteProvider.notifier)
                         .deleteNote(noteIds);
                     selectionNotifier.clearSelection();
+                    }
                   },
                   elevation: 2.0,
                   backgroundColor: Colors.red,
@@ -268,7 +278,9 @@ class NotesScreen extends ConsumerWidget {
                       : Icon(Icons.delete),
                 ),
               )
-            : Padding(
+            :
+            //Create Note button
+            Padding(
                 padding: const EdgeInsets.only(bottom: 12.0, right: 6.0),
                 child: FloatingActionButton(
                   tooltip: 'Create a new note',
