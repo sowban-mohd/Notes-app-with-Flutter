@@ -12,7 +12,7 @@ class SignUpScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controllers = ref.watch(controllersProvider).signUpControllers;
+    final controllers = ref.watch(authControllerProvider);
 
     //Gets access to authentication state and notifier
     final signUpState = ref.watch(authStateProvider);

@@ -11,7 +11,7 @@ class ForgotPasswordScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final emailController =
-        ref.watch(controllersProvider).forgotPasswordController.emailController;
+        ref.watch(authControllerProvider).emailController;
 
     //Gets Access to authentication state and notifier    
     final authState = ref.watch(authStateProvider);

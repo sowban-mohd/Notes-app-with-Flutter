@@ -12,7 +12,7 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controllers = ref.watch(controllersProvider).loginControllers;
+    final controllers = ref.watch(authControllerProvider);
 
     //Gets access to authentication state and notifier
     final loginState = ref.watch(authStateProvider);
@@ -39,6 +39,7 @@ class LoginScreen extends ConsumerWidget {
     ref.listen(authStateProvider, (previous, next) {
       if (next.successMessage == 'Login is successful') {
         loginNotifier.clearState();
+        ref.read(authControllerProvider).dispose();
         initialLocationNotifier.setInitialLocation('/home');
         context.go('/home');
       }

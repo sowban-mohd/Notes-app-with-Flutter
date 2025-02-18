@@ -10,9 +10,8 @@ class AccessConfirmationScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //Provides access to email controller from forgot password screen
-    final emailController =
-        ref.watch(controllersProvider).forgotPasswordController.emailController;
+    //Provides access to email controller
+    final emailController = ref.watch(authControllerProvider).emailController;
 
     //Provides access to authentication state and notifier
     final authState = ref.watch(authStateProvider);
