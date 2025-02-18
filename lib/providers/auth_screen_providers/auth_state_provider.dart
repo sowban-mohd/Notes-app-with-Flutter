@@ -78,6 +78,17 @@ class AuthStateNotifier extends Notifier<AuthState> {
       _handleAuthError(e);
     }
   }
+  
+  /// Logs out the user
+  Future<void> logOut() async{
+     state = AuthState(isLoading: true);
+    try{
+     await _auth.signOut();
+     state = AuthState(isLoading: false, successMessage: 'Log out is successful');
+    } catch(e) {
+      state = AuthState(isLoading: false, generalError: 'Error signing out : ${e.toString()}');
+    }
+  }
 
   ///Handles Firebase related error
   void _handleAuthError(FirebaseAuthException e) {

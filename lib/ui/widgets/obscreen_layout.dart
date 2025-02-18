@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+/// A reusable layout for onboarding screens
 class OnboardingLayout extends StatelessWidget {
-  // Properties for onboarding content and actions
   final Widget image;
   final String title;
   final String description;

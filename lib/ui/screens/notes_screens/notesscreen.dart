@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:notetakingapp1/providers/auth_screen_providers/auth_state_provider.dart';
+import 'package:notetakingapp1/providers/initial_location_provider.dart';
 import 'package:notetakingapp1/providers/notes_screen_providers/delete_note_provider.dart';
 import 'package:notetakingapp1/ui/utils/confirmaton_dialog.dart';
 import '../../../providers/notes_screen_providers/note_controllers.dart';
@@ -21,17 +23,44 @@ class NotesScreen extends ConsumerWidget {
     //Access to notes provider
     final notesAsync = ref.watch(notesProvider);
 
-    //Access to note selection state and notifier
-    final selectionState = ref.watch(selectionProvider);
+    //List of selected notes
+    final selectedNotes = ref.watch(selectionProvider);
+
+    //Access to methods to manipulate selected notes list
     final selectionNotifier = ref.read(selectionProvider.notifier);
 
-    //List of selected notes
-    final List<String> noteIds = selectionNotifier.selectedNotes;
+    //Access to authentication state and notifier
+    final authState = ref.watch(authStateProvider);
+    final authNotifier = ref.read(authStateProvider.notifier);
 
+    //Displays authentication error messages if any
+    if (authState.generalError != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authState.generalError!),
+          ),
+        );
+      });
+    }
+
+    //Navigates to login screen if logout is succesful
+    ref.listen(authStateProvider, (previous, next) {
+      if (next.successMessage == 'Log out is successful') {
+        authNotifier.clearState(); //Clears all error messages
+        ref.read(initialLocationProvider.notifier).setInitialLocation(
+            '/login'); //Sets the login screen as the initial screen
+        context.go('/login');
+      }
+    });
+
+    //UI
     return Scaffold(
         backgroundColor: Color.fromRGBO(242, 242, 246, 1),
-        appBar: selectionState.isNotEmpty
-            ? AppBar(
+        appBar: selectedNotes.isNotEmpty
+            ?
+            //App bar when notes are selected
+            AppBar(
                 backgroundColor: Colors.white,
                 leading: IconButton(
                     onPressed: () {
@@ -42,7 +71,9 @@ class NotesScreen extends ConsumerWidget {
                       color: Colors.blue,
                     )),
               )
-            : AppBar(
+            :
+            //Normal app bar
+            AppBar(
                 elevation: 0.0,
                 backgroundColor: Color.fromRGBO(242, 242, 246, 1),
                 title: Padding(
@@ -70,16 +101,32 @@ class NotesScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      IconButton(
-                        tooltip: 'Log Out',
-                        onPressed: () {
-                          //Icon function
-                        },
-                        icon: Icon(
-                          Icons.logout,
-                        ),
+
+                      //Log out button
+                      authState.isLoading
+                          ? SizedBox(
+                              width: 15,
+                              height: 15,
+                              child: CircularProgressIndicator(
+                                color: Colors.blue,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : IconButton(
+                              tooltip: 'Log Out',
+                              onPressed: () async {
+                                bool? confirmation =
+                                    await showConfirmationDialog(context,
+                                        type: 'Log out');
+                                if (confirmation == true) {
+                                  await authNotifier.logOut();
+                                }
+                              },
+                              icon: Icon(
+                                Icons.logout,
+                              ),
                               color: Color.fromRGBO(60, 60, 67, 0.8),
-                      ),
+                            ),
                     ],
                   ),
                 ),
@@ -136,8 +183,7 @@ class NotesScreen extends ConsumerWidget {
                               final String noteId = note['noteId'];
                               final String title = note['title'];
                               final bool hasTitle = title.trim().isNotEmpty;
-                              final isSelected =
-                                  selectionState[noteId] ?? false;
+
                               //Note Card
                               return GestureDetector(
                                 //When tapped
@@ -159,7 +205,7 @@ class NotesScreen extends ConsumerWidget {
                                   elevation: 1.0,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10.0),
-                                    side: isSelected
+                                    side: selectedNotes.contains(noteId)
                                         ? BorderSide(
                                             color: Colors.blue, width: 1.0)
                                         : BorderSide.none,
@@ -247,20 +293,24 @@ class NotesScreen extends ConsumerWidget {
             ),
           ),
         ),
-        floatingActionButton: selectionState.isNotEmpty
-            ?
-            //Delete note button
-            Padding(
-                padding: const EdgeInsets.only(bottom: 12.0, right: 6.0),
-                child: FloatingActionButton(
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 12.0, right: 6.0),
+          child: selectedNotes.isNotEmpty
+              ?
+              //Delete note button
+              FloatingActionButton(
                   tooltip: 'Delete note',
                   onPressed: () async {
-                    bool? confirmed = await showConfirmationDialog(context, type : 'Delete note'); 
-                    if(confirmed == true) {
-                    await ref
-                        .read(deleteNoteProvider.notifier)
-                        .deleteNote(noteIds);
-                    selectionNotifier.clearSelection();
+                    String type = selectionNotifier.hasMultipleSelections
+                        ? 'Delete notes'
+                        : 'Delete note';
+                    bool? confirmed =
+                        await showConfirmationDialog(context, type: type);
+                    if (confirmed == true) {
+                      await ref
+                          .read(deleteNoteProvider.notifier)
+                          .deleteNote(selectedNotes);
+                      selectionNotifier.clearSelection();
                     }
                   },
                   elevation: 2.0,
@@ -276,22 +326,18 @@ class NotesScreen extends ConsumerWidget {
                           ),
                         )
                       : Icon(Icons.delete),
-                ),
-              )
-            :
-            //Create Note button
-            Padding(
-                padding: const EdgeInsets.only(bottom: 12.0, right: 6.0),
-                child: FloatingActionButton(
+                )
+              :
+              //Create note button
+              FloatingActionButton(
                   tooltip: 'Create a new note',
                   onPressed: () {
                     context.go('/note');
                   },
                   elevation: 2.0,
                   backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                  child: const Icon(Icons.edit),
+                  child: const Icon(Icons.edit, color: Colors.white),
                 ),
-              ));
+        ));
   }
 }

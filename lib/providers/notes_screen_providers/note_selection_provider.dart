@@ -1,21 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 //Notifier of selected notes
-class SelectionNotifier extends Notifier<Map<String, bool>> {
+class SelectionNotifier extends Notifier<Set<String>> {
   @override
-  Map<String, bool> build() => {};
+  Set<String> build() => {};
 
-  //Selects or deselects note based on it's Id
+  /// Selects or deselects note based on it's Id
   void toggleSelection(String noteId) {
-    //Deselects
-    if (state[noteId] == true) {
-      final newState = Map<String, bool>.from(state);
-      newState.remove(noteId);
-      state = newState;
-    }
-    //Selects
-    else {
-      state = {...state, noteId: true};
+    if (state.contains(noteId)) {
+      state = {...state}..remove(noteId); //Deselects
+    } else {
+      state = {...state, noteId}; //Selects
     }
   }
 
@@ -23,12 +18,10 @@ class SelectionNotifier extends Notifier<Map<String, bool>> {
   void clearSelection() {
     state = {};
   }
-
-  ///List of selected noteIds
-  List<String> get selectedNotes => state.keys.toList();
+  /// Checks if multiple notes are selected
+  bool get hasMultipleSelections => state.length > 1;
 }
 
 /// Provider of SelectionNotifier
 final selectionProvider =
-    NotifierProvider<SelectionNotifier, Map<String, bool>>(
-        SelectionNotifier.new);
+    NotifierProvider<SelectionNotifier, Set<String>>(SelectionNotifier.new);

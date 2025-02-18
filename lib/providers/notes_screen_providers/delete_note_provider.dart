@@ -16,7 +16,7 @@ class DeleteNoteNotifier extends Notifier<DeleteState> {
   DeleteState build() => DeleteState(isLoading: false);
 
   /// Deletes selected notes
-  Future<void> deleteNote(List<String> noteIds) async {
+  Future<void> deleteNote(Set<String> noteIds) async {
     state = DeleteState(isLoading: true);
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     String? uid = FirebaseAuth.instance.currentUser?.uid;
