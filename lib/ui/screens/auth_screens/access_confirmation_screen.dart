@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:notetakingapp1/ui/utils/styles.dart';
 import '../../../providers/controllers_provider.dart';
 import '../../../providers/auth_screen_providers/auth_state_provider.dart';
 
@@ -35,10 +36,7 @@ class AccessConfirmationScreen extends ConsumerWidget {
                     children: [
                       Text(
                         'Access Confirmation',
-                        style: GoogleFonts.nunitoSans(
-                          fontSize: 40.0,
-                          fontWeight: FontWeight.w700,
-                        ),
+                        style: Styles.titleStyle(fontSize: 40.0),
                       ),
                       SizedBox(height: 18.0),
                       Text.rich(TextSpan(children: [
@@ -73,13 +71,7 @@ class AccessConfirmationScreen extends ConsumerWidget {
                 onPressed: () {
                   authNotifier.passwordreset(emailController.text.trim());
                 },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(304, 56),
-                  backgroundColor: const Color.fromRGBO(0, 122, 255, 1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                ),
+                style: Styles.elevatedButtonStyle(),
                 child: authState.isLoading
                     ? SizedBox(
                         width: 20,
@@ -91,11 +83,7 @@ class AccessConfirmationScreen extends ConsumerWidget {
                       )
                     : Text(
                         'Resend link',
-                        style: GoogleFonts.nunitoSans(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
+                        style: Styles.elevatedButtonTextStyle(),
                       ),
               ),
 

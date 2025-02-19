@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '/ui/utils/styles.dart';
 
 /// Displays a confirmation dialog before actions like Log Out, Note deletion
 Future<bool?> showConfirmationDialog(BuildContext context,
@@ -23,10 +24,7 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                   child: Column(children: [
                     Text(
                       type!,
-                      style: GoogleFonts.nunitoSans(
-                        fontSize: 26.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Styles.titleStyle(fontSize: 26.0),
                     ),
                     SizedBox(
                       height: 8.0,
@@ -38,10 +36,7 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                               ? 'Are you sure you want to delete these notes?'
                               : 'Are you sure you want to log out?',
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.nunitoSans(
-                        fontSize: 16,
-                        color: Colors.black.withValues(alpha: 51.0),
-                      ),
+                      style: Styles.subtitleStyle(fontSize: 16.0),
                     ),
                   ]),
                 ),
@@ -74,7 +69,7 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.red,
+                          color: Color.fromRGBO(235, 77, 61, 1),
                           borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(12.0)),
                           border: Border(

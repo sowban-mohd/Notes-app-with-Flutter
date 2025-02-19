@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:notetakingapp1/ui/utils/styles.dart';
 import '../../../providers/auth_screen_providers/auth_state_provider.dart';
 import '../../../providers/controllers_provider.dart';
 
@@ -10,13 +10,12 @@ class ForgotPasswordScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emailController =
-        ref.watch(authControllerProvider).emailController;
+    final emailController = ref.watch(authControllerProvider).emailController;
 
-    //Gets Access to authentication state and notifier    
+    //Gets Access to authentication state and notifier
     final authState = ref.watch(authStateProvider);
     final authNotifier = ref.read(authStateProvider.notifier);
-    
+
     if (authState.generalError != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -26,9 +25,9 @@ class ForgotPasswordScreen extends ConsumerWidget {
         );
       });
     }
-   
-    ref.listen(authStateProvider, (previous, next){
-      if(next.successMessage == 'Password reset email sent'){
+
+    ref.listen(authStateProvider, (previous, next) {
+      if (next.successMessage == 'Password reset email sent') {
         context.go('/access-confirm');
       }
     });
@@ -56,11 +55,7 @@ class ForgotPasswordScreen extends ConsumerWidget {
                             color: Colors.blue),
                         label: Text(
                           "Back",
-                          style: GoogleFonts.nunitoSans(
-                            color: Colors.blue,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Styles.textButtonStyle(),
                         ),
                       ),
                     ),
@@ -75,57 +70,27 @@ class ForgotPasswordScreen extends ConsumerWidget {
                             Text(
                               'Forgot Password?',
                               textAlign: TextAlign.center,
-                              style: GoogleFonts.nunitoSans(
-                                  fontSize: 36.0, fontWeight: FontWeight.w700),
+                              style: Styles.titleStyle(fontSize: 36.0),
                             ),
                             SizedBox(height: 12.0),
                             Text(
                               'Enter your registered email, and we\'ll send you instructions to reset your password',
-                              style: GoogleFonts.nunitoSans(
-                                fontSize: 16,
-                                color: Colors.black.withValues(alpha: 25.0),
-                              ),
+                              style: Styles.subtitleStyle(fontSize: 16.0),
                             ),
 
                             SizedBox(height: 42.0),
 
-                            Text('Email',
-                                style: GoogleFonts.nunito(
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w500)),
+                            Text('Email', style: Styles.textfieldLabelStyle()),
                             const SizedBox(height: 10.0),
                             Theme(
-                              data: ThemeData(
-                                textSelectionTheme: TextSelectionThemeData(
-                                  cursorColor: Colors.blue,
-                                  selectionColor: Colors.blue.withAlpha(51),
-                                  selectionHandleColor: Colors.blue,
-                                ),
-                              ),
+                              data: Styles.textSelectionTheme(),
                               child: TextField(
                                 controller: emailController,
                                 keyboardType: TextInputType.emailAddress,
                                 onTap: authNotifier.clearState,
-                                decoration: InputDecoration(
-                                  hintText: 'Email address',
-                                  hintStyle: GoogleFonts.nunito(),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(
-                                      color: authState.emailError != null
-                                          ? Colors.red
-                                          : Colors.grey,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    borderSide: BorderSide(
-                                        color: authState.emailError != null
-                                            ? Colors.red
-                                            : Colors.blue,
-                                        width: 2.0),
-                                  ),
-                                ),
+                                decoration: Styles.textfieldDecoration(
+                                    hintText: 'Email address',
+                                    error: authState.emailError),
                               ),
                             ),
                             const SizedBox(height: 6.0),
@@ -145,13 +110,7 @@ class ForgotPasswordScreen extends ConsumerWidget {
                 onPressed: () {
                   authNotifier.passwordreset(emailController.text.trim());
                 },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(304, 56),
-                  backgroundColor: const Color.fromRGBO(0, 122, 255, 1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                ),
+                style: Styles.elevatedButtonStyle(),
                 child: authState.isLoading
                     ? SizedBox(
                         width: 20,
@@ -163,11 +122,7 @@ class ForgotPasswordScreen extends ConsumerWidget {
                       )
                     : Text(
                         'Continue',
-                        style: GoogleFonts.nunitoSans(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
+                        style: Styles.elevatedButtonTextStyle(),
                       ),
               ),
             ],

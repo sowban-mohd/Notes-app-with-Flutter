@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:notetakingapp1/providers/auth_screen_providers/auth_state_provider.dart';
-import 'package:notetakingapp1/providers/initial_location_provider.dart';
-import 'package:notetakingapp1/providers/notes_screen_providers/delete_note_provider.dart';
-import 'package:notetakingapp1/ui/utils/confirmaton_dialog.dart';
-import '../../../providers/notes_screen_providers/note_controllers.dart';
-import '../../../providers/notes_screen_providers/note_selection_provider.dart';
-import '../../../providers/notes_screen_providers/notes_provider.dart';
+import '/providers/auth_screen_providers/auth_state_provider.dart';
+import '/providers/initial_location_provider.dart';
+import '/providers/notes_screen_providers/delete_note_provider.dart';
+import '/ui/utils/confirmaton_dialog.dart';
+import '/providers/notes_screen_providers/note_controllers.dart';
+import '/providers/notes_screen_providers/note_selection_provider.dart';
+import '/providers/notes_screen_providers/notes_provider.dart';
 
 class NotesScreen extends ConsumerWidget {
   const NotesScreen({super.key});
@@ -67,8 +67,8 @@ class NotesScreen extends ConsumerWidget {
                       selectionNotifier.clearSelection();
                     },
                     icon: Icon(
-                      Icons.arrow_back,
-                      color: Colors.blue,
+                      Icons.arrow_back_ios_new,
+                      color: Color.fromRGBO(0, 122, 255, 1),
                     )),
               )
             :
@@ -207,7 +207,9 @@ class NotesScreen extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(10.0),
                                     side: selectedNotes.contains(noteId)
                                         ? BorderSide(
-                                            color: Colors.blue, width: 1.0)
+                                            color:
+                                                Color.fromRGBO(0, 122, 255, 1),
+                                            width: 2.0)
                                         : BorderSide.none,
                                   ),
                                   color: Colors.white,
@@ -314,8 +316,7 @@ class NotesScreen extends ConsumerWidget {
                     }
                   },
                   elevation: 2.0,
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
+                  backgroundColor: Color.fromRGBO(235, 77, 61, 1),
                   child: ref.watch(deleteNoteProvider).isLoading
                       ? SizedBox(
                           width: 15,
@@ -325,7 +326,7 @@ class NotesScreen extends ConsumerWidget {
                             strokeWidth: 2,
                           ),
                         )
-                      : Icon(Icons.delete),
+                      : Icon(Icons.delete, color: Colors.white,),
                 )
               :
               //Create note button
@@ -335,7 +336,7 @@ class NotesScreen extends ConsumerWidget {
                     context.go('/note');
                   },
                   elevation: 2.0,
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Color.fromRGBO(0, 122, 255, 1),
                   child: const Icon(Icons.edit, color: Colors.white),
                 ),
         ));

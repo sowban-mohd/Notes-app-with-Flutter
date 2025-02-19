@@ -39,7 +39,6 @@ class LoginScreen extends ConsumerWidget {
     ref.listen(authStateProvider, (previous, next) {
       if (next.successMessage == 'Login is successful') {
         loginNotifier.clearState();
-        ref.read(authControllerProvider).dispose();
         initialLocationNotifier.setInitialLocation('/home');
         context.go('/home');
       }

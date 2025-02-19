@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../widgets/obscreen_layout.dart';
+import '/providers/initial_location_provider.dart';
+import '/ui/widgets/obscreen_layout.dart';
 import 'package:go_router/go_router.dart';
-import '../../../providers/ob_screen_providers/page_provider.dart';
+import '/providers/ob_screen_providers/page_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OnboardingScreen1 extends ConsumerWidget {
@@ -9,7 +10,6 @@ class OnboardingScreen1 extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     //Gets access to current page index
     final currentPage = ref.watch(pageNotifierProvider);
 
@@ -24,6 +24,8 @@ class OnboardingScreen1 extends ConsumerWidget {
             .goToPage(1); // Navigate to second screen
       },
       onSkip: () {
+        //Sets the initial location to login screen
+        ref.read(initialLocationProvider.notifier).setInitialLocation('/login');
         context.go('/login');
       },
     );
