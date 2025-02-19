@@ -33,7 +33,7 @@ class ForgotPasswordScreen extends ConsumerWidget {
     });
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.surfaceContainerLowest,
       body: SafeArea(
         child: Padding(
           padding:
@@ -51,11 +51,11 @@ class ForgotPasswordScreen extends ConsumerWidget {
                           authNotifier.clearState();
                           context.go('/login');
                         },
-                        icon: const Icon(Icons.arrow_back_ios_new,
-                            color: Colors.blue),
+                        icon: Icon(Icons.arrow_back_ios_new,
+                            color: colorScheme.primary),
                         label: Text(
                           "Back",
-                          style: Styles.textButtonStyle(),
+                          style: Styles.textButtonStyle(fontSize: 16.0),
                         ),
                       ),
                     ),
@@ -80,7 +80,7 @@ class ForgotPasswordScreen extends ConsumerWidget {
 
                             SizedBox(height: 42.0),
 
-                            Text('Email', style: Styles.textfieldLabelStyle()),
+                            Text('Email', style: Styles.w500texts(fontSize: 14.0)),
                             const SizedBox(height: 10.0),
                             Theme(
                               data: Styles.textSelectionTheme(),
@@ -97,7 +97,7 @@ class ForgotPasswordScreen extends ConsumerWidget {
                             //Email error message
                             authState.emailError != null
                                 ? Text(authState.emailError!,
-                                    style: const TextStyle(color: Colors.red))
+                                    style: TextStyle(color: colorScheme.error))
                                 : const SizedBox.shrink(),
                           ],
                         ),
@@ -116,7 +116,7 @@ class ForgotPasswordScreen extends ConsumerWidget {
                         width: 20,
                         height: 20,
                         child: CircularProgressIndicator(
-                          color: Colors.white,
+                          color: colorScheme.onPrimary,
                           strokeWidth: 2,
                         ),
                       )

@@ -1,12 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:notetakingapp1/ui/colorscheme.dart';
 
+final colorScheme = customColorscheme();
+
+/// Contains methods that applies certain styles to widgets
 class Styles {
+  /// Generates textstyle with universal font of the app
+  static TextStyle universalFont(
+      {double? fontSize, Color? color, FontWeight? fontWeight}) {
+    return GoogleFonts.nunitoSans(
+        fontSize: fontSize, fontWeight: fontWeight, color: color);
+  }
+  
+  ///Generates textstyle with respective fontweights
+  
+  static TextStyle w300texts({Color? color, double? fontSize}) {
+    return universalFont(fontWeight: FontWeight.w300, fontSize: fontSize, color: color);
+  }
+
+  static TextStyle w400texts({Color? color, double? fontSize}) {
+    return universalFont(fontWeight: FontWeight.w400, fontSize: fontSize, color: color);
+  }
+
+  static TextStyle w500texts({Color? color, double? fontSize}) {
+    return universalFont(fontWeight: FontWeight.w500, fontSize: fontSize, color: color);
+  }
+
+  static TextStyle w600texts({Color? color, double? fontSize}) {
+    return universalFont(fontWeight: FontWeight.w600, fontSize: fontSize, color: color);
+  }
+
+  static TextStyle w700texts({Color? color, double? fontSize}) {
+    return universalFont(fontWeight: FontWeight.w700, fontSize: fontSize, color: color);
+  }
+
+  static TextStyle boldTexts({Color? color, double? fontSize}) {
+    return universalFont(fontWeight: FontWeight.bold, fontSize: fontSize, color: color);
+  }
+
   /// Style for elevated buttons
   static ButtonStyle elevatedButtonStyle() {
     return ElevatedButton.styleFrom(
       minimumSize: const Size(304, 56),
-      backgroundColor: const Color.fromRGBO(0, 122, 255, 1),
+      backgroundColor: colorScheme.primary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
@@ -15,37 +52,32 @@ class Styles {
 
   /// Style for texts in elevatedbuttons
   static TextStyle elevatedButtonTextStyle() {
-    return GoogleFonts.nunitoSans(
+    return w700texts(
       fontSize: 17,
-      fontWeight: FontWeight.w700,
-      color: Colors.white,
+      color: colorScheme.onPrimary,
     );
   }
 
   /// Style for text buttons
-  static TextStyle textButtonStyle() {
-    return GoogleFonts.nunitoSans(
-      color: Color.fromRGBO(0, 122, 255, 1),
-      fontSize: 16.0,
-      fontWeight: FontWeight.bold,
+  static TextStyle textButtonStyle({required double fontSize}) {
+    return boldTexts(
+      color: colorScheme.primary,
+      fontSize: fontSize,
     );
   }
 
   /// Style for title texts
-  static TextStyle titleStyle({required double fontSize}) {
-    return GoogleFonts.nunitoSans(
+  static TextStyle titleStyle({double? fontSize, Color? color}) {
+    return w700texts(
       fontSize: fontSize,
-      fontWeight: FontWeight.w700,
-      color: Colors.black,
+      color: color,
     );
   }
 
   ///Style for subtitle texts
   static TextStyle subtitleStyle({required double fontSize}) {
-    return GoogleFonts.nunitoSans(
-      fontSize: fontSize,
-      color: Colors.black.withValues(alpha: 51.0),
-    );
+    return universalFont(
+        fontSize: fontSize, color: colorScheme.onSurface);
   }
 
   ///Theme for selection inside a textfield
@@ -67,24 +99,20 @@ class Styles {
   }) {
     return InputDecoration(
       hintText: hintText,
-      hintStyle: GoogleFonts.nunito(),
+      hintStyle: universalFont(),
       suffixIcon: suffixIcon,
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(
-          color: error != null ? Colors.red : Colors.grey,
+          color: error != null ? colorScheme.error : colorScheme.outline,
         ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.0),
         borderSide: BorderSide(
-            color: error != null ? Colors.red : Colors.blue, width: 2.0),
+            color: error != null ? colorScheme.error : colorScheme.primary,
+            width: 2.0),
       ),
     );
-  }
-
-  /// Style for textfield labels
-  static TextStyle textfieldLabelStyle() {
-    return GoogleFonts.nunito(fontSize: 14.0, fontWeight: FontWeight.w500);
   }
 }

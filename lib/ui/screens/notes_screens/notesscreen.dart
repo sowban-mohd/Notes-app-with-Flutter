@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:notetakingapp1/ui/utils/styles.dart';
 import '/providers/auth_screen_providers/auth_state_provider.dart';
 import '/providers/initial_location_provider.dart';
 import '/providers/notes_screen_providers/delete_note_provider.dart';
@@ -56,26 +56,26 @@ class NotesScreen extends ConsumerWidget {
 
     //UI
     return Scaffold(
-        backgroundColor: Color.fromRGBO(242, 242, 246, 1),
+        backgroundColor: colorScheme.surface,
         appBar: selectedNotes.isNotEmpty
             ?
             //App bar when notes are selected
             AppBar(
-                backgroundColor: Colors.white,
+                backgroundColor: colorScheme.surfaceContainerLowest,
                 leading: IconButton(
                     onPressed: () {
                       selectionNotifier.clearSelection();
                     },
                     icon: Icon(
-                      Icons.arrow_back_ios_new,
-                      color: Color.fromRGBO(0, 122, 255, 1),
+                      Icons.arrow_back,
+                      color: colorScheme.primary,
                     )),
               )
             :
             //Normal app bar
             AppBar(
                 elevation: 0.0,
-                backgroundColor: Color.fromRGBO(242, 242, 246, 1),
+                backgroundColor: colorScheme.surface,
                 title: Padding(
                   padding: EdgeInsets.only(left: 6.0, right: 6.0, top: 10.0),
                   child: Row(
@@ -86,18 +86,14 @@ class NotesScreen extends ConsumerWidget {
                         children: [
                           Text(
                             formattedDate,
-                            style: GoogleFonts.nunito(
+                            style: Styles.w400texts(
                               fontSize: 12.0,
-                              fontWeight: FontWeight.w400,
-                              color: Color.fromRGBO(60, 60, 67, 0.6),
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                           Text(
                             'Notes',
-                            style: GoogleFonts.nunitoSans(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 24.0,
-                            ),
+                            style: Styles.titleStyle(fontSize: 24.0),
                           ),
                         ],
                       ),
@@ -108,7 +104,7 @@ class NotesScreen extends ConsumerWidget {
                               width: 15,
                               height: 15,
                               child: CircularProgressIndicator(
-                                color: Colors.blue,
+                                color: colorScheme.primary,
                                 strokeWidth: 2,
                               ),
                             )
@@ -125,7 +121,7 @@ class NotesScreen extends ConsumerWidget {
                               icon: Icon(
                                 Icons.logout,
                               ),
-                              color: Color.fromRGBO(60, 60, 67, 0.8),
+                              color: colorScheme.onSurface.withAlpha(153),
                             ),
                     ],
                   ),
@@ -156,13 +152,9 @@ class NotesScreen extends ConsumerWidget {
                               const SizedBox(
                                 height: 4.0,
                               ),
-                              Text(
-                                'No notes yet!\nCreate one.',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.nunito(
-                                  fontSize: 20.0,
-                                ),
-                              ),
+                              Text('No notes yet!\nCreate one.',
+                                  textAlign: TextAlign.center,
+                                  style: Styles.universalFont(fontSize: 20.0)),
                             ],
                           ));
                         }
@@ -207,12 +199,11 @@ class NotesScreen extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(10.0),
                                     side: selectedNotes.contains(noteId)
                                         ? BorderSide(
-                                            color:
-                                                Color.fromRGBO(0, 122, 255, 1),
+                                            color: colorScheme.primary,
                                             width: 2.0)
                                         : BorderSide.none,
                                   ),
-                                  color: Colors.white,
+                                  color: colorScheme.surfaceContainer,
                                   child: Padding(
                                     padding: EdgeInsets.all(14),
                                     child: Column(
@@ -220,15 +211,11 @@ class NotesScreen extends ConsumerWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         if (hasTitle) ...[
-                                          Text(
-                                            title,
-                                            style: GoogleFonts.nunitoSans(
-                                              color:
-                                                  Color.fromRGBO(28, 33, 33, 1),
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
+                                          Text(title,
+                                              style: Styles.w600texts(
+                                                color: colorScheme.onSurface,
+                                                fontSize: 16,
+                                              )),
                                           SizedBox(height: 3),
                                           Divider(),
                                           SizedBox(
@@ -237,10 +224,8 @@ class NotesScreen extends ConsumerWidget {
                                         ],
                                         Flexible(
                                           child: Text(note['content'] ?? '',
-                                              style: GoogleFonts.nunitoSans(
-                                                  color: Color.fromRGBO(
-                                                      28, 33, 33, 1),
-                                                  fontWeight: FontWeight.w300,
+                                              style: Styles.w300texts(
+                                                  color: colorScheme.onSurface,
                                                   fontSize: 14),
                                               overflow: TextOverflow.fade),
                                         ),
@@ -255,7 +240,7 @@ class NotesScreen extends ConsumerWidget {
                       //When notes are loading
                       loading: () => Center(
                               child: CircularProgressIndicator(
-                            color: Colors.blue,
+                            color: colorScheme.primary,
                           )),
 
                       //When there is error
@@ -267,23 +252,16 @@ class NotesScreen extends ConsumerWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    'An error occured',
-                                    style: GoogleFonts.nunito(
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 16.0,
-                                    ),
-                                  ),
+                                  Text('An error occured',
+                                      style:
+                                          Styles.universalFont(fontSize: 16.0)),
                                   TextButton(
                                       onPressed: () =>
                                           ref.refresh(notesProvider),
                                       child: Text(
                                         'Retry',
-                                        style: GoogleFonts.nunito(
-                                          color: Colors.blue,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16.0,
-                                        ),
+                                        style: Styles.textButtonStyle(
+                                            fontSize: 16.0),
                                       ))
                                 ],
                               )));
@@ -316,17 +294,20 @@ class NotesScreen extends ConsumerWidget {
                     }
                   },
                   elevation: 2.0,
-                  backgroundColor: Color.fromRGBO(235, 77, 61, 1),
+                  backgroundColor: colorScheme.error,
                   child: ref.watch(deleteNoteProvider).isLoading
                       ? SizedBox(
                           width: 15,
                           height: 15,
                           child: CircularProgressIndicator(
-                            color: Colors.white,
+                            color: colorScheme.onError,
                             strokeWidth: 2,
                           ),
                         )
-                      : Icon(Icons.delete, color: Colors.white,),
+                      : Icon(
+                          Icons.delete,
+                          color: colorScheme.onError,
+                        ),
                 )
               :
               //Create note button
@@ -336,8 +317,8 @@ class NotesScreen extends ConsumerWidget {
                     context.go('/note');
                   },
                   elevation: 2.0,
-                  backgroundColor: Color.fromRGBO(0, 122, 255, 1),
-                  child: const Icon(Icons.edit, color: Colors.white),
+                  backgroundColor: colorScheme.primary,
+                  child: Icon(Icons.edit, color: colorScheme.onPrimary),
                 ),
         ));
   }

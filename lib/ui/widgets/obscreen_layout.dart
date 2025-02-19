@@ -25,7 +25,7 @@ class OnboardingLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.surfaceContainerLowest,
       body: SafeArea(
         child: Column(
           children: [
@@ -40,13 +40,13 @@ class OnboardingLayout extends StatelessWidget {
                   onBack != null
                       ? TextButton.icon(
                           onPressed: onBack,
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.arrow_back_ios_new,
-                            color: Color.fromRGBO(0, 122, 255, 1),
+                            color: colorScheme.primary,
                           ),
                           label: Text(
                             "Back",
-                            style: Styles.textButtonStyle(),
+                            style: Styles.textButtonStyle(fontSize: 16.0),
                           ),
                         )
                       : const SizedBox.shrink(),
@@ -54,7 +54,8 @@ class OnboardingLayout extends StatelessWidget {
                   onSkip != null
                       ? TextButton(
                           onPressed: onSkip,
-                          child: Text("Skip", style: Styles.textButtonStyle()),
+                          child: Text("Skip",
+                              style: Styles.textButtonStyle(fontSize: 16.0)),
                         )
                       : const SizedBox.shrink(),
                 ],

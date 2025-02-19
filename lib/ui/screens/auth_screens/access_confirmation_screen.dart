@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:notetakingapp1/ui/utils/styles.dart';
 import '../../../providers/controllers_provider.dart';
 import '../../../providers/auth_screen_providers/auth_state_provider.dart';
@@ -41,24 +40,19 @@ class AccessConfirmationScreen extends ConsumerWidget {
                       SizedBox(height: 18.0),
                       Text.rich(TextSpan(children: [
                         TextSpan(
-                            text: 'We have sent a confirmation email to ',
-                            style: GoogleFonts.nunito(
-                              fontSize: 16.0,
-                              color: Colors.black.withValues(alpha: 25.0),
-                            )),
+                          text: 'We have sent a confirmation email to ',
+                          style: Styles.subtitleStyle(fontSize: 16.0),
+                        ),
                         TextSpan(
-                            text: emailController.text.trim(),
-                            style: GoogleFonts.nunito(
-                                fontWeight: FontWeight.bold, fontSize: 16.0))
+                          text: emailController.text.trim(),
+                          style: Styles.boldTexts(fontSize: 16.0),
+                        )
                       ])),
                       SizedBox(height: 18.0),
                       Text(
                         'Kindly check your inbox and click on the link to reset your password',
-                        style: GoogleFonts.nunito(
-                          fontSize: 16.0,
-                          color: Colors.black.withValues(alpha: 25.0),
-                        ),
-                      )
+                        style: Styles.subtitleStyle(fontSize: 16.0),
+                      ),
                     ],
                   ),
                 ),
@@ -94,8 +88,7 @@ class AccessConfirmationScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Have reset your password?',
-                      style: GoogleFonts.nunito(
-                          fontSize: 15.0, fontWeight: FontWeight.w500)),
+                      style: Styles.w500texts(fontSize: 15.0)),
                   TextButton(
                     onPressed: () {
                       authNotifier.clearState();
@@ -103,11 +96,7 @@ class AccessConfirmationScreen extends ConsumerWidget {
                     },
                     child: Text(
                       'Login now',
-                      style: GoogleFonts.nunito(
-                        fontSize: 14.0,
-                        color: const Color.fromRGBO(0, 122, 255, 1),
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Styles.textButtonStyle(fontSize: 14.0),
                     ),
                   ),
                 ],
