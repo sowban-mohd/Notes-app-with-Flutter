@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '/ui/utils/styles.dart';
 
 /// A reusable layout for onboarding screens
 class OnboardingLayout extends StatelessWidget {
@@ -25,7 +25,7 @@ class OnboardingLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.surfaceContainerLowest,
       body: SafeArea(
         child: Column(
           children: [
@@ -40,15 +40,13 @@ class OnboardingLayout extends StatelessWidget {
                   onBack != null
                       ? TextButton.icon(
                           onPressed: onBack,
-                          icon: const Icon(Icons.arrow_back_ios_new,
-                              color: Colors.blue),
+                          icon: Icon(
+                            Icons.arrow_back_ios_new,
+                            color: colorScheme.primary,
+                          ),
                           label: Text(
                             "Back",
-                            style: GoogleFonts.nunitoSans(
-                              color: Colors.blue,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Styles.textButtonStyle(fontSize: 16.0),
                           ),
                         )
                       : const SizedBox.shrink(),
@@ -56,14 +54,8 @@ class OnboardingLayout extends StatelessWidget {
                   onSkip != null
                       ? TextButton(
                           onPressed: onSkip,
-                          child: Text(
-                            "Skip",
-                            style: GoogleFonts.nunitoSans(
-                              color: Colors.blue,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          child: Text("Skip",
+                              style: Styles.textButtonStyle(fontSize: 16.0)),
                         )
                       : const SizedBox.shrink(),
                 ],
@@ -91,7 +83,8 @@ class OnboardingLayout extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: currentPage == index
                         ? const Color.fromRGBO(58, 133, 247, 1) // Active step
-                        : const Color.fromRGBO(206, 203, 211, 1), // Inactive steps
+                        : const Color.fromRGBO(
+                            206, 203, 211, 1), // Inactive steps
                     borderRadius: index == 0
                         ? const BorderRadius.only(
                             topLeft: Radius.circular(5),
@@ -117,20 +110,13 @@ class OnboardingLayout extends StatelessWidget {
                   Text(
                     title,
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.nunitoSans(
-                      fontSize: 33.0,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
+                    style: Styles.titleStyle(fontSize: 33.0),
                   ),
                   const SizedBox(height: 12),
                   Text(
                     description,
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.nunitoSans(
-                      fontSize: 15,
-                      color: Colors.black.withValues(alpha: 51.0),
-                    ),
+                    style: Styles.subtitleStyle(fontSize: 15.0),
                   ),
                 ],
               ),
@@ -140,20 +126,12 @@ class OnboardingLayout extends StatelessWidget {
             // Navigation button
             ElevatedButton(
               onPressed: onNext,
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(304, 56),
-                backgroundColor: const Color.fromRGBO(0, 122, 255, 1),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-              ),
+              style: Styles.elevatedButtonStyle(),
               child: Text(
-                currentPage == 2 ? "Get Started" : 'Next', // Last screen shows "Get Started"
-                style: GoogleFonts.nunitoSans(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
+                currentPage == 2
+                    ? "Get Started"
+                    : 'Next', // Last screen shows "Get Started"
+                style: Styles.elevatedButtonTextStyle(),
               ),
             ),
             const SizedBox(height: 42),

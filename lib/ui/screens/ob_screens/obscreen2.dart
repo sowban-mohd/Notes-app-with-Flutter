@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../widgets/obscreen_layout.dart';
+import 'package:notetakingapp1/providers/initial_location_provider.dart';
+import '/ui/widgets/obscreen_layout.dart';
 import 'package:go_router/go_router.dart';
-import '../../../providers/ob_screen_providers/page_provider.dart';
+import '/providers/ob_screen_providers/page_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OnboardingScreen2 extends ConsumerWidget {
@@ -30,6 +31,8 @@ class OnboardingScreen2 extends ConsumerWidget {
             .goToPage(0); // Navigate to previous screen
       },
       onSkip: () {
+        //Sets the initial location to login screen
+        ref.read(initialLocationProvider.notifier).setInitialLocation('/login');
         context.go('/login');
       },
     );

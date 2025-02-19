@@ -17,11 +17,15 @@ class AuthController {
   }
 }
 
-final authControllerProvider = Provider((ref) {
+final authControllerProvider = Provider.autoDispose((ref) {
   final authController = AuthController(
     emailController: TextEditingController(),
     passwordController: TextEditingController(),
   );
+
+  ref.onDispose(() {
+    authController.dispose();
+  });
 
   return authController;
 });

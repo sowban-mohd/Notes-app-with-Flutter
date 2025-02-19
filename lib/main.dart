@@ -24,6 +24,8 @@ class NoteApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      theme: ThemeData(
+      ),
       routerConfig: _router, // Uses GoRouter for navigation
       debugShowCheckedModeBanner: false, // Hides debug banner
     );
@@ -36,11 +38,13 @@ final GoRouter _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => LoadingScreen(), // Loading screen before initial screen
+      builder: (context, state) =>
+          LoadingScreen(), // Loading screen before initial screen
     ),
     GoRoute(
       path: '/welcome',
-      builder: (context, state) => OnboardingScreens(), // Onboarding screens for new users
+      builder: (context, state) =>
+          OnboardingScreens(), // Onboarding screens for new users
     ),
     GoRoute(
       path: '/login',
@@ -52,11 +56,13 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: '/password-reset',
-      builder: (context, state) => ForgotPasswordScreen(), // Password reset screen
+      builder: (context, state) =>
+          ForgotPasswordScreen(), // Password reset screen
     ),
     GoRoute(
       path: '/access-confirm',
-      builder: (context, state) => AccessConfirmationScreen(), // Access confirmation screen
+      builder: (context, state) =>
+          AccessConfirmationScreen(), // Access confirmation screen
     ),
     GoRoute(
       path: '/home',

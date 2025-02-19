@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '/ui/utils/styles.dart';
 
 /// Displays a confirmation dialog before actions like Log Out, Note deletion
 Future<bool?> showConfirmationDialog(BuildContext context,
@@ -14,7 +14,7 @@ Future<bool?> showConfirmationDialog(BuildContext context,
             height: 175,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12.0),
-              color: Colors.white,
+              color: colorScheme.surfaceContainer,
             ),
             child: Column(
               children: [
@@ -23,10 +23,7 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                   child: Column(children: [
                     Text(
                       type!,
-                      style: GoogleFonts.nunitoSans(
-                        fontSize: 26.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Styles.titleStyle(fontSize: 26.0),
                     ),
                     SizedBox(
                       height: 8.0,
@@ -38,10 +35,7 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                               ? 'Are you sure you want to delete these notes?'
                               : 'Are you sure you want to log out?',
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.nunitoSans(
-                        fontSize: 16,
-                        color: Colors.black.withValues(alpha: 51.0),
-                      ),
+                      style: Styles.subtitleStyle(fontSize: 16.0),
                     ),
                   ]),
                 ),
@@ -63,10 +57,7 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                           },
                           child: Text(
                             'Cancel',
-                            style: GoogleFonts.nunitoSans(
-                                color: Colors.black,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w600),
+                            style: Styles.w600texts(color: colorScheme.onSurface, fontSize: 16.0),
                           ),
                         ),
                       ),
@@ -74,7 +65,7 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.red,
+                          color: colorScheme.error,
                           borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(12.0)),
                           border: Border(
@@ -87,10 +78,7 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                           },
                           child: Text(
                             type == 'Log out' ? type : 'Delete',
-                            style: GoogleFonts.nunitoSans(
-                                color: Colors.white,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w600),
+                            style: Styles.w600texts(color: colorScheme.onError, fontSize: 16.0)
                           ),
                         ),
                       ),

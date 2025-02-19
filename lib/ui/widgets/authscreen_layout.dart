@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:notetakingapp1/ui/utils/styles.dart';
 
 class AuthScreenLayout extends StatelessWidget {
   final TextEditingController emailController;
@@ -18,7 +18,7 @@ class AuthScreenLayout extends StatelessWidget {
   final String toggleText;
   final VoidCallback onToggle;
 
- const AuthScreenLayout({
+  const AuthScreenLayout({
     super.key,
     required this.emailController,
     required this.passwordController,
@@ -40,7 +40,7 @@ class AuthScreenLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.surfaceContainerLowest,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -57,10 +57,7 @@ class AuthScreenLayout extends StatelessWidget {
                         children: [
                           Text(
                             title,
-                            style: GoogleFonts.nunitoSans(
-                              fontSize: 36.0,
-                              fontWeight: FontWeight.w700,
-                            ),
+                            style: Styles.titleStyle(fontSize: 36.0),
                           ),
                           const SizedBox(height: 42.0),
                           Column(
@@ -68,104 +65,49 @@ class AuthScreenLayout extends StatelessWidget {
                               children: [
                                 //Email label
                                 Text('Email',
-                                    style: GoogleFonts.nunito(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w500)),
+                                    style: Styles.w500texts(fontSize: 14.0)),
                                 const SizedBox(height: 7.0),
                                 //Email Textfield
                                 Theme(
-                                  data: ThemeData(
-                                    textSelectionTheme: TextSelectionThemeData(
-                                      cursorColor: Colors.blue,
-                                      selectionColor: Colors.blue.withAlpha(51),
-                                      selectionHandleColor: Colors.blue,
-                                    ),
-                                  ),
+                                  data: Styles.textSelectionTheme(),
                                   child: TextField(
-                                    controller: emailController,
-                                    keyboardType: TextInputType.emailAddress,
-                                    onTap: clearErrorFunction,
-                                    decoration: InputDecoration(
-                                      hintText: 'Email address',
-                                      hintStyle: GoogleFonts.nunito(),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        borderSide: BorderSide(
-                                          color: emailError != null
-                                              ? Colors.red
-                                              : Colors.grey,
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        borderSide: BorderSide(
-                                            color: emailError != null
-                                                ? Colors.red
-                                                : Colors.blue,
-                                            width: 2.0),
-                                      ),
-                                    ),
-                                  ),
+                                      controller: emailController,
+                                      keyboardType: TextInputType.emailAddress,
+                                      onTap: clearErrorFunction,
+                                      decoration: Styles.textfieldDecoration(
+                                          hintText: 'Email address',
+                                          error: emailError)),
                                 ),
                                 const SizedBox(height: 6.0),
                                 //Email error message
                                 emailError != null
                                     ? Text(emailError!,
                                         style:
-                                            const TextStyle(color: Colors.red))
+                                            TextStyle(color: colorScheme.error))
                                     : const SizedBox.shrink(),
                                 const SizedBox(height: 16.0),
                                 //Password label
                                 Text('Password',
-                                    style: GoogleFonts.nunito(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w500)),
+                                    style: Styles.w500texts(fontSize: 14.0)),
                                 const SizedBox(height: 7.0),
                                 //Password Textfield
                                 Theme(
-                                  data: ThemeData(
-                                    textSelectionTheme: TextSelectionThemeData(
-                                      cursorColor: Colors.blue,
-                                      selectionColor: Colors.blue.withAlpha(51),
-                                      selectionHandleColor: Colors.blue,
-                                    ),
-                                  ),
+                                  data: Styles.textSelectionTheme(),
                                   child: TextField(
-                                    controller: passwordController,
-                                    obscureText: isPasswordHidden,
-                                    onTap: clearErrorFunction,
-                                    onChanged: strengthEvaluateFunction,
-                                    decoration: InputDecoration(
-                                      hintText: 'Password',
-                                      hintStyle: GoogleFonts.nunito(),
-                                      suffixIcon: IconButton(
-                                        onPressed: visibilityOnPressed,
-                                        icon: Icon(isPasswordHidden
-                                            ? Icons.visibility_off
-                                            : Icons.visibility),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        borderSide: BorderSide(
-                                          color: passwordError != null
-                                              ? Colors.red
-                                              : Colors.grey,
+                                      controller: passwordController,
+                                      obscureText: isPasswordHidden,
+                                      onTap: clearErrorFunction,
+                                      onChanged: strengthEvaluateFunction,
+                                      decoration: Styles.textfieldDecoration(
+                                        hintText: 'Password',
+                                        error: passwordError,
+                                        suffixIcon: IconButton(
+                                          onPressed: visibilityOnPressed,
+                                          icon: Icon(isPasswordHidden
+                                              ? Icons.visibility_off
+                                              : Icons.visibility),
                                         ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        borderSide: BorderSide(
-                                            color: passwordError != null
-                                                ? Colors.red
-                                                : Colors.blue,
-                                            width: 2.0),
-                                      ),
-                                    ),
-                                  ),
+                                      )),
                                 ),
                                 //Passwor error message, forgot password button/password strength indicator
                                 Row(
@@ -175,7 +117,8 @@ class AuthScreenLayout extends StatelessWidget {
                                     passwordError != null
                                         ? Text(
                                             passwordError!,
-                                            style: TextStyle(color: Colors.red),
+                                            style: TextStyle(
+                                                color: colorScheme.error),
                                           )
                                         : const SizedBox.shrink(),
                                     belowPassword
@@ -195,13 +138,7 @@ class AuthScreenLayout extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: onSubmit,
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(304, 56),
-                      backgroundColor: const Color.fromRGBO(0, 122, 255, 1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                    ),
+                    style: Styles.elevatedButtonStyle(),
                     child: buttonWidget,
                   ),
                   const SizedBox(height: 8.0),
@@ -209,17 +146,12 @@ class AuthScreenLayout extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(bottomText,
-                          style: GoogleFonts.nunito(
-                              fontSize: 15.0, fontWeight: FontWeight.w500)),
+                          style: Styles.w500texts(fontSize: 14.0, color: colorScheme.onSurface)),
                       TextButton(
                         onPressed: onToggle,
                         child: Text(
                           toggleText,
-                          style: GoogleFonts.nunito(
-                            fontSize: 14.0,
-                            color: const Color.fromRGBO(0, 122, 255, 1),
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Styles.textButtonStyle(fontSize: 14.0),
                         ),
                       ),
                     ],

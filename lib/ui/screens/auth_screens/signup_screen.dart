@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:notetakingapp1/ui/utils/styles.dart';
 import '../../widgets/authscreen_layout.dart';
 import '../../../providers/controllers_provider.dart';
 import '../../../providers/auth_screen_providers/password_strength_provider.dart';
@@ -64,11 +64,11 @@ class SignUpScreen extends ConsumerWidget {
                 children: [
                   TextSpan(
                     text: 'Strength : ',
-                    style: GoogleFonts.nunitoSans(color: Colors.black),
+                    style: Styles.universalFont(color: colorScheme.onSurface),
                   ),
                   TextSpan(
                     text: passwordStrengthState.passwordStrength!,
-                    style: GoogleFonts.nunito(
+                    style: Styles.universalFont(
                         color: passwordStrengthState.passwordStrengthColor),
                   ),
                 ],
@@ -80,17 +80,13 @@ class SignUpScreen extends ConsumerWidget {
               width: 20,
               height: 20,
               child: CircularProgressIndicator(
-                color: Colors.white,
+                color: colorScheme.onPrimary,
                 strokeWidth: 2,
               ),
             )
           : Text(
               'Sign Up',
-              style: GoogleFonts.nunitoSans(
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-              ),
+              style: Styles.elevatedButtonTextStyle(),
             ),
       onSubmit: () {
         signUpStateNotifier.authenticate(
