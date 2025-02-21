@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notetakingapp1/ui/utils/styles.dart';
+import 'package:notetakingapp1/ui/utils/utils.dart';
 import '../../../providers/initial_location_provider.dart';
 import '../../widgets/authscreen_layout.dart';
 import '../../../providers/auth_screen_providers/auth_state_provider.dart';
@@ -21,25 +22,19 @@ class LoginScreen extends ConsumerWidget {
     //Gets access to bool value which indicates if the password is hidden
     final isPasswordHidden = ref.watch(passwordVisibilityProvider);
 
-    //Gets access to initial location value and notifier
-    final initialLocationNotifier = ref.read(initialLocationProvider.notifier);
-
     if (loginState.generalError != null || loginState.successMessage != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text(loginState.generalError ?? loginState.successMessage!),
-          ),
-        );
-      });
+      showSnackbarMessage(context,
+          message: loginState.generalError ?? loginState.successMessage!);
     }
 
     //Navigates to notes screen if login is successful
     ref.listen(authStateProvider, (previous, next) {
       if (next.successMessage == 'Login is successful') {
+        //Gets access to initial location notifier
+        final initialLocationNotifier =
+            ref.read(initialLocationProvider.notifier);
+        initialLocationNotifier.setInitialLocation('/home'); //Sets note screen as the initial screen of app
         loginNotifier.clearState();
-        initialLocationNotifier.setInitialLocation('/home');
         context.go('/home');
       }
     });

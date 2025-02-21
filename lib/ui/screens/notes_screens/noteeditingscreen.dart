@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notetakingapp1/ui/utils/styles.dart';
+import 'package:notetakingapp1/ui/utils/utils.dart';
 import '/providers/notes_screen_providers/note_controllers.dart';
 import '/providers/notes_screen_providers/save_note_provider.dart';
 
@@ -19,15 +20,9 @@ class NoteEditingscreen extends ConsumerWidget {
     final noteSaveState = ref.watch(saveNoteProvider);
     final noteSaveNotifier = ref.read(saveNoteProvider.notifier);
 
-    //Note Id from url
-    final noteId = GoRouterState.of(context).uri.queryParameters['noteId'];
-
     //Display error messages if any
     if (noteSaveState.error != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(noteSaveState.error!)));
-      });
+      showSnackbarMessage(context, message: noteSaveState.error!);
     }
 
     //Navigates to notes screen if note saving is success
@@ -69,6 +64,10 @@ class NoteEditingscreen extends ConsumerWidget {
                     ),
                     TextButton(
                         onPressed: () async {
+                          //Note Id from url
+                          final noteId = GoRouterState.of(context)
+                              .uri
+                              .queryParameters['noteId'];
                           await noteSaveNotifier.saveNote(
                               titleController.text, contentController.text,
                               noteId: noteId);

@@ -18,8 +18,6 @@ class SelectionNotifier extends Notifier<Set<String>> {
   void clearSelection() {
     state = {};
   }
-  /// Checks if multiple notes are selected
-  bool get hasMultipleSelections => state.length > 1;
 }
 
 /// Provider of SelectionNotifier

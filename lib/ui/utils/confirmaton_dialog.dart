@@ -46,9 +46,10 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border(
-                            top: BorderSide(color: Colors.black54, width: 1.0),
-                            right:
-                                BorderSide(color: Colors.black54, width: 1.0),
+                            top: BorderSide(
+                                color: colorScheme.outlineVariant, width: 1.0),
+                            right: BorderSide(
+                                color: colorScheme.outlineVariant, width: 1.0),
                           ),
                         ),
                         child: TextButton(
@@ -57,7 +58,8 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                           },
                           child: Text(
                             'Cancel',
-                            style: Styles.w600texts(color: colorScheme.onSurface, fontSize: 16.0),
+                            style: Styles.w600texts(
+                                color: colorScheme.onSurface, fontSize: 16.0),
                           ),
                         ),
                       ),
@@ -69,17 +71,17 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                           borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(12.0)),
                           border: Border(
-                            top: BorderSide(color: Colors.black54, width: 1.0),
+                            top: BorderSide(
+                                color: colorScheme.outlineVariant, width: 1.0),
                           ),
                         ),
                         child: TextButton(
                           onPressed: () {
                             Navigator.of(context).pop(true);
                           },
-                          child: Text(
-                            type == 'Log out' ? type : 'Delete',
-                            style: Styles.w600texts(color: colorScheme.onError, fontSize: 16.0)
-                          ),
+                          child: Text(type == 'Log out' ? type : 'Delete',
+                              style: Styles.w600texts(
+                                  color: colorScheme.onError, fontSize: 16.0)),
                         ),
                       ),
                     ),

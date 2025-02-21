@@ -17,5 +17,6 @@ ColorScheme customColorscheme() {
     surfaceContainer: Colors.white,
     surfaceContainerLowest: Colors.white,
     outline: Colors.grey,
+    outlineVariant: Colors.black54,
   );
 }

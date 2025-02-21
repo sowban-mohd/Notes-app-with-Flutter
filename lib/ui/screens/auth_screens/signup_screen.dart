@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notetakingapp1/ui/utils/styles.dart';
+import 'package:notetakingapp1/ui/utils/utils.dart';
 import '../../widgets/authscreen_layout.dart';
 import '../../../providers/controllers_provider.dart';
 import '../../../providers/auth_screen_providers/password_strength_provider.dart';
@@ -18,22 +19,14 @@ class SignUpScreen extends ConsumerWidget {
     final signUpState = ref.watch(authStateProvider);
     final signUpStateNotifier = ref.read(authStateProvider.notifier);
 
-    //Gets access to password strength message state and notifier
+    //Gets access to password strength message state
     final passwordStrengthState = ref.watch(passwordStrengthProvider);
-    final passwordStrengthNotifier =
-        ref.read(passwordStrengthProvider.notifier);
 
     //Gets access to bool value which indicates if the password is hidden
     final isPasswordHidden = ref.watch(passwordVisibilityProvider);
 
     if (signUpState.generalError != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(signUpState.generalError!),
-          ),
-        );
-      });
+      showSnackbarMessage(context, message: signUpState.generalError!);
     }
 
     // Navigate to login screen on successful signup
@@ -55,6 +48,9 @@ class SignUpScreen extends ConsumerWidget {
         ref.read(passwordVisibilityProvider.notifier).state = !isPasswordHidden;
       },
       strengthEvaluateFunction: (password) {
+        /// Gets access to strength evaluate method
+        final passwordStrengthNotifier =
+            ref.read(passwordStrengthProvider.notifier);
         passwordStrengthNotifier.evaluate(password);
       },
       belowPassword: signUpState.passwordError == null &&

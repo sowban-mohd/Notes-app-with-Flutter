@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notetakingapp1/ui/utils/styles.dart';
+import 'package:notetakingapp1/ui/utils/utils.dart';
 import '../../../providers/auth_screen_providers/auth_state_provider.dart';
 import '../../../providers/controllers_provider.dart';
 
@@ -16,16 +17,12 @@ class ForgotPasswordScreen extends ConsumerWidget {
     final authState = ref.watch(authStateProvider);
     final authNotifier = ref.read(authStateProvider.notifier);
 
+    //Show error messages if any
     if (authState.generalError != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(authState.generalError!),
-          ),
-        );
-      });
+      showSnackbarMessage(context, message: authState.generalError!);
     }
 
+    // If password reset email has sent, navigate to the access confirmation screen
     ref.listen(authStateProvider, (previous, next) {
       if (next.successMessage == 'Password reset email sent') {
         context.go('/access-confirm');
@@ -44,6 +41,7 @@ class ForgotPasswordScreen extends ConsumerWidget {
                   child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    //Back button
                     Align(
                       alignment: Alignment.topLeft,
                       child: TextButton.icon(
@@ -80,8 +78,12 @@ class ForgotPasswordScreen extends ConsumerWidget {
 
                             SizedBox(height: 42.0),
 
-                            Text('Email', style: Styles.w500texts(fontSize: 14.0)),
+                            // Label for textfield
+                            Text('Email',
+                                style: Styles.w500texts(fontSize: 14.0)),
                             const SizedBox(height: 10.0),
+
+                            //Textfield
                             Theme(
                               data: Styles.textSelectionTheme(),
                               child: TextField(

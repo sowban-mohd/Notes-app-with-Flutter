@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:notetakingapp1/ui/utils/styles.dart';
+import 'package:notetakingapp1/ui/utils/utils.dart';
+import 'package:notetakingapp1/ui/widgets/note_card.dart';
+import '/ui/utils/styles.dart';
 import '/providers/auth_screen_providers/auth_state_provider.dart';
 import '/providers/initial_location_provider.dart';
-import '/providers/notes_screen_providers/delete_note_provider.dart';
 import '/ui/utils/confirmaton_dialog.dart';
-import '/providers/notes_screen_providers/note_controllers.dart';
-import '/providers/notes_screen_providers/note_selection_provider.dart';
-import '/providers/notes_screen_providers/notes_provider.dart';
+import '/providers/notes_screen_providers.dart';
 
 class NotesScreen extends ConsumerWidget {
   const NotesScreen({super.key});
@@ -34,14 +33,9 @@ class NotesScreen extends ConsumerWidget {
     final authNotifier = ref.read(authStateProvider.notifier);
 
     //Displays authentication error messages if any
-    if (authState.generalError != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(authState.generalError!),
-          ),
-        );
-      });
+    if (authState.generalError != null || authState.isLoading) {
+      showSnackbarMessage(context,
+          message: authState.generalError ?? 'Logging out...');
     }
 
     //Navigates to login screen if logout is succesful
@@ -62,15 +56,17 @@ class NotesScreen extends ConsumerWidget {
             //App bar when notes are selected
             AppBar(
                 backgroundColor: colorScheme.surfaceContainerLowest,
-                leading: IconButton(
-                    onPressed: () {
-                      selectionNotifier.clearSelection();
-                    },
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: colorScheme.primary,
-                    )),
-              )
+                title: TextButton.icon(
+                  onPressed: () {
+                    selectionNotifier.clearSelection();
+                  },
+                  icon: Icon(
+                    Icons.arrow_back_ios_new,
+                    color: colorScheme.primary,
+                  ),
+                  label: Text('${selectedNotes.length} selected',
+                      style: Styles.textButtonStyle(fontSize: 18.0)),
+                ))
             :
             //Normal app bar
             AppBar(
@@ -81,6 +77,7 @@ class NotesScreen extends ConsumerWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      //Date and Title
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -99,30 +96,21 @@ class NotesScreen extends ConsumerWidget {
                       ),
 
                       //Log out button
-                      authState.isLoading
-                          ? SizedBox(
-                              width: 15,
-                              height: 15,
-                              child: CircularProgressIndicator(
-                                color: colorScheme.primary,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : IconButton(
-                              tooltip: 'Log Out',
-                              onPressed: () async {
-                                bool? confirmation =
-                                    await showConfirmationDialog(context,
-                                        type: 'Log out');
-                                if (confirmation == true) {
-                                  await authNotifier.logOut();
-                                }
-                              },
-                              icon: Icon(
-                                Icons.logout,
-                              ),
-                              color: colorScheme.onSurface.withAlpha(153),
-                            ),
+                      IconButton(
+                        tooltip: 'Log Out',
+                        onPressed: () async {
+                          bool? confirmation = await showConfirmationDialog(
+                              context,
+                              type: 'Log out');
+                          if (confirmation == true) {
+                            await authNotifier.logOut();
+                          }
+                        },
+                        icon: Icon(
+                          Icons.logout,
+                        ),
+                        color: colorScheme.onSurface.withAlpha(153),
+                      ),
                     ],
                   ),
                 ),
@@ -136,7 +124,6 @@ class NotesScreen extends ConsumerWidget {
               children: [
                 Expanded(
                   child: notesAsync.when(
-
                       //When notes are avaliable
                       data: (notes) {
                         //If notes are empty
@@ -158,7 +145,6 @@ class NotesScreen extends ConsumerWidget {
                             ],
                           ));
                         }
-
                         //Display notes
                         return GridView.builder(
                             gridDelegate:
@@ -170,73 +156,11 @@ class NotesScreen extends ConsumerWidget {
                             ),
                             itemCount: notes.length,
                             itemBuilder: (context, index) {
-                              //Essential values
                               final note = notes[index];
-                              final String noteId = note['noteId'];
-                              final String title = note['title'];
-                              final bool hasTitle = title.trim().isNotEmpty;
-
                               //Note Card
-                              return GestureDetector(
-                                //When tapped
-                                onTap: () {
-                                  final controllers =
-                                      ref.read(notesControllersProvider);
-                                  controllers.titleController.text =
-                                      note['title'];
-                                  controllers.contentController.text =
-                                      note['content'];
-                                  context.go('/note?noteId=$noteId');
-                                },
-
-                                //When long pressed
-                                onLongPress: () =>
-                                    selectionNotifier.toggleSelection(noteId),
-
-                                child: Card(
-                                  elevation: 1.0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    side: selectedNotes.contains(noteId)
-                                        ? BorderSide(
-                                            color: colorScheme.primary,
-                                            width: 2.0)
-                                        : BorderSide.none,
-                                  ),
-                                  color: colorScheme.surfaceContainer,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(14),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        if (hasTitle) ...[
-                                          Text(title,
-                                              style: Styles.w600texts(
-                                                color: colorScheme.onSurface,
-                                                fontSize: 16,
-                                              )),
-                                          SizedBox(height: 3),
-                                          Divider(),
-                                          SizedBox(
-                                            height: 3,
-                                          ),
-                                        ],
-                                        Flexible(
-                                          child: Text(note['content'] ?? '',
-                                              style: Styles.w300texts(
-                                                  color: colorScheme.onSurface,
-                                                  fontSize: 14),
-                                              overflow: TextOverflow.fade),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
+                              return NoteCard(note: note);
                             });
                       },
-
                       //When notes are loading
                       loading: () => Center(
                               child: CircularProgressIndicator(
@@ -281,7 +205,7 @@ class NotesScreen extends ConsumerWidget {
               FloatingActionButton(
                   tooltip: 'Delete note',
                   onPressed: () async {
-                    String type = selectionNotifier.hasMultipleSelections
+                    String type = selectedNotes.length > 1
                         ? 'Delete notes'
                         : 'Delete note';
                     bool? confirmed =

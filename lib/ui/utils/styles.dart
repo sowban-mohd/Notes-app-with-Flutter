@@ -84,9 +84,9 @@ class Styles {
   static ThemeData textSelectionTheme() {
     return ThemeData(
       textSelectionTheme: TextSelectionThemeData(
-        cursorColor: Colors.blue,
-        selectionColor: Colors.blue.withAlpha(51),
-        selectionHandleColor: Colors.blue,
+        cursorColor: colorScheme.primary,
+        selectionColor: colorScheme.primary.withAlpha(51),
+        selectionHandleColor: colorScheme.primary,
       ),
     );
   }
