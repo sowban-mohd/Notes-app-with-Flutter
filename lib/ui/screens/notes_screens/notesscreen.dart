@@ -154,10 +154,10 @@ class NotesScreen extends ConsumerWidget {
                           return GridView.builder(
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
+                                crossAxisCount: isDesktop(context) ? 6 : isTablet(context) ? 4 : 2,
                                 crossAxisSpacing: 6.0,
                                 mainAxisSpacing: 6.0,
-                                childAspectRatio: 168 / 198,
+                                
                               ),
                               itemCount: notes.length,
                               itemBuilder: (context, index) {

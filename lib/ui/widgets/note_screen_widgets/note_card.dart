@@ -57,12 +57,10 @@ class NoteCard extends ConsumerWidget {
                   height: 3,
                 ),
               ],
-              Flexible(
-                child: Text(note['content'] ?? '',
+              Text(note['content'] ?? '',
                     style: Styles.w300texts(
-                        color: colorScheme.onSurface, fontSize: 14),
-                    overflow: TextOverflow.fade),
-              ),
+                        color: colorScheme.onSurface, fontSize: 14),maxLines: 6,
+                    overflow: TextOverflow.ellipsis),
             ],
           ),
         ),

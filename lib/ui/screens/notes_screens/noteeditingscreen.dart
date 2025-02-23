@@ -116,7 +116,7 @@ class NoteEditingscreen extends ConsumerWidget {
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(
-                          left: 22.0, right: 22.0, top: 12.0, bottom: 20.0),
+                          left: 24.0, right: 24.0, top: 12.0, bottom: 20.0),
                       hintText: 'Notes goes here...',
                       hintStyle: Styles.w400texts(
                           fontSize: 16.0,
