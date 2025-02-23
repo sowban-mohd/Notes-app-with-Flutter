@@ -32,7 +32,7 @@ class NoteCard extends ConsumerWidget {
         selectionNotifier.toggleSelection(noteId);
       },
       child: Card(
-        elevation: 1.0,
+        elevation: selectedNotes.contains(noteId) ? 3.0 : 1.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
           side: selectedNotes.contains(noteId)

@@ -47,9 +47,8 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                         decoration: BoxDecoration(
                           border: Border(
                             top: BorderSide(
-                                color: colorScheme.outlineVariant, width: 1.0),
-                            right: BorderSide(
-                                color: colorScheme.outlineVariant, width: 1.0),
+                                color: colorScheme.outline, width: 1.0),
+                      
                           ),
                         ),
                         child: TextButton(
@@ -72,7 +71,7 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                               bottomRight: Radius.circular(12.0)),
                           border: Border(
                             top: BorderSide(
-                                color: colorScheme.outlineVariant, width: 1.0),
+                                color: colorScheme.outline, width: 1.0),
                           ),
                         ),
                         child: TextButton(
