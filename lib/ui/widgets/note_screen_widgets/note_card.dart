@@ -15,12 +15,14 @@ class NoteCard extends ConsumerWidget {
     //Essential values
     final String noteId = note['noteId'];
     final String title = note['title'];
+    final String content = note['content'];
     final bool hasTitle = title.trim().isNotEmpty;
+    final bool hasContent = content.trim().isNotEmpty;
 
     return GestureDetector(
       //When tapped
       onTap: () {
-        final controllers = ref.read(notesControllersProvider);
+        final controllers = ref.watch(notesControllersProvider);
         controllers.titleController.text = note['title'];
         controllers.contentController.text = note['content'];
         context.go('/note?noteId=$noteId');
@@ -32,7 +34,7 @@ class NoteCard extends ConsumerWidget {
         selectionNotifier.toggleSelection(noteId);
       },
       child: Card(
-        elevation: 1.0,
+        elevation: selectedNotes.contains(noteId) ? 3.0 : 1.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
           side: selectedNotes.contains(noteId)
@@ -46,23 +48,32 @@ class NoteCard extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (hasTitle) ...[
-                Text(title,
-                    style: Styles.w600texts(
-                      color: colorScheme.onSurface,
-                      fontSize: 16,
-                    )),
+                Text(
+                  title,
+                  style: Styles.w600texts(
+                    color: colorScheme.onSurface,
+                    fontSize: 16,
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 SizedBox(height: 3),
                 Divider(),
                 SizedBox(
                   height: 3,
                 ),
               ],
+              hasContent ?
               Flexible(
-                child: Text(note['content'] ?? '',
+                child: Text(content,
                     style: Styles.w300texts(
                         color: colorScheme.onSurface, fontSize: 14),
                     overflow: TextOverflow.fade),
-              ),
+              ) :
+              Text('No content',
+                    style: Styles.w300texts(
+                        color: colorScheme.onSurface.withAlpha(102), fontSize: 14),
+                    ),
             ],
           ),
         ),

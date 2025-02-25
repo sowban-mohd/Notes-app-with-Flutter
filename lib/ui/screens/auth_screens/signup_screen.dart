@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:notetakingapp1/ui/utils/styles.dart';
 import 'package:notetakingapp1/ui/utils/utils.dart';
 import '../../widgets/authscreen_layout.dart';
-import '../../../providers/controllers_provider.dart';
+import '../../../providers/auth_screen_providers/auth_controllers_provider.dart';
 import '../../../providers/auth_screen_providers/password_strength_provider.dart';
 import '../../../providers/auth_screen_providers/auth_state_provider.dart';
 

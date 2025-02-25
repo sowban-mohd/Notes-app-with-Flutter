@@ -24,8 +24,7 @@ class NoteApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      theme: ThemeData(
-      ),
+      theme: ThemeData(),
       routerConfig: _router, // Uses GoRouter for navigation
       debugShowCheckedModeBanner: false, // Hides debug banner
     );

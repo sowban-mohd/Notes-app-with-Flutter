@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Notifier that manages, exposes the current page index and controls page controller in the Pageview
-class PageNotifier extends Notifier<int> {
+class PageNotifier extends AutoDisposeNotifier<int> {
   final PageController pageController = PageController();
   @override
   int build() => 0;
@@ -20,4 +20,4 @@ class PageNotifier extends Notifier<int> {
 
 /// Provider of the PageNotifier
 final pageNotifierProvider =
-    NotifierProvider<PageNotifier, int>(PageNotifier.new);
+    NotifierProvider.autoDispose<PageNotifier, int>(PageNotifier.new);

@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notetakingapp1/ui/utils/styles.dart';
 import 'package:notetakingapp1/ui/utils/utils.dart';
-import '/providers/notes_screen_providers/note_controllers.dart';
+import '../../../providers/notes_screen_providers/note_controllers_provider.dart';
 import '/providers/notes_screen_providers/save_note_provider.dart';
 
 class NoteEditingscreen extends ConsumerWidget {
@@ -116,7 +116,7 @@ class NoteEditingscreen extends ConsumerWidget {
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(
-                          left: 22.0, right: 22.0, top: 12.0, bottom: 20.0),
+                          left: 24.0, right: 24.0, top: 12.0, bottom: 20.0),
                       hintText: 'Notes goes here...',
                       hintStyle: Styles.w400texts(
                           fontSize: 16.0,

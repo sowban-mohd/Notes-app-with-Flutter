@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notetakingapp1/ui/utils/styles.dart';
-import '../../../providers/controllers_provider.dart';
+import '../../../providers/auth_screen_providers/auth_controllers_provider.dart';
 import '../../../providers/auth_screen_providers/auth_state_provider.dart';
 
 class AccessConfirmationScreen extends ConsumerWidget {

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,7 +7,7 @@ import 'package:notetakingapp1/ui/utils/utils.dart';
 import '../../../providers/initial_location_provider.dart';
 import '../../widgets/authscreen_layout.dart';
 import '../../../providers/auth_screen_providers/auth_state_provider.dart';
-import '../../../providers/controllers_provider.dart';
+import '../../../providers/auth_screen_providers/auth_controllers_provider.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -22,20 +23,19 @@ class LoginScreen extends ConsumerWidget {
     //Gets access to bool value which indicates if the password is hidden
     final isPasswordHidden = ref.watch(passwordVisibilityProvider);
 
-    if (loginState.generalError != null || loginState.successMessage != null) {
-      showSnackbarMessage(context,
-          message: loginState.generalError ?? loginState.successMessage!);
+    if (loginState.generalError != null) {
+      showSnackbarMessage(context, message: loginState.generalError!);
     }
 
     //Navigates to notes screen if login is successful
-    ref.listen(authStateProvider, (previous, next) {
-      if (next.successMessage == 'Login is successful') {
+    FirebaseAuth.instance.authStateChanges().listen((user){
+      if(user!=null){
         //Gets access to initial location notifier
         final initialLocationNotifier =
             ref.read(initialLocationProvider.notifier);
         initialLocationNotifier.setInitialLocation('/home'); //Sets note screen as the initial screen of app
         loginNotifier.clearState();
-        context.go('/home');
+        if(context.mounted) context.go('/home');
       }
     });
 
