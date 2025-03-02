@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Color scheme for the app
+/// Generates color scheme for the app
 // Not applied in MaterialApp's theme property, but used as needed
 ColorScheme customColorscheme() {
   return ColorScheme(

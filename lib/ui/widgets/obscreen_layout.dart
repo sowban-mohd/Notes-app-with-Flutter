@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '/ui/utils/styles.dart';
 
-/// A reusable layout for onboarding screens
+
 class OnboardingLayout extends StatelessWidget {
   final Widget image;
   final String title;
@@ -11,6 +11,8 @@ class OnboardingLayout extends StatelessWidget {
   final VoidCallback? onBack;
   final VoidCallback? onSkip;
 
+  /// A reusable layout for onboarding screens
+  
   const OnboardingLayout({
     super.key,
     required this.image,

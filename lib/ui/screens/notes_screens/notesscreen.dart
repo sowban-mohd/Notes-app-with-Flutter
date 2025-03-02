@@ -1,53 +1,98 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:notetakingapp1/providers/auth_screen_providers/auth_state_provider.dart';
-import 'package:notetakingapp1/providers/initial_location_provider.dart';
-import 'package:notetakingapp1/providers/notes_screen_providers.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:notetakingapp1/logic/notes_controller.dart';
+import 'package:notetakingapp1/ui/screens/notes_screens/noteeditingscreen.dart';
 import 'package:notetakingapp1/ui/utils/styles.dart';
 import 'package:notetakingapp1/ui/utils/utils.dart';
-import 'package:notetakingapp1/ui/widgets/note_screen_widgets.dart';
+import 'package:notetakingapp1/ui/widgets/note_grid.dart';
+import 'package:notetakingapp1/ui/widgets/search_bar.dart';
 
-class NotesScreen extends ConsumerWidget {
-  const NotesScreen({super.key});
+class NotesScreen extends StatelessWidget {
+  NotesScreen({super.key});
+
+  final _notesController = Get.find<NotesController>();
+  final String formattedDate =
+      DateFormat('d MMMM, yyyy').format(DateTime.now()); //Formatted date
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    //Providers access
-    final selectedNotes = ref.watch(selectionProvider); //List of selected notes
-    final authState = ref.watch(authStateProvider); //Authentication state
-    final authNotifier = ref.read(authStateProvider
-        .notifier); //Methods to manipukate authentication state
-
-    //Displays authentication error messages if any
-    if (authState.generalError != null || authState.isLoading) {
-      showSnackbarMessage(context,
-          message: authState.generalError ?? 'Logging out...');
-    }
-
-    //Navigates to login screen if logout is succesful
-    FirebaseAuth.instance.authStateChanges().listen((user) {
-      // User is logged out
-      if (user == null) {
-        authNotifier.clearState(); // Clears all error messages
-        ref.read(initialLocationProvider.notifier).setInitialLocation(
-            '/login'); //Sets login screen as the initial screen
-        if (context.mounted) context.go('/login');
-      }
-    });
-
+  Widget build(BuildContext context) {
+    final selectedNotes = _notesController.selectedNotes;
     //UI
     return Scaffold(
         backgroundColor: colorScheme.surface,
-        appBar: NoteAppBar(),
+        appBar: selectedNotes.isNotEmpty
+            ?
+            //App bar when notes are selected
+            AppBar(
+                backgroundColor: colorScheme.surfaceContainerLowest,
+                title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () {
+                          selectedNotes.clear();
+                        },
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: colorScheme.onSurface,
+                          size: 20.0,
+                        ),
+                        label: Text('${selectedNotes.length} selected',
+                            style: Styles.w500texts(
+                                fontSize: 20.0, color: colorScheme.onSurface)),
+                      ),
+                    ]))
+            :
+            //Normal app bar
+            AppBar(
+                elevation: 0.0,
+                backgroundColor: colorScheme.surface,
+                title: Padding(
+                  padding: EdgeInsets.only(left: 6.0, right: 6.0, top: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      //Date and Title
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            formattedDate,
+                            style: Styles.w400texts(
+                              fontSize: 12.0,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                          Text(
+                            'Notes',
+                            style: Styles.titleStyle(fontSize: 24.0),
+                          ),
+                        ],
+                      ),
+
+                      //Log out button
+                      IconButton(
+                        tooltip: 'Log Out',
+                        onPressed: () async {
+                          //
+                        },
+                        icon: Icon(
+                          Icons.logout,
+                        ),
+                        color: colorScheme.onSurface.withAlpha(153),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.only(
                 left: 18.0, right: 18.0, top: 10.0, bottom: 16.0),
             child: Column(
               children: [
-                if (selectedNotes.isEmpty) ...[
+                if (_notesController.selectedNotes.isEmpty) ...[
                   //Search bar
                   Padding(
                     padding: EdgeInsets.only(
@@ -55,14 +100,38 @@ class NotesScreen extends ConsumerWidget {
                     child: SearchBarWidget(),
                   ),
                 ], //Search bar is hidden when note selection is on
+
                 //Notes grid
-                Expanded(child: NoteGrid()),
+                NoteGrid()
               ],
             ),
           ),
         ),
         floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 12.0, right: 6.0),
-            child: NoteFloatingButton()));
+            child: selectedNotes.isNotEmpty
+                ?
+                //Delete note button
+                FloatingActionButton(
+                    tooltip: 'Delete note',
+                    onPressed: () async {},
+                    elevation: 2.0,
+                    backgroundColor: colorScheme.error,
+                    child: Icon(
+                      Icons.delete,
+                      color: colorScheme.onError,
+                    ),
+                  )
+                :
+                //Create note button
+                FloatingActionButton(
+                    tooltip: 'Create a new note',
+                    onPressed: () {
+                      Get.to(NoteEditingscreen());
+                    },
+                    elevation: 2.0,
+                    backgroundColor: colorScheme.primary,
+                    child: Icon(Icons.edit, color: colorScheme.onPrimary),
+                  )));
   }
 }

@@ -1,57 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
+import 'package:notetakingapp1/logic/notes_controller.dart';
 import 'package:notetakingapp1/ui/utils/styles.dart';
-import 'package:notetakingapp1/ui/utils/utils.dart';
-import '../../../providers/notes_screen_providers/note_controllers_provider.dart';
-import '/providers/notes_screen_providers/save_note_provider.dart';
 
-class NoteEditingscreen extends ConsumerWidget {
+class NoteEditingscreen extends StatefulWidget {
   const NoteEditingscreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    //Controllers
-    final titleController = ref.watch(notesControllersProvider).titleController;
-    final contentController =
-        ref.watch(notesControllersProvider).contentController;
+  State<NoteEditingscreen> createState() => _NoteEditingscreenState();
+}
 
-    //Note saving state and notifier
-    final noteSaveState = ref.watch(saveNoteProvider);
-    final noteSaveNotifier = ref.read(saveNoteProvider.notifier);
+class _NoteEditingscreenState extends State<NoteEditingscreen> {
+  final _notesController = Get.find<NotesController>();
+  late TextEditingController titleController;
+  late TextEditingController contentController;
+  late int index;
 
-    //Display error messages if any
-    if (noteSaveState.error != null) {
-      showSnackbarMessage(context, message: noteSaveState.error!);
-    }
+  @override
+  void initState() {
+    super.initState();
+    index = Get.arguments;
+    var note = _notesController.notes[index];
+    titleController = TextEditingController(text: note['title']);
+    contentController = TextEditingController(text: note['content']);
+  }
 
-    //Navigates to notes screen if note saving is success
-    ref.listen(saveNoteProvider, (previous, next) {
-      if (next.success != null) {
-        noteSaveNotifier.clearState();
-        ref.invalidate(notesControllersProvider);
-        context.go('/home');
-      }
-    });
+  @override
+  void dispose() {
+    titleController.dispose();
+    contentController.dispose();
+    super.dispose();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerLowest,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //Back button and Save button on top
             Padding(
               padding: const EdgeInsets.only(
                   left: 2.0, right: 10.0, top: 8.0, bottom: 24.0),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    //Back button
                     TextButton.icon(
                       onPressed: () {
-                        noteSaveNotifier.clearState();
-                        ref.invalidate(notesControllersProvider);
-                        context.go('/home');
+                        Get.back();
                       },
                       icon: Icon(
                         Icons.arrow_back_ios_new,
@@ -62,29 +60,23 @@ class NoteEditingscreen extends ConsumerWidget {
                         style: Styles.textButtonStyle(fontSize: 16.0),
                       ),
                     ),
+                    //Save button
                     TextButton(
-                        onPressed: () async {
-                          //Note Id from url
-                          final noteId = GoRouterState.of(context)
-                              .uri
-                              .queryParameters['noteId'];
-                          await noteSaveNotifier.saveNote(
-                              titleController.text, contentController.text,
-                              noteId: noteId);
+                        onPressed: () {
+                          final title = titleController.text;
+                          final content = contentController.text;
+                          title.isEmpty && content.isEmpty ?
+                          Get.snackbar('Error', 'Can\'t save an empty note') :
+                          _notesController.saveNote(
+                              index: index,
+                              title: titleController.text,
+                              content: contentController.text);
+                              Get.back();
                         },
-                        child: noteSaveState.isLoading
-                            ? SizedBox(
-                                width: 15,
-                                height: 15,
-                                child: CircularProgressIndicator(
-                                  color: colorScheme.primary,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Text(
-                                'Save',
-                                style: Styles.textButtonStyle(fontSize: 16.0),
-                              ))
+                        child: Text(
+                          'Save',
+                          style: Styles.textButtonStyle(fontSize: 16.0),
+                        ))
                   ]),
             ),
             //Title Field

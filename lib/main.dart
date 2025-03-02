@@ -1,75 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'ui/screens/screens.dart';
-import 'firebase_options.dart';
+import 'package:get/get.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:notetakingapp1/logic/controllers.dart';
+import 'package:notetakingapp1/ui/screens/screens.dart';
 
 void main() async {
-  // Ensures Flutter bindings are initialized before Firebase setup
+  // Ensures Flutter bindings are initialized before Hive setup
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase with platform-specific options
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Hive.initFlutter(); //Hive Initialization
+  await Hive.openBox('notes'); //Opening a hive box named 'notes'
 
-  // Wraps the app with Riverpod's ProviderScope for state management
-  runApp(ProviderScope(child: NoteApp()));
+  Get.put(UserTypeController()); //Controller that provides user type
+  Get.put(PageControllerX()); //Controller that manages pages in ob pageview
+  Get.put(NotesController()); //Controller that manages and provides note
+  Get.put(SearchControllerX()); //Controller that manages notes search query
+
+  runApp(NoteApp());
 }
 
 class NoteApp extends StatelessWidget {
-  const NoteApp({super.key});
+  NoteApp({super.key});
+
+  final UserTypeController _userTypeController = Get.find<UserTypeController>();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: ThemeData(),
-      routerConfig: _router, // Uses GoRouter for navigation
-      debugShowCheckedModeBanner: false, // Hides debug banner
-    );
+    return MaterialApp(
+        debugShowCheckedModeBanner: false, // Hides debug banner
+        home: Obx(() {
+          final userType = _userTypeController.userType.value;
+          return userType == 'isLoading'
+              ? LoadingScreen() // A blank fallback screen is displayed until the actual user type loads
+              : userType == 'OnBoarded'
+                  ? NotesScreen() // The main notes list screen is displayed if the user is already onboarded
+                  : OnboardingScreen(); //Onboarding screen is displayed for new users
+        }));
   }
 }
-
-// Defines the application's navigation routes using GoRouter
-final GoRouter _router = GoRouter(
-  initialLocation: '/', // Starting screen of the app
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) =>
-          LoadingScreen(), // Loading screen before initial screen
-    ),
-    GoRoute(
-      path: '/welcome',
-      builder: (context, state) =>
-          OnboardingScreens(), // Onboarding screens for new users
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => LoginScreen(), // Login screen
-    ),
-    GoRoute(
-      path: '/signup',
-      builder: (context, state) => SignUpScreen(), // Signup screen
-    ),
-    GoRoute(
-      path: '/password-reset',
-      builder: (context, state) =>
-          ForgotPasswordScreen(), // Password reset screen
-    ),
-    GoRoute(
-      path: '/access-confirm',
-      builder: (context, state) =>
-          AccessConfirmationScreen(), // Access confirmation screen
-    ),
-    GoRoute(
-      path: '/home',
-      builder: (context, state) => NotesScreen(), // Main notes listing screen
-    ),
-    GoRoute(
-      path: '/note',
-      builder: (context, state) => NoteEditingscreen(), // Note editing screen
-    )
-  ],
-);

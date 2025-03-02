@@ -1,23 +1,25 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:notetakingapp1/providers/notes_screen_providers.dart';
+import 'package:get/get.dart';
+import 'package:notetakingapp1/logic/search_controller.dart';
 import 'package:notetakingapp1/ui/utils/styles.dart';
 import 'package:notetakingapp1/ui/utils/utils.dart';
 
-class SearchBarWidget extends ConsumerStatefulWidget {
+class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});
 
   @override
-  ConsumerState<SearchBarWidget> createState() => _SearchBarWidgetState();
+  State<SearchBarWidget> createState() => _SearchBarWidgetState();
 }
 
-class _SearchBarWidgetState extends ConsumerState<SearchBarWidget> {
+class _SearchBarWidgetState extends State<SearchBarWidget> {
   late TextEditingController _searchController;
+  final _searchControllerX = Get.find<SearchControllerX>();
 
   @override
   void initState() {
     super.initState();
-    _searchController = TextEditingController(text: ref.read(searchProvider));
+    final searchQuery = _searchControllerX.searchQuery.value;
+    _searchController = TextEditingController(text: searchQuery);
   }
 
   @override
@@ -36,7 +38,7 @@ class _SearchBarWidgetState extends ConsumerState<SearchBarWidget> {
           color: colorScheme.outline,
         ),
         onChanged: (query) {
-          ref.read(searchProvider.notifier).state = query;
+          _searchControllerX.searchQuery.value = query;
         }, //Starts filtering notes based on query once the user starts typing
         onTapOutside: (event) {
           FocusScope.of(context).unfocus();
