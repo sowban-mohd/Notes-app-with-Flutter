@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notetakingapp1/logic/notes_controller.dart';
-import 'package:notetakingapp1/logic/search_controller.dart';
 import 'package:notetakingapp1/ui/screens/screens.dart';
 import 'package:notetakingapp1/ui/utils/styles.dart';
 import 'package:notetakingapp1/ui/utils/utils.dart';
@@ -10,48 +9,32 @@ class NoteGrid extends StatelessWidget {
   NoteGrid({super.key});
 
   final _notesController = Get.find<NotesController>();
-  final _searchController = Get.find<SearchControllerX>();
 
   @override
   Widget build(BuildContext context) {
-    //If notes are empty
-    if (_notesController.notes.isEmpty) {
-      return Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.edit_note,
-            size: 50.0,
-          ),
-          const SizedBox(
-            height: 4.0,
-          ),
-          Text('No notes yet!\nCreate one.',
-              textAlign: TextAlign.center,
-              style: Styles.universalFont(fontSize: 20.0)),
-        ],
-      ));
-    }
-
-    //If notes are not empty
     return Obx(() {
-      final searchQuery = _searchController.searchQuery.value;
-      final allNotes = _notesController.notes;
-      final selectedNotes = _notesController.selectedNotes;
-      final filteredNotes = searchQuery.isEmpty
-          ? allNotes
-          : allNotes.where((note) {
-              return note['title']
-                      .toString()
-                      .toLowerCase()
-                      .contains(searchQuery.toLowerCase()) ||
-                  note['content']
-                      .toString()
-                      .toLowerCase()
-                      .contains(searchQuery.toLowerCase());
-            }).toList();
+      final notes = _notesController.notes.reversed.toList(); //Notes are revresed to build newer cards first in listview
+      //If notes are empty
+      if (notes.isEmpty) {
+        return Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.edit_note,
+              size: 50.0,
+            ),
+            const SizedBox(
+              height: 4.0,
+            ),
+            Text('No notes yet!\nCreate one.',
+                textAlign: TextAlign.center,
+                style: Styles.universalFont(fontSize: 20.0)),
+          ],
+        ));
+      }
 
+      //If notes are not empty
       //Note GridView
       return GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -64,10 +47,11 @@ class NoteGrid extends StatelessWidget {
             mainAxisSpacing: 5.0,
             childAspectRatio: 168 / 198,
           ),
-          itemCount: filteredNotes.length,
+          itemCount: notes.length,
           itemBuilder: (context, index) {
             //Essential values
-            final note = filteredNotes[index];
+            final note = notes[index];
+            final int key = note['key'];
             final String title = note['title'];
             final String content = note['content'];
             final bool hasTitle = title.trim().isNotEmpty;
@@ -75,19 +59,20 @@ class NoteGrid extends StatelessWidget {
 
             //Note Card
             return GestureDetector(
-              //When tapped
-              onTap: () {
-                Get.to(NoteEditingscreen(), arguments: index);
-              },
-              //When long pressed
-              onLongPress: () {
-                _notesController.selectNote(index);
-              },
-              child: Card(
-                elevation: selectedNotes.contains(index) ? 3.0 : 1.0,
+                //When tapped
+                onTap: () {
+              Get.to(() => NoteEditingscreen(), arguments: key);
+            },
+                //When long pressed
+                onLongPress: () {
+              _notesController.toggleSelection(key);
+            }, child: Obx(() {
+              final isSelected = _notesController.isSelected;
+              return Card(
+                elevation: isSelected(key) ? 3.0 : 1.0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
-                  side: selectedNotes.contains(index)
+                  side: isSelected(key)
                       ? BorderSide(color: colorScheme.primary, width: 2.0)
                       : BorderSide.none,
                 ),
@@ -130,8 +115,8 @@ class NoteGrid extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
-            );
+              );
+            }));
           });
     });
   }

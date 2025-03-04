@@ -12,9 +12,7 @@ void main() async {
   await Hive.openBox('notes'); //Opening a hive box named 'notes'
 
   Get.put(UserTypeController()); //Controller that provides user type
-  Get.put(PageControllerX()); //Controller that manages pages in ob pageview
   Get.put(NotesController()); //Controller that manages and provides note
-  Get.put(SearchControllerX()); //Controller that manages notes search query
 
   runApp(NoteApp());
 }
@@ -26,7 +24,7 @@ class NoteApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
         debugShowCheckedModeBanner: false, // Hides debug banner
         home: Obx(() {
           final userType = _userTypeController.userType.value;

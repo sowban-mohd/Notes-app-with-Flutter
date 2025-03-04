@@ -14,15 +14,25 @@ class _NoteEditingscreenState extends State<NoteEditingscreen> {
   final _notesController = Get.find<NotesController>();
   late TextEditingController titleController;
   late TextEditingController contentController;
-  late int index;
+  int? key;
+  late String titleText;
+  late String contentText;
 
   @override
   void initState() {
     super.initState();
-    index = Get.arguments;
-    var note = _notesController.notes[index];
-    titleController = TextEditingController(text: note['title']);
-    contentController = TextEditingController(text: note['content']);
+    if (Get.arguments is int) {
+      key = Get.arguments as int;
+      var note = _notesController.notesBox.get(key);
+      titleText = note['title'];
+      contentText = note['content'];
+    } else {
+      key = null;
+      titleText = '';
+      contentText = '';
+    }
+    titleController = TextEditingController(text: titleText);
+    contentController = TextEditingController(text: contentText);
   }
 
   @override
@@ -62,16 +72,21 @@ class _NoteEditingscreenState extends State<NoteEditingscreen> {
                     ),
                     //Save button
                     TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           final title = titleController.text;
                           final content = contentController.text;
-                          title.isEmpty && content.isEmpty ?
-                          Get.snackbar('Error', 'Can\'t save an empty note') :
-                          _notesController.saveNote(
-                              index: index,
-                              title: titleController.text,
-                              content: contentController.text);
-                              Get.back();
+                          if (title.isEmpty && content.isEmpty) {
+                            Get.showSnackbar(GetSnackBar(
+                              message: 'Can\'t save an empty note',
+                              duration: Duration(seconds: 5),
+                            ));
+                          } else {
+                            await _notesController.saveNote(
+                                key: key,
+                                title: titleController.text,
+                                content: contentController.text);
+                            Get.back();
+                          }
                         },
                         child: Text(
                           'Save',

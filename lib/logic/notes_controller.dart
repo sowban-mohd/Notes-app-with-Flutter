@@ -13,32 +13,50 @@ class NotesController extends GetxController {
   }
 
   void loadNotes() {
-    notes.value = notesBox.values.cast<Map<String, dynamic>>().toList();
+    notes.assignAll(notesBox.values.cast<Map<String, dynamic>>().toList());
   }
 
-  void saveNote({int? index, String? title, String? content}) {
-    index != null ?
-    //If index already exists, update the note in that index with the given content
-    notesBox.putAt(index, {
-      'title': title,
-      'content': content,
-      'timeStamp': DateTime.now().toString()
-    }) :
-    //If index doesn't exist, add the new note to the box
-    notesBox.add({
-      'title': title,
-      'content': content,
-      'timeStamp': DateTime.now().toString()
-    });
-    loadNotes();
+  Future<void> saveNote({int? key, String? title, String? content}) async {
+    if (key != null) {
+      // If a key is provided, update the existing note
+      await notesBox.put(key, {
+        'title': title,
+        'content': content,
+        'timeStamp': DateTime.now().toString(),
+        'key': key,
+      });
+      loadNotes(); //Refresh notes list
+    } else {
+      // Add a new note and retrieve its key
+      int noteKey = await notesBox.add({
+        'title': title,
+        'content': content,
+        'timeStamp': DateTime.now().toString(),
+      });
+
+      await notesBox.put(noteKey, {
+        'title': title,
+        'content': content,
+        'timeStamp': DateTime.now().toString(),
+        'key': noteKey,
+      }); //Update the note with it's key right away
+      
+      //Refresh notes list after adding
+      var note = notesBox.get(noteKey);
+      notes.add(note as Map<String, dynamic>);
+    }
   }
 
-  void deleteNote(int index) {
-    notesBox.deleteAt(index);
-    loadNotes();
+  Future<void> deleteNote(List<int> selectedNotes) async {
+    await notesBox.deleteAll(selectedNotes);
+    loadNotes(); //Refresh notes list
   }
 
-  void selectNote(int index) {
-    selectedNotes.add(index);
+  void toggleSelection(int key) {
+    selectedNotes.contains(key)
+        ? selectedNotes.remove(key) //Deselects notes with specific index
+        : selectedNotes.add(key); //Selects notes with specific index
   }
+
+  bool isSelected(int key) => selectedNotes.contains(key);
 }
