@@ -3,7 +3,7 @@ import 'package:hive_flutter/adapters.dart';
 
 class NotesController extends GetxController {
   final notesBox = Hive.box('notes');
-  var notes = <Map<String, dynamic>>[].obs;
+  var notes = <Map<dynamic, dynamic>>[].obs;
   var selectedNotes = <int>{}.obs;
 
   @override
@@ -13,7 +13,7 @@ class NotesController extends GetxController {
   }
 
   void loadNotes() {
-    notes.assignAll(notesBox.values.cast<Map<String, dynamic>>().toList());
+    notes.assignAll(notesBox.values.cast<Map<dynamic, dynamic>>().toList());
   }
 
   Future<void> saveNote({int? key, String? title, String? content}) async {
@@ -40,7 +40,7 @@ class NotesController extends GetxController {
         'timeStamp': DateTime.now().toString(),
         'key': noteKey,
       }); //Update the note with it's key right away
-      
+
       //Refresh notes list after adding
       var note = notesBox.get(noteKey);
       notes.add(note as Map<String, dynamic>);

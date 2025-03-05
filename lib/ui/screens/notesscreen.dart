@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:notetakingapp1/logic/notes_controller.dart';
 import 'package:notetakingapp1/ui/screens/noteeditingscreen.dart';
 import 'package:notetakingapp1/ui/utils/confirmaton_dialog.dart';
 import 'package:notetakingapp1/ui/utils/styles.dart';
 import 'package:notetakingapp1/ui/widgets/note_app_bar.dart';
 import 'package:notetakingapp1/ui/widgets/note_grid.dart';
+import 'package:notetakingapp1/ui/widgets/search_bar.dart';
 
 class NotesScreen extends StatelessWidget {
   NotesScreen({super.key});
 
   final _notesController = Get.find<NotesController>();
-  final String formattedDate =
-      DateFormat('d MMMM, yyyy').format(DateTime.now()); //Formatted date
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +23,20 @@ class NotesScreen extends StatelessWidget {
           child: Padding(
               padding: EdgeInsets.only(
                   left: 18.0, right: 18.0, top: 10.0, bottom: 16.0),
-              child: Column(
-                children: [
-                  Expanded(child: NoteGrid()),
-                ],
-              )),
+              child: Obx(() {
+                final notes = _notesController.notes;
+                return Column(
+                  children: [
+                    if (notes.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: SearchBarWidget(),
+                      )
+                    ],
+                    Expanded(child: NoteGrid()),
+                  ],
+                );
+              })),
         ),
         floatingActionButton: Obx(() {
           final selectedNotes = _notesController.selectedNotes;
@@ -41,11 +48,15 @@ class NotesScreen extends StatelessWidget {
                   FloatingActionButton(
                       tooltip: 'Delete note',
                       onPressed: () async {
-                        String type = selectedNotes.length > 1 ? 'Delete Notes' : 'Delete Note';
+                        String type = selectedNotes.length > 1
+                            ? 'Delete Notes'
+                            : 'Delete Note';
                         bool? confirmed = await showConfirmationDialog(type);
-                        if(confirmed == true){
-                          await _notesController.deleteNote(selectedNotes.toList()); }
-                           selectedNotes.clear();
+                        if (confirmed == true) {
+                          await _notesController
+                              .deleteNote(selectedNotes.toList());
+                        }
+                        selectedNotes.clear();
                       },
                       elevation: 2.0,
                       backgroundColor: colorScheme.error,

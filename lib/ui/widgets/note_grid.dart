@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notetakingapp1/logic/notes_controller.dart';
+import 'package:notetakingapp1/logic/search_controller.dart';
 import 'package:notetakingapp1/ui/screens/screens.dart';
 import 'package:notetakingapp1/ui/utils/styles.dart';
 import 'package:notetakingapp1/ui/utils/utils.dart';
@@ -9,11 +10,13 @@ class NoteGrid extends StatelessWidget {
   NoteGrid({super.key});
 
   final _notesController = Get.find<NotesController>();
+  final _searchController = Get.put(SearchControllerX());
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final notes = _notesController.notes.reversed.toList(); //Notes are revresed to build newer cards first in listview
+      final notes = _notesController.notes.reversed
+          .toList(); //Notes are reveresed to build newer cards first in listview
       //If notes are empty
       if (notes.isEmpty) {
         return Center(
@@ -35,7 +38,22 @@ class NoteGrid extends StatelessWidget {
       }
 
       //If notes are not empty
-      //Note GridView
+      //Notes are filtered with searchquery
+      final filterdNotes = _searchController.searchQuery.isEmpty
+          ? notes //shows entire list of notes when no search query is provided
+          : notes
+              .where((note) =>
+                  note['title']
+                      .toString()
+                      .toLowerCase()
+                      .contains(_searchController.searchQuery) ||
+                  note['content']
+                      .toString()
+                      .toLowerCase()
+                      .contains(_searchController.searchQuery))
+              .toList();
+    
+      // Notes are displayed in a gridview
       return GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: isDesktop(context)
@@ -47,10 +65,10 @@ class NoteGrid extends StatelessWidget {
             mainAxisSpacing: 5.0,
             childAspectRatio: 168 / 198,
           ),
-          itemCount: notes.length,
+          itemCount: filterdNotes.length,
           itemBuilder: (context, index) {
             //Essential values
-            final note = notes[index];
+            final note = filterdNotes[index];
             final int key = note['key'];
             final String title = note['title'];
             final String content = note['content'];
