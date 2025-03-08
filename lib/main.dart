@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:notetakingapp1/providers/initial_location_provider.dart';
 import 'ui/screens/screens.dart';
 import 'firebase_options.dart';
 
@@ -18,58 +19,57 @@ void main() async {
   runApp(ProviderScope(child: NoteApp()));
 }
 
-class NoteApp extends StatelessWidget {
+class NoteApp extends ConsumerWidget {
   const NoteApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final initialLocation = ref.watch(initialLocationProvider);
     return MaterialApp.router(
-      theme: ThemeData(),
-      routerConfig: _router, // Uses GoRouter for navigation
       debugShowCheckedModeBanner: false, // Hides debug banner
+      routerConfig: GoRouter(
+        initialLocation: initialLocation, // Starting screen of the app
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (context, state) =>
+                LoadingScreen(), // A fallback Loading screen till initial screen loads
+          ),
+          GoRoute(
+            path: '/welcome',
+            builder: (context, state) =>
+                OnboardingScreen(), // Onboarding screen for new users
+          ),
+          GoRoute(
+            path: '/login',
+            builder: (context, state) => LoginScreen(), // Login screen
+          ),
+          GoRoute(
+            path: '/signup',
+            builder: (context, state) => SignUpScreen(), // Signup screen
+          ),
+          GoRoute(
+            path: '/password-reset',
+            builder: (context, state) =>
+                ForgotPasswordScreen(), // Password reset screen
+          ),
+          GoRoute(
+            path: '/access-confirm',
+            builder: (context, state) =>
+                AccessConfirmationScreen(), // Access confirmation screen
+          ),
+          GoRoute(
+            path: '/home',
+            builder: (context, state) =>
+                NotesScreen(), // Main notes listing screen
+          ),
+          GoRoute(
+            path: '/note',
+            builder: (context, state) =>
+                NoteEditingscreen(), // Note editing screen
+          )
+        ],
+      ),
     );
   }
 }
-
-// Defines the application's navigation routes using GoRouter
-final GoRouter _router = GoRouter(
-  initialLocation: '/', // Starting screen of the app
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) =>
-          LoadingScreen(), // Loading screen before initial screen
-    ),
-    GoRoute(
-      path: '/welcome',
-      builder: (context, state) =>
-          OnboardingScreens(), // Onboarding screens for new users
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => LoginScreen(), // Login screen
-    ),
-    GoRoute(
-      path: '/signup',
-      builder: (context, state) => SignUpScreen(), // Signup screen
-    ),
-    GoRoute(
-      path: '/password-reset',
-      builder: (context, state) =>
-          ForgotPasswordScreen(), // Password reset screen
-    ),
-    GoRoute(
-      path: '/access-confirm',
-      builder: (context, state) =>
-          AccessConfirmationScreen(), // Access confirmation screen
-    ),
-    GoRoute(
-      path: '/home',
-      builder: (context, state) => NotesScreen(), // Main notes listing screen
-    ),
-    GoRoute(
-      path: '/note',
-      builder: (context, state) => NoteEditingscreen(), // Note editing screen
-    )
-  ],
-);

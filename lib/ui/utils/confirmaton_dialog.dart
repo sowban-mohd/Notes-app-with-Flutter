@@ -3,7 +3,7 @@ import '/ui/utils/styles.dart';
 
 /// Displays a confirmation dialog before actions like Log Out, Note deletion
 Future<bool?> showConfirmationDialog(BuildContext context,
-    {required String? type, bool? multiple}) {
+    {required String? type}) {
   return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {

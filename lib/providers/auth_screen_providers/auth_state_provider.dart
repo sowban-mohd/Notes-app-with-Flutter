@@ -47,14 +47,11 @@ class AuthStateNotifier extends Notifier<AuthState> {
       if (isSignup) {
         await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
-        state = AuthState(
-            successMessage: 'Sign up is successful, Now login',
-            isLoading: false);
+        state = AuthState(isLoading: false);
       } else {
         await _auth.signInWithEmailAndPassword(
             email: email, password: password);
-        state =
-            AuthState(successMessage: 'Login is successful', isLoading: false);
+        state = AuthState(isLoading: false);
       }
     } on FirebaseAuthException catch (e) {
       _handleAuthError(e);
@@ -78,15 +75,17 @@ class AuthStateNotifier extends Notifier<AuthState> {
       _handleAuthError(e);
     }
   }
-  
+
   /// Logs out the user
-  Future<void> logOut() async{
-     state = AuthState(isLoading: true);
-    try{
-     await _auth.signOut();
-     state = AuthState(isLoading: false, successMessage: 'Log out is successful');
-    } catch(e) {
-      state = AuthState(isLoading: false, generalError: 'Error signing out : ${e.toString()}');
+  Future<void> logOut() async {
+    state = AuthState(isLoading: true);
+    try {
+      await _auth.signOut();
+      state = AuthState(isLoading: false);
+    } catch (e) {
+      state = AuthState(
+          isLoading: false,
+          generalError: 'Error signing out : ${e.toString()}');
     }
   }
 

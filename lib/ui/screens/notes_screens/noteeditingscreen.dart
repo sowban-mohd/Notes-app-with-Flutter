@@ -40,13 +40,13 @@ class NoteEditingscreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //Back button and Save button on top
             Padding(
               padding: const EdgeInsets.only(
                   left: 2.0, right: 10.0, top: 8.0, bottom: 24.0),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    //Back button
                     TextButton.icon(
                       onPressed: () {
                         noteSaveNotifier.clearState();
@@ -62,6 +62,7 @@ class NoteEditingscreen extends ConsumerWidget {
                         style: Styles.textButtonStyle(fontSize: 16.0),
                       ),
                     ),
+                    //Save button
                     TextButton(
                         onPressed: () async {
                           //Note Id from url
