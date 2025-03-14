@@ -11,28 +11,24 @@ void main() async {
   await Hive.initFlutter(); //Hive Initialization
   await Hive.openBox('notes'); //Opening a hive box named 'notes'
 
-  Get.put(UserTypeController()); //Controller that provides user type
-  Get.put(NotesController()); //Controller that manages and provides note
+  Get.put(UserTypeController());
+  Get.put(PageControllerX());
+  Get.lazyPut(() => NotesController());
+  Get.lazyPut(() => SearchControllerX());
+  Get.lazyPut(() => SelectedNotesController());
 
   runApp(NoteApp());
 }
 
 class NoteApp extends StatelessWidget {
-  NoteApp({super.key});
-
-  final UserTypeController _userTypeController = Get.find<UserTypeController>();
+  const NoteApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
         debugShowCheckedModeBanner: false, // Hides debug banner
-        home: Obx(() {
-          final userType = _userTypeController.userType.value;
-          return userType == 'isLoading'
-              ? LoadingScreen() // A blank fallback screen is displayed until the actual user type loads
-              : userType == 'OnBoarded'
-                  ? NotesScreen() // The main notes list screen is displayed if the user is already onboarded
-                  : OnboardingScreen(); //Onboarding screen is displayed for new users
-        }));
+        home:
+            LoadingScreen() // Loading screen decides which screen to load based on the user type
+        );
   }
 }

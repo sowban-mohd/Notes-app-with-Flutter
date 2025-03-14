@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:notetakingapp1/ui/colorscheme.dart';
+import 'package:notetakingapp1/ui/theme/colorscheme.dart';
 
 final colorScheme = customColorscheme();
 

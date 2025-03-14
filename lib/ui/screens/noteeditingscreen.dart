@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notetakingapp1/logic/notes_controller.dart';
-import 'package:notetakingapp1/ui/utils/styles.dart';
+import 'package:notetakingapp1/ui/theme/styles.dart';
 
 class NoteEditingscreen extends StatefulWidget {
   const NoteEditingscreen({super.key});
@@ -14,7 +14,7 @@ class _NoteEditingscreenState extends State<NoteEditingscreen> {
   final _notesController = Get.find<NotesController>();
   late TextEditingController titleController;
   late TextEditingController contentController;
-  int? key;
+  late int? key;
   late String titleText;
   late String contentText;
 

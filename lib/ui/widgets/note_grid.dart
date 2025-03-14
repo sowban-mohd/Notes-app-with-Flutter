@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notetakingapp1/logic/notes_controller.dart';
 import 'package:notetakingapp1/logic/search_controller.dart';
+import 'package:notetakingapp1/logic/selected_notes_controller.dart';
 import 'package:notetakingapp1/ui/screens/screens.dart';
-import 'package:notetakingapp1/ui/utils/styles.dart';
-import 'package:notetakingapp1/ui/utils/utils.dart';
+import 'package:notetakingapp1/ui/theme/styles.dart';
+import 'package:notetakingapp1/logic/utils.dart';
 
 class NoteGrid extends StatelessWidget {
   NoteGrid({super.key});
 
   final _notesController = Get.find<NotesController>();
-  final _searchController = Get.put(SearchControllerX());
+  final _selectedNotesController = Get.find<SelectedNotesController>();
+  final _searchController = Get.find<SearchControllerX>();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class NoteGrid extends StatelessWidget {
                       .toLowerCase()
                       .contains(_searchController.searchQuery))
               .toList();
-    
+
       // Notes are displayed in a gridview
       return GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -83,9 +85,9 @@ class NoteGrid extends StatelessWidget {
             },
                 //When long pressed
                 onLongPress: () {
-              _notesController.toggleSelection(key);
+              _selectedNotesController.toggleSelection(key);
             }, child: Obx(() {
-              final isSelected = _notesController.isSelected;
+              final isSelected = _selectedNotesController.isSelected;
               return Card(
                 elevation: isSelected(key) ? 3.0 : 1.0,
                 shape: RoundedRectangleBorder(

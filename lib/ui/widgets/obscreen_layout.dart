@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
-import '/ui/utils/styles.dart';
-
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/instance_manager.dart';
+import 'package:notetakingapp1/logic/controllers.dart';
+import '../theme/styles.dart';
 
 class OnboardingLayout extends StatelessWidget {
   final Widget image;
   final String title;
   final String description;
-  final int currentPage;
   final VoidCallback onNext;
   final VoidCallback? onBack;
   final VoidCallback? onSkip;
 
   /// A reusable layout for onboarding screens
-  
-  const OnboardingLayout({
+  OnboardingLayout({
     super.key,
     required this.image,
     required this.title,
     required this.description,
-    required this.currentPage,
     required this.onNext,
     this.onBack,
     this.onSkip,
   });
+
+  final _pageControllerX = Get.find<PageControllerX>();
 
   @override
   Widget build(BuildContext context) {
@@ -75,33 +76,36 @@ class OnboardingLayout extends StatelessWidget {
             ),
 
             // Progress indicator bar
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                3,
-                (index) => Container(
-                  height: 5,
-                  width: 99,
-                  decoration: BoxDecoration(
-                    color: currentPage == index
-                        ? const Color.fromRGBO(58, 133, 247, 1) // Active step
-                        : const Color.fromRGBO(
-                            206, 203, 211, 1), // Inactive steps
-                    borderRadius: index == 0
-                        ? const BorderRadius.only(
-                            topLeft: Radius.circular(5),
-                            bottomLeft: Radius.circular(5),
-                          )
-                        : index == 2
-                            ? const BorderRadius.only(
-                                topRight: Radius.circular(5),
-                                bottomRight: Radius.circular(5),
-                              )
-                            : null,
+            Obx(() {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  3,
+                  (index) => Container(
+                    height: 5,
+                    width: 99,
+                    decoration: BoxDecoration(
+                      color: _pageControllerX.currentPageIndex.value == index
+                          ? const Color.fromRGBO(58, 133, 247, 1) // Active step
+                          : const Color.fromRGBO(
+                              206, 203, 211, 1), // Inactive steps
+                      borderRadius: index == 0
+                          ? const BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              bottomLeft: Radius.circular(5),
+                            )
+                          : index == 2
+                              ? const BorderRadius.only(
+                                  topRight: Radius.circular(5),
+                                  bottomRight: Radius.circular(5),
+                                )
+                              : null,
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
+
             const SizedBox(height: 36),
 
             // Title and description text
@@ -129,11 +133,13 @@ class OnboardingLayout extends StatelessWidget {
             ElevatedButton(
               onPressed: onNext,
               style: Styles.elevatedButtonStyle(),
-              child: Text(
-                currentPage == 2
-                    ? "Get Started"
-                    : 'Next', // Last screen shows "Get Started"
-                style: Styles.elevatedButtonTextStyle(),
+              child: Obx(
+                () => Text(
+                  _pageControllerX.currentPageIndex.value == 2
+                      ? "Get Started"
+                      : 'Next', // Last screen shows "Get Started"
+                  style: Styles.elevatedButtonTextStyle(),
+                ),
               ),
             ),
             const SizedBox(height: 42),

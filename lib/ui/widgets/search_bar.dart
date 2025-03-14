@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notetakingapp1/logic/search_controller.dart';
-import 'package:notetakingapp1/ui/utils/styles.dart';
-import 'package:notetakingapp1/ui/utils/utils.dart';
+import 'package:notetakingapp1/ui/theme/styles.dart';
+import 'package:notetakingapp1/logic/utils.dart';
 
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});

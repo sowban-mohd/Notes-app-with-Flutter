@@ -15,4 +15,11 @@ class PageControllerX extends GetxController {
       curve: Curves.easeInOut, // Smooth sliding transition
     );
   }
+
+  /// Dispose of the PageController when the controller is removed from memory
+  @override
+  void onClose() {
+    pageController.dispose();
+    super.onClose();
+  }
 }

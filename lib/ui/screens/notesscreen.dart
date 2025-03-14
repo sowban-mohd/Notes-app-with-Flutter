@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notetakingapp1/logic/notes_controller.dart';
+import 'package:notetakingapp1/logic/selected_notes_controller.dart';
 import 'package:notetakingapp1/ui/screens/noteeditingscreen.dart';
-import 'package:notetakingapp1/ui/utils/confirmaton_dialog.dart';
-import 'package:notetakingapp1/ui/utils/styles.dart';
+import 'package:notetakingapp1/ui/widgets/confirmaton_dialog.dart';
+import 'package:notetakingapp1/ui/theme/styles.dart';
+import 'package:notetakingapp1/logic/utils.dart';
 import 'package:notetakingapp1/ui/widgets/note_app_bar.dart';
 import 'package:notetakingapp1/ui/widgets/note_grid.dart';
 import 'package:notetakingapp1/ui/widgets/search_bar.dart';
@@ -12,6 +14,7 @@ class NotesScreen extends StatelessWidget {
   NotesScreen({super.key});
 
   final _notesController = Get.find<NotesController>();
+  final _selectedNotesController = Get.find<SelectedNotesController>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +32,10 @@ class NotesScreen extends StatelessWidget {
                   children: [
                     if (notes.isNotEmpty) ...[
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        padding: EdgeInsets.only(
+                            top: 8.0, bottom: isDesktop(context) ? 18.0 : 8.0),
                         child: SearchBarWidget(),
-                      )
+                      ),
                     ],
                     Expanded(child: NoteGrid()),
                   ],
@@ -39,7 +43,7 @@ class NotesScreen extends StatelessWidget {
               })),
         ),
         floatingActionButton: Obx(() {
-          final selectedNotes = _notesController.selectedNotes;
+          final selectedNotes = _selectedNotesController.selectedNotes;
           return Padding(
               padding: const EdgeInsets.only(bottom: 12.0, right: 6.0),
               child: selectedNotes.isNotEmpty

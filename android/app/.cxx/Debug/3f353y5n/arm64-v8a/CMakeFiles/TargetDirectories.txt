@@ -1,0 +1,2 @@
+C:/Users/sowba/withhive/android/app/.cxx/Debug/3f353y5n/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/sowba/withhive/android/app/.cxx/Debug/3f353y5n/arm64-v8a/CMakeFiles/rebuild_cache.dir

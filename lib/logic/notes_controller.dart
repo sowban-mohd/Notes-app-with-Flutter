@@ -4,14 +4,14 @@ import 'package:hive_flutter/adapters.dart';
 class NotesController extends GetxController {
   final notesBox = Hive.box('notes');
   var notes = <Map<dynamic, dynamic>>[].obs;
-  var selectedNotes = <int>{}.obs;
 
   @override
   void onInit() {
     super.onInit();
     loadNotes();
   }
-
+  
+  /// Assigns all notes from the hive notes box to the notes list
   void loadNotes() {
     notes.assignAll(notesBox.values.cast<Map<dynamic, dynamic>>().toList());
   }
@@ -51,12 +51,4 @@ class NotesController extends GetxController {
     await notesBox.deleteAll(selectedNotes);
     loadNotes(); //Refresh notes list
   }
-
-  void toggleSelection(int key) {
-    selectedNotes.contains(key)
-        ? selectedNotes.remove(key) //Deselects notes with specific index
-        : selectedNotes.add(key); //Selects notes with specific index
-  }
-
-  bool isSelected(int key) => selectedNotes.contains(key);
 }

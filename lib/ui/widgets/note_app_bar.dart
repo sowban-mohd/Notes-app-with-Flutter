@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:notetakingapp1/logic/notes_controller.dart';
-import 'package:notetakingapp1/ui/utils/styles.dart';
+import 'package:notetakingapp1/logic/selected_notes_controller.dart';
+import 'package:notetakingapp1/ui/theme/styles.dart';
 
 class NoteAppBar extends StatelessWidget implements PreferredSizeWidget {
   NoteAppBar({super.key});
 
   final String formattedDate =
       DateFormat('d MMMM, yyyy').format(DateTime.now()); //Formatted date
-  final _notesController = Get.find<NotesController>();
+  final _selectedNotesController = Get.find<SelectedNotesController>();
+  
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final selectedNotes = _notesController.selectedNotes;
+      final selectedNotes = _selectedNotesController.selectedNotes;
 
       return selectedNotes.isNotEmpty
           ?
