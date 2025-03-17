@@ -16,7 +16,7 @@ void main() async {
   Get.lazyPut(() => NotesController());
   Get.lazyPut(() => SearchControllerX());
   Get.lazyPut(() => SelectedNotesController());
-
+  
   runApp(NoteApp());
 }
 

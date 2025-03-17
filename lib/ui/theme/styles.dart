@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:notetakingapp1/ui/theme/colorscheme.dart';
 
 final colorScheme = customColorscheme();
@@ -9,34 +8,43 @@ class Styles {
   /// Generates textstyle with universal font of the app
   static TextStyle universalFont(
       {double? fontSize, Color? color, FontWeight? fontWeight}) {
-    return GoogleFonts.nunitoSans(
-        fontSize: fontSize, fontWeight: fontWeight, color: color);
+    return TextStyle(
+        fontFamily: 'NunitoSans',
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        color: color);
   }
-  
+
   ///Generates textstyle with respective fontweights
-  
+
   static TextStyle w300texts({Color? color, double? fontSize}) {
-    return universalFont(fontWeight: FontWeight.w300, fontSize: fontSize, color: color);
+    return universalFont(
+        fontWeight: FontWeight.w300, fontSize: fontSize, color: color);
   }
 
   static TextStyle w400texts({Color? color, double? fontSize}) {
-    return universalFont(fontWeight: FontWeight.w400, fontSize: fontSize, color: color);
+    return universalFont(
+        fontWeight: FontWeight.w400, fontSize: fontSize, color: color);
   }
 
   static TextStyle w500texts({Color? color, double? fontSize}) {
-    return universalFont(fontWeight: FontWeight.w500, fontSize: fontSize, color: color);
+    return universalFont(
+        fontWeight: FontWeight.w500, fontSize: fontSize, color: color);
   }
 
   static TextStyle w600texts({Color? color, double? fontSize}) {
-    return universalFont(fontWeight: FontWeight.w600, fontSize: fontSize, color: color);
+    return universalFont(
+        fontWeight: FontWeight.w600, fontSize: fontSize, color: color);
   }
 
   static TextStyle w700texts({Color? color, double? fontSize}) {
-    return universalFont(fontWeight: FontWeight.w700, fontSize: fontSize, color: color);
+    return universalFont(
+        fontWeight: FontWeight.w700, fontSize: fontSize, color: color);
   }
 
   static TextStyle boldTexts({Color? color, double? fontSize}) {
-    return universalFont(fontWeight: FontWeight.bold, fontSize: fontSize, color: color);
+    return universalFont(
+        fontWeight: FontWeight.bold, fontSize: fontSize, color: color);
   }
 
   /// Style for elevated buttons
@@ -76,8 +84,7 @@ class Styles {
 
   ///Style for subtitle texts
   static TextStyle subtitleStyle({required double fontSize}) {
-    return universalFont(
-        fontSize: fontSize, color: colorScheme.onSurface);
+    return universalFont(fontSize: fontSize, color: colorScheme.onSurface);
   }
 
   ///Theme for selection inside a textfield

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notetakingapp1/logic/notes_controller.dart';
+import 'package:notetakingapp1/logic/services/hive_service.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 
 class NoteEditingscreen extends StatefulWidget {
@@ -12,6 +13,7 @@ class NoteEditingscreen extends StatefulWidget {
 
 class _NoteEditingscreenState extends State<NoteEditingscreen> {
   final _notesController = Get.find<NotesController>();
+  final hiveService = HiveService();
   late TextEditingController titleController;
   late TextEditingController contentController;
   late int? key;
@@ -23,7 +25,7 @@ class _NoteEditingscreenState extends State<NoteEditingscreen> {
     super.initState();
     if (Get.arguments is int) {
       key = Get.arguments as int;
-      var note = _notesController.notesBox.get(key);
+      var note = hiveService.notesBox.get(key);
       titleText = note['title'];
       contentText = note['content'];
     } else {

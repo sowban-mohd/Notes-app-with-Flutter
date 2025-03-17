@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../theme/styles.dart';
+import '../../theme/styles.dart';
 
 /// Displays a confirmation dialog before actions like Log Out, Note deletion
 Future<bool?> showConfirmationDialog(String type) {

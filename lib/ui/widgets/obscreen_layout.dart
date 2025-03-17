@@ -35,7 +35,7 @@ class OnboardingLayout extends StatelessWidget {
             // Top navigation bar with Back and Skip buttons
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
+                  const EdgeInsets.all(12.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -110,7 +110,7 @@ class OnboardingLayout extends StatelessWidget {
 
             // Title and description text
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 48.0),
+              padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: Column(
                 children: [
                   Text(

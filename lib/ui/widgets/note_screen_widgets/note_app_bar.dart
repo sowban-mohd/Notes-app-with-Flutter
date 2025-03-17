@@ -10,7 +10,6 @@ class NoteAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String formattedDate =
       DateFormat('d MMMM, yyyy').format(DateTime.now()); //Formatted date
   final _selectedNotesController = Get.find<SelectedNotesController>();
-  
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +29,13 @@ class NoteAppBar extends StatelessWidget implements PreferredSizeWidget {
                         selectedNotes.clear();
                       },
                       icon: Icon(
-                        Icons.arrow_back,
-                        color: colorScheme.onSurface,
+                        Icons.arrow_back_ios_new,
+                        color: colorScheme.primary,
                         size: 20.0,
                       ),
                       label: Text('${selectedNotes.length} selected',
-                          style: Styles.w500texts(
-                              fontSize: 20.0, color: colorScheme.onSurface)),
+                          style: Styles.boldTexts(
+                              fontSize: 20.0, color: colorScheme.primary)),
                     ),
                   ]))
           :
