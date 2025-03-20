@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notetakingapp1/logic/controllers.dart';
+import 'package:notetakingapp1/logic/state_controllers.dart';
 import 'package:notetakingapp1/ui/screens/noteeditingscreen.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 import 'package:notetakingapp1/ui/widgets/note_screen_widgets/confirmaton_dialog.dart';
@@ -27,7 +27,7 @@ class NoteFloatingButton extends StatelessWidget {
                         : 'Delete Note';
                     bool? confirmed = await showConfirmationDialog(type);
                     if (confirmed == true) {
-                      await _notesController.deleteNote(selectedNotes.toList());
+                      await _notesController.deleteNote(selectedNotes);
                     }
                     selectedNotes.clear();
                   },

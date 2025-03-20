@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notetakingapp1/logic/notes_controller.dart';
+import 'package:notetakingapp1/logic/state_controllers/notes_controller.dart';
 import 'package:notetakingapp1/logic/services/hive_service.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 
 class NoteEditingscreen extends StatefulWidget {
-  const NoteEditingscreen({super.key});
+  final Map<dynamic, dynamic>? note;
+  final bool? isNotePinned;
+  const NoteEditingscreen({super.key, this.note, this.isNotePinned});
 
   @override
   State<NoteEditingscreen> createState() => _NoteEditingscreenState();
@@ -23,15 +25,14 @@ class _NoteEditingscreenState extends State<NoteEditingscreen> {
   @override
   void initState() {
     super.initState();
-    if (Get.arguments is int) {
-      key = Get.arguments as int;
-      var note = hiveService.notesBox.get(key);
-      titleText = note['title'];
-      contentText = note['content'];
+    if (widget.note != null) {
+      titleText = widget.note!['title'];
+      contentText = widget.note!['content'];
+      key = widget.note!['key'];
     } else {
-      key = null;
       titleText = '';
       contentText = '';
+      key = null;
     }
     titleController = TextEditingController(text: titleText);
     contentController = TextEditingController(text: contentText);
@@ -82,13 +83,13 @@ class _NoteEditingscreenState extends State<NoteEditingscreen> {
                               message: 'Can\'t save an empty note',
                               duration: Duration(seconds: 5),
                             ));
-                          } else {
-                            await _notesController.saveNote(
-                                key: key,
-                                title: titleController.text,
-                                content: contentController.text);
-                            Get.back();
                           }
+                          await _notesController.saveNote(
+                              key: key,
+                              title: title,
+                              content: content,
+                              isPinned: widget.isNotePinned);
+                          Get.back();
                         },
                         child: Text(
                           'Save',

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notetakingapp1/logic/search_controller.dart';
+import 'package:notetakingapp1/logic/state_controllers/search_controller.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 import 'package:notetakingapp1/logic/utils.dart';
 

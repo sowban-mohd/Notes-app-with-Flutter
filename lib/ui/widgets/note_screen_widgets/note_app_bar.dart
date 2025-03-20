@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:notetakingapp1/logic/selected_notes_controller.dart';
+import 'package:notetakingapp1/logic/state_controllers.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 
 class NoteAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -10,10 +11,12 @@ class NoteAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String formattedDate =
       DateFormat('d MMMM, yyyy').format(DateTime.now()); //Formatted date
   final _selectedNotesController = Get.find<SelectedNotesController>();
+  final _notesController = Get.find<NotesController>();
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      final selectedPinnedNotes = _selectedNotesController.selectedPinnedNotes;
       final selectedNotes = _selectedNotesController.selectedNotes;
 
       return selectedNotes.isNotEmpty
@@ -31,12 +34,40 @@ class NoteAppBar extends StatelessWidget implements PreferredSizeWidget {
                       icon: Icon(
                         Icons.arrow_back_ios_new,
                         color: colorScheme.primary,
-                        size: 20.0,
+                        size: 22.0,
                       ),
-                      label: Text('${selectedNotes.length} selected',
-                          style: Styles.boldTexts(
-                              fontSize: 20.0, color: colorScheme.primary)),
+                      label: Text('${selectedNotes.length}',
+                          style: Styles.textButtonStyle(fontSize: 18.0)),
                     ),
+                    IconButton(
+                        onPressed: () async {
+                          if(selectedPinnedNotes.isEmpty) {
+                               await _notesController.pinNote(selectedNotes);
+                          } else {
+                              await _notesController.unPinNote(selectedNotes);
+                               selectedPinnedNotes.clear();
+                          }
+                          selectedNotes.clear();
+                        },
+                        icon: selectedPinnedNotes.isEmpty
+                            ? SvgPicture.asset(
+                                'assets/icons/keep.svg',
+                                width: 22,
+                                height: 22,
+                                colorFilter: ColorFilter.mode(
+                                  colorScheme.primary,
+                                  BlendMode.srcIn,
+                                ),
+                              )
+                            : SvgPicture.asset(
+                                'assets/icons/keep-off.svg',
+                                width: 24,
+                                height: 24,
+                                colorFilter: ColorFilter.mode(
+                                  colorScheme.primary,
+                                  BlendMode.srcIn,
+                                ),
+                              )),
                   ]))
           :
           //Normal app bar

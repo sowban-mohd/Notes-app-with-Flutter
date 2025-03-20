@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notetakingapp1/logic/user_type_controller.dart';
+import 'package:notetakingapp1/logic/state_controllers/user_type_controller.dart';
 import 'package:notetakingapp1/ui/screens/notesscreen.dart';
 import 'package:notetakingapp1/ui/widgets/obscreen_layout.dart';
-import '../../logic/page_controller.dart';
+import '../../logic/state_controllers/page_controller.dart';
 
 class OnboardingPageView extends StatelessWidget {
   OnboardingPageView({super.key});

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
-import 'package:notetakingapp1/logic/user_type_controller.dart';
+import 'package:notetakingapp1/logic/state_controllers/user_type_controller.dart';
 import 'package:notetakingapp1/ui/screens/screens.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 

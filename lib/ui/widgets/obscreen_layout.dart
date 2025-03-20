@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/instance_manager.dart';
-import 'package:notetakingapp1/logic/controllers.dart';
+import 'package:notetakingapp1/logic/state_controllers.dart';
 import '../theme/styles.dart';
 
 class OnboardingLayout extends StatelessWidget {

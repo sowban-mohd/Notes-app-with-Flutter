@@ -87,6 +87,11 @@ class Styles {
     return universalFont(fontSize: fontSize, color: colorScheme.onSurface);
   }
 
+  ///Style for notes sections
+  static TextStyle noteSectionTitle(){
+    return boldTexts(fontSize: 14.0);
+  }
+
   ///Theme for selection inside a textfield
   static ThemeData textSelectionTheme() {
     return ThemeData(
