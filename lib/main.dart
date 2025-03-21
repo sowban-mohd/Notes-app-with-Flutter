@@ -12,11 +12,11 @@ void main() async {
   await Hive.openBox('PinnedNotes'); //Opening a hive box named 'PinnedNotes' which stores all user's pinned notes
   await Hive.openBox('OtherNotes'); // Box for rest of the notes
 
-  Get.put(UserTypeController());
-  Get.put(PageControllerX());
-  Get.lazyPut(() => NotesController());
-  Get.lazyPut(() => SearchControllerX());
-  Get.lazyPut(() => SelectedNotesController());
+  Get.put(UserTypeController()); //GetX controller that manages User type
+  Get.put(PageControllerX()); //GetX controller that manages Onboarding pageview
+  Get.lazyPut(() => NotesController()); //GetX controller responsible for providing and managing notes
+  Get.lazyPut(() => SearchControllerX()); //GetX controller that manages selected notes
+  Get.lazyPut(() => SelectedNotesController()); //GetX controller that mamages user search query
   
   runApp(NoteApp());
 }

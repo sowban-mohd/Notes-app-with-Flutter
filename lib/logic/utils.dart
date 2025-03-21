@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Filters the list of notes based on search query
 List<Map<dynamic, dynamic>> filterNotes(
     List<Map<dynamic, dynamic>> notes, String query) {
   return query.isEmpty

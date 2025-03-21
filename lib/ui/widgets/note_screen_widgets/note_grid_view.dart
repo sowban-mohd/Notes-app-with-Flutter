@@ -10,27 +10,27 @@ class NotesGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 2.0),
-        child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: isDesktop(context)
-                  ? 6
-                  : isTablet(context)
-                      ? 4
-                      : 2,
-              crossAxisSpacing: 3.0,
-              mainAxisSpacing: 4.0,
-              childAspectRatio: 170 / 200,
-            ),
-            itemCount: notes.length,
-            itemBuilder: (context, index) {
-              //Essential values
-              final note = notes[index];
-              return NoteCard(note: note, isNotePinned: isPinned);
-            }),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2.0),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: isDesktop(context)
+                ? 6
+                : isTablet(context)
+                    ? 4
+                    : 2,
+            crossAxisSpacing: 3.0,
+            mainAxisSpacing: 4.0,
+            childAspectRatio: 170 / 200,
+          ),
+          itemCount: notes.length,
+          itemBuilder: (context, index) {
+            //Essential values
+            final note = notes[index];
+            return NoteCard(note: note, isNotePinned: isPinned);
+          }),
     );
   }
 }
