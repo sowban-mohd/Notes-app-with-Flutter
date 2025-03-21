@@ -1,13 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:notetakingapp1/ui/utils/styles.dart';
-import 'package:notetakingapp1/ui/utils/utils.dart';
-import '../../../providers/initial_location_provider.dart';
+import 'package:notetakingapp1/logic/providers/auth_change_provider.dart';
+import 'package:notetakingapp1/ui/theme/styles.dart';
+import 'package:notetakingapp1/logic/utils/utils.dart';
+import '../../../logic/providers/initial_location_provider.dart';
 import '../../widgets/authscreen_layout.dart';
-import '../../../providers/auth_screen_providers/auth_state_provider.dart';
-import '../../../providers/auth_screen_providers/auth_controllers_provider.dart';
+import '../../../logic/providers/auth_screen_providers.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -20,22 +19,25 @@ class LoginScreen extends ConsumerWidget {
     final loginState = ref.watch(authStateProvider);
     final loginNotifier = ref.read(authStateProvider.notifier);
 
+    //Gets access to initial location notifier
+    final initialLocationNotifier = ref.read(initialLocationProvider.notifier);
+
     //Gets access to bool value which indicates if the password is hidden
     final isPasswordHidden = ref.watch(passwordVisibilityProvider);
 
+    final authChange = ref.watch(authChangeProvider);
+
     if (loginState.generalError != null) {
       showSnackbarMessage(context, message: loginState.generalError!);
+      loginNotifier.clearState();
     }
 
     //Navigates to notes screen if login is successful
-    FirebaseAuth.instance.authStateChanges().listen((user){
-      if(user!=null){
-        //Gets access to initial location notifier
-        final initialLocationNotifier =
-            ref.read(initialLocationProvider.notifier);
-        initialLocationNotifier.setInitialLocation('/home'); //Sets note screen as the initial screen of app
-        loginNotifier.clearState();
-        if(context.mounted) context.go('/home');
+    authChange.whenData((user) async {
+      if (user != null) {
+        await initialLocationNotifier.setInitialLocation(
+            '/home'); //Sets note screen as the initial screen of app
+        if (context.mounted) context.go('/home');
       }
     });
 

@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import '/ui/utils/styles.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notetakingapp1/logic/providers/page_provider.dart';
+import '../theme/styles.dart';
 
 class OnboardingLayout extends StatelessWidget {
   final Widget image;
   final String title;
   final String description;
-  final int currentPage;
   final VoidCallback onNext;
   final VoidCallback? onBack;
   final VoidCallback? onSkip;
 
   /// A reusable layout for onboarding screens
-  
+
   const OnboardingLayout({
     super.key,
     required this.image,
     required this.title,
     required this.description,
-    required this.currentPage,
     required this.onNext,
     this.onBack,
     this.onSkip,
@@ -34,7 +33,7 @@ class OnboardingLayout extends StatelessWidget {
             // Top navigation bar with Back and Skip buttons
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
+                  const EdgeInsets.all(12.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -75,38 +74,41 @@ class OnboardingLayout extends StatelessWidget {
             ),
 
             // Progress indicator bar
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                3,
-                (index) => Container(
-                  height: 5,
-                  width: 99,
-                  decoration: BoxDecoration(
-                    color: currentPage == index
-                        ? const Color.fromRGBO(58, 133, 247, 1) // Active step
-                        : const Color.fromRGBO(
-                            206, 203, 211, 1), // Inactive steps
-                    borderRadius: index == 0
-                        ? const BorderRadius.only(
-                            topLeft: Radius.circular(5),
-                            bottomLeft: Radius.circular(5),
-                          )
-                        : index == 2
-                            ? const BorderRadius.only(
-                                topRight: Radius.circular(5),
-                                bottomRight: Radius.circular(5),
-                              )
-                            : null,
+            Consumer(builder: (context, ref, child) {
+              final currentPage = ref.watch(pageNotifierProvider);
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  3,
+                  (index) => Container(
+                    height: 5,
+                    width: 99,
+                    decoration: BoxDecoration(
+                      color: currentPage == index
+                          ? const Color.fromRGBO(58, 133, 247, 1) // Active step
+                          : const Color.fromRGBO(
+                              206, 203, 211, 1), // Inactive steps
+                      borderRadius: index == 0
+                          ? const BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              bottomLeft: Radius.circular(5),
+                            )
+                          : index == 2
+                              ? const BorderRadius.only(
+                                  topRight: Radius.circular(5),
+                                  bottomRight: Radius.circular(5),
+                                )
+                              : null,
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
             const SizedBox(height: 36),
 
             // Title and description text
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 48.0),
+              padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: Column(
                 children: [
                   Text(
@@ -123,19 +125,22 @@ class OnboardingLayout extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 32),
 
             // Navigation button
-            ElevatedButton(
-              onPressed: onNext,
-              style: Styles.elevatedButtonStyle(),
-              child: Text(
-                currentPage == 2
-                    ? "Get Started"
-                    : 'Next', // Last screen shows "Get Started"
-                style: Styles.elevatedButtonTextStyle(),
-              ),
-            ),
+            Consumer(builder: (context, ref, child) {
+              final currentPage = ref.watch(pageNotifierProvider);
+              return ElevatedButton(
+                onPressed: onNext,
+                style: Styles.elevatedButtonStyle(),
+                child: Text(
+                  currentPage == 2
+                      ? "Get Started"
+                      : 'Next', // Last screen shows "Get Started"
+                  style: Styles.elevatedButtonTextStyle(),
+                ),
+              );
+            }),
             const SizedBox(height: 42),
           ],
         ),

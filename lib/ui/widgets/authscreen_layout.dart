@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notetakingapp1/ui/utils/styles.dart';
+import 'package:notetakingapp1/ui/theme/styles.dart';
 
 class AuthScreenLayout extends StatelessWidget {
   final TextEditingController emailController;

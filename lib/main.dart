@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:notetakingapp1/providers/initial_location_provider.dart';
 import 'ui/screens/screens.dart';
 import 'firebase_options.dart';
 
@@ -19,16 +18,15 @@ void main() async {
   runApp(ProviderScope(child: NoteApp()));
 }
 
-class NoteApp extends ConsumerWidget {
+class NoteApp extends StatelessWidget {
   const NoteApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final initialLocation = ref.watch(initialLocationProvider);
+  Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false, // Hides debug banner
       routerConfig: GoRouter(
-        initialLocation: initialLocation, // Starting screen of the app
+        initialLocation: '/', // Starting screen of the app
         routes: [
           GoRoute(
             path: '/',
@@ -38,7 +36,7 @@ class NoteApp extends ConsumerWidget {
           GoRoute(
             path: '/welcome',
             builder: (context, state) =>
-                OnboardingScreen(), // Onboarding screen for new users
+                OnboardingPageView(), // Onboarding screen for new users
           ),
           GoRoute(
             path: '/login',
@@ -61,7 +59,7 @@ class NoteApp extends ConsumerWidget {
           GoRoute(
             path: '/home',
             builder: (context, state) =>
-                NotesScreen(), // Main notes listing screen
+                HomeScreen(), // Main notes listing screen
           ),
           GoRoute(
             path: '/note',
