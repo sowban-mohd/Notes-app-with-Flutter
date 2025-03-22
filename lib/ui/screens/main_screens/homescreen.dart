@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notetakingapp1/logic/providers/auth_change_provider.dart';
 import 'package:notetakingapp1/logic/providers/auth_screen_providers/auth_state_provider.dart';
+import 'package:notetakingapp1/logic/providers/home_screen_providers/category_provider.dart';
 import 'package:notetakingapp1/logic/providers/initial_location_provider.dart';
 import 'package:notetakingapp1/logic/providers/home_screen_providers.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
@@ -62,6 +63,7 @@ class HomeScreen extends ConsumerWidget {
               final notes = ref.watch(notesProvider);
               final notesNotifier = ref.watch(notesProvider.notifier);
               final query = ref.watch(searchProvider);
+              final category = ref.watch(categoryProvider);
 
               if (notesNotifier.isLoading) {
                 return Center(
@@ -108,8 +110,8 @@ class HomeScreen extends ConsumerWidget {
                     padding:
                         EdgeInsets.only(top: 12.0, left: 16.0, bottom: 8.0),
                     child: Text(
-                      'All notes',
-                      style: Styles.boldTexts(fontSize: 14.0),
+                      category ?? 'Notes',
+                      style: Styles.boldTexts(fontSize: 14.0), 
                     ),
                   ),
                   NoteGrid(notes: filteredNotes)

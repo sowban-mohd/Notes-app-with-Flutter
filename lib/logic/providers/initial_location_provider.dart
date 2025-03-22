@@ -11,9 +11,9 @@ class IntialScreenNotifier extends AsyncNotifier<String> {
 
   Future<void> setInitialLocation(String newLocation) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('InitialLocation', newLocation);
+    await prefs.setString('InitialLocation', newLocation);
     final screen = prefs.getString('InitialLocation');
-    debugPrint('initial screen is : $screen');
+    debugPrint('initial screen changed to : $screen');
   }
 }
 

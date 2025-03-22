@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notetakingapp1/logic/providers/home_screen_providers/note_type_provider.dart';
+import 'package:notetakingapp1/logic/providers/home_screen_providers/category_provider.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 
 class CategoryGrid extends StatelessWidget {

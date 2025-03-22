@@ -19,74 +19,119 @@ class NoteAppBar extends ConsumerWidget implements PreferredSizeWidget {
     final authNotifier = ref.read(authStateProvider
         .notifier); //Access to methods to manipukate authentication state
 
-    //App bar when notes are selected
-    return selectedNotes.isNotEmpty
-        ? AppBar(
-            backgroundColor: colorScheme.surfaceContainerLowest,
-            title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton.icon(
-                    onPressed: () {
-                      selectionNotifier.clearSelection();
-                    },
-                    icon: Icon(
-                      Icons.arrow_back_ios_new,
-                      color: colorScheme.primary,
-                      size: 22.0,
-                    ),
-                    label: Text('${selectedNotes.length}',
-                        style: Styles.textButtonStyle(
-                            fontSize: 18.0)),
-                  ),
-                ]))
-        :
-        //Normal app bar
-        AppBar(
-            elevation: 0.0,
-            backgroundColor: colorScheme.surface,
-            title: Padding(
-              padding: EdgeInsets.only(left: 6.0, right: 6.0, top: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  //Date and Title
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        formattedDate,
-                        style: Styles.w400texts(
-                          fontSize: 12.0,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
+    return AppBar(
+        elevation: 0,
+        backgroundColor: colorScheme.surface,
+        title: selectedNotes.isEmpty
+            ?
+            // Default Appbar title
+            Padding(
+                padding: EdgeInsets.only(left: 4.0, top: 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //Date and time
+                    Text(
+                      formattedDate,
+                      style: Styles.w400texts(
+                        fontSize: 12.0,
+                        color: colorScheme.onSurfaceVariant,
                       ),
-                      Text(
-                        'Notes',
-                        style: Styles.titleStyle(fontSize: 24.0),
-                      ),
-                    ],
-                  ),
-
-                  //Log out button
-                  IconButton(
-                    tooltip: 'Log Out',
-                    onPressed: () async {
-                      bool? confirmation = await showConfirmationDialog(context,
-                          type: 'Log out');
-                      if (confirmation == true) {
-                        await authNotifier.logOut();
-                      }
-                    },
-                    icon: Icon(
-                      Icons.logout,
                     ),
-                    color: colorScheme.onSurface.withAlpha(153),
+                    Text(
+                      'Notes',
+                      style: Styles.titleStyle(fontSize: 24.0),
+                    ),
+                  ],
+                ),
+              )
+            :
+            //Appbar title when notes are selected
+            Padding(
+                padding: EdgeInsets.only(top: 10.0),
+                child: TextButton.icon(
+                  onPressed: () {
+                    selectionNotifier.clearSelection();
+                  },
+                  icon: Icon(
+                    Icons.arrow_back_ios_new,
+                    color: colorScheme.primary,
+                    size: 24.0,
                   ),
-                ],
+                  label: Text('${selectedNotes.length} selected',
+                      style: Styles.w500texts(
+                          fontSize: 20.0, color: colorScheme.primary)),
+                ),
               ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 20.0, top: 8.0),
+            child: PopupMenuButton(
+              icon: Container(
+                width: 25,
+                height: 25,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: colorScheme.primary,
+                    width: 1,
+                  ),
+                  color: colorScheme.surface,
+                ),
+                child: Icon(
+                  Icons.more_horiz,
+                  size: 15.0,
+                  color: colorScheme.primary,
+                ),
+              ),
+              color: colorScheme.surfaceContainer,
+              constraints: BoxConstraints(minWidth: 120.0),
+              itemBuilder: (context) {
+                return selectedNotes.isEmpty
+                    ?
+                    //Default popup menu items
+                    [
+                        PopupMenuItem(
+                          child: Text(
+                            'Log out',
+                            style: Styles.w500texts(fontSize: 15.0),
+                          ),
+                          onTap: () async {
+                            bool? confirmation = await showConfirmationDialog(
+                                context,
+                                type: 'Log out');
+                            if (confirmation == true) {
+                              await authNotifier.logOut();
+                            }
+                          },
+                        ),
+                        PopupMenuItem(
+                          child: Text(
+                            'Quit app',
+                            style: Styles.w500texts(fontSize: 15.0),
+                          ),
+                        ),
+                      ]
+                    : 
+                    //Popup menu for selected notes
+                    [
+                        PopupMenuItem(
+                            child: Text(
+                              'Pin note',
+                              style: Styles.w500texts(fontSize: 15.0),
+                            ),
+                            onTap: () {}),
+                        PopupMenuItem(
+                          child: Text(
+                            'Add to folders',
+                            style: Styles.w500texts(fontSize: 15.0),
+                          ),
+                        ),
+                      ];
+              },
             ),
-          );
+          ),
+        ]);
   }
 
   @override
