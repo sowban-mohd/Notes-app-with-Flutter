@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:notetakingapp1/logic/providers/auth_screen_providers/auth_state_provider.dart';
@@ -114,6 +115,9 @@ class NoteAppBar extends ConsumerWidget implements PreferredSizeWidget {
                             'Quit app',
                             style: Styles.w500texts(fontSize: 15.0),
                           ),
+                          onTap: (){
+                            SystemNavigator.pop();
+                          },
                         ),
                       ]
                     :
