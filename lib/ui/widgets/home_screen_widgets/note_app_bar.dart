@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:notetakingapp1/logic/providers/auth_screen_providers/auth_state_provider.dart';
 import 'package:notetakingapp1/logic/providers/home_screen_providers.dart';
+import 'package:notetakingapp1/logic/providers/home_screen_providers/pinned_selection_provider.dart';
 import 'package:notetakingapp1/ui/widgets/confirmaton_dialog.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 
@@ -16,8 +17,11 @@ class NoteAppBar extends ConsumerWidget implements PreferredSizeWidget {
     final selectedNotes = ref.watch(selectionProvider); //List of selected notes
     final selectionNotifier =
         ref.read(selectionProvider.notifier); //Access to selection notifier
+    final selectedPinnedNotes = ref.watch(pinnedSelectionProvider);
+    final selectedPinnedNotifer = ref.read(pinnedSelectionProvider.notifier);
     final authNotifier = ref.read(authStateProvider
         .notifier); //Access to methods to manipukate authentication state
+    final noteCudNotifier = ref.read(noteCudProvider.notifier);
 
     return AppBar(
         elevation: 0,
@@ -112,15 +116,31 @@ class NoteAppBar extends ConsumerWidget implements PreferredSizeWidget {
                           ),
                         ),
                       ]
-                    : 
+                    :
                     //Popup menu for selected notes
                     [
-                        PopupMenuItem(
-                            child: Text(
-                              'Pin note',
-                              style: Styles.w500texts(fontSize: 15.0),
-                            ),
-                            onTap: () {}),
+                        selectedPinnedNotes.isEmpty
+                            ? PopupMenuItem(
+                                child: Text(
+                                  'Pin note',
+                                  style: Styles.w500texts(fontSize: 15.0),
+                                ),
+                                onTap: () async {
+                                  await noteCudNotifier.pinNote(selectedNotes);
+                                  selectedPinnedNotifer.clearSelection();
+                                  selectionNotifier.clearSelection();
+                                })
+                            : PopupMenuItem(
+                                child: Text(
+                                  'Unpin note',
+                                  style: Styles.w500texts(fontSize: 15.0),
+                                ),
+                                onTap: () async {
+                                  await noteCudNotifier
+                                      .unpinNote(selectedPinnedNotes);
+                                  selectedPinnedNotifer.clearSelection();
+                                  selectionNotifier.clearSelection();
+                                }),
                         PopupMenuItem(
                           child: Text(
                             'Add to folders',

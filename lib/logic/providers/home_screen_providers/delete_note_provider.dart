@@ -13,7 +13,7 @@ class DeleteNoteNotifier extends Notifier<String?> {
   /// Deletes selected notes
   Future<void> deleteNote(Set<String> noteIds) async {
     try {
-      await _firestoreService.deleteNote(noteIds);
+      await _firestoreService.deleteFromCollection(noteIds);
     }
     //Handles Firebase errors
     on FirebaseException catch (e) {

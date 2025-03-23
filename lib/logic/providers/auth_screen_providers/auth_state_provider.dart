@@ -43,7 +43,7 @@ class AuthStateNotifier extends Notifier<AuthState> {
     try {
       if (isSignup) {
         await _authService.signUp(email: email, password: password);
-        state = AuthState(isLoading: false);
+        state = AuthState(isLoading: false, successMessage: 'Sign up is successful. Now login');
       } else {
         await _authService.login(email: email, password: password);
         state = AuthState(isLoading: false);

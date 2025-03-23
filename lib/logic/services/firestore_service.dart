@@ -24,30 +24,32 @@ class FirestoreService {
     //Converts each note to a map and all the notes to list of maps
   }
   
-  ///Adds note to the collection with the given title, content
-  Future<void> addNote(String title, String content) async {
+  ///Adds note to the collection with the given title, content returns the related noteId for other operations
+  Future<String> addToCollection(String title, String content) async {
     final docRef = await _noteRef.add({
       'title': title,
       'content': content,
       'timestamp': FieldValue.serverTimestamp(),
+      'pinned' : false,
     });
-
-    //Updates the document with related noteId after creation
-    await docRef.update({'noteId': docRef.id});
+    
+    return docRef.id;
   }
 
   /// Updates the note of given noteId with the given title, content
-  Future<void> updateNote(String title, String content, {String? noteId}) async {
+  Future<void> updateInCollection({String? title, String? content, required String noteId, required bool pinned }) async {
     //Updates note
     await _noteRef.doc(noteId).update({
       'title': title,
       'content': content,
       'timestamp': FieldValue.serverTimestamp(),
+      'pinned': pinned,
+      'noteId': noteId,
     });
   }
 
   /// Deletes note from the collection with specific noteIds
-  Future<void> deleteNote(Set<String> noteIds) async {
+  Future<void> deleteFromCollection(Set<String> noteIds) async {
     //Enables firebase batch opeartions
       final batch = _firestore.batch();
 

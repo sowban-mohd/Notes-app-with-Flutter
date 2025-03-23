@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:notetakingapp1/logic/providers/home_screen_providers/category_provider.dart';
+import 'package:notetakingapp1/logic/providers/home_screen_providers/pinned_selection_provider.dart';
 import '../../../logic/providers/home_screen_providers.dart';
 import '../../theme/styles.dart';
 
 class NoteCard extends ConsumerWidget {
   final Map<String, dynamic> note;
-  const NoteCard({super.key, required this.note});
+  final bool isNotePinned;
+  const NoteCard({super.key, required this.note, required this.isNotePinned});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //List of selected notes
     final selectedNotes = ref.watch(selectionProvider);
+    final selectionNotifier = ref.read(selectionProvider.notifier);
+    final selectedPinnedNotifier = ref.read(pinnedSelectionProvider.notifier);
+
+    final category = ref.watch(categoryProvider);
     //Essential values
     final String noteId = note['noteId'];
     final String title = note['title'];
@@ -26,8 +32,9 @@ class NoteCard extends ConsumerWidget {
       },
       //When long pressed
       onLongPress: () {
-        //Access to methods to manipulate selected notes list
-        final selectionNotifier = ref.read(selectionProvider.notifier);
+        if (isNotePinned) {
+          selectedPinnedNotifier.toggleSelection(noteId);
+        }
         selectionNotifier.toggleSelection(noteId);
       },
       child: Card(
@@ -35,10 +42,20 @@ class NoteCard extends ConsumerWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
           side: selectedNotes.contains(noteId)
-              ? BorderSide(color: colorScheme.primary, width: 2.0)
+              ? BorderSide(
+                  color: category == 'All Notes'
+                      ? colorScheme.tertiary
+                      : category == 'Folders'
+                          ? colorScheme.secondary
+                          : colorScheme.primary,
+                  width: 2.0)
               : BorderSide.none,
         ),
-        color: colorScheme.surfaceContainer,
+        color: category == 'All Notes'
+            ? Color(0xFFe8e8ed)
+            : category == 'Folders'
+                ? Color(0xFFf4e8c2)
+                : colorScheme.surfaceContainer,
         child: Padding(
           padding: EdgeInsets.all(14),
           child: Column(
@@ -60,16 +77,18 @@ class NoteCard extends ConsumerWidget {
                   height: 3,
                 ),
               ],
-              hasContent ?
-              Flexible(
-                child: Text(content,
-                    style: Styles.w300texts(
-                        color: colorScheme.onSurface, fontSize: 14),
-                    overflow: TextOverflow.fade),
-              ) :
-              Text('No content',
-                    style: Styles.w300texts(
-                        color: colorScheme.onSurface.withAlpha(102), fontSize: 14),
+              hasContent
+                  ? Flexible(
+                      child: Text(content,
+                          style: Styles.w300texts(
+                              color: colorScheme.onSurface, fontSize: 14),
+                          overflow: TextOverflow.fade),
+                    )
+                  : Text(
+                      'No content',
+                      style: Styles.w300texts(
+                          color: colorScheme.onSurface.withAlpha(102),
+                          fontSize: 14),
                     ),
             ],
           ),

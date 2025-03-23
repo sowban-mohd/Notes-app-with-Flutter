@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CategoryNotifier extends Notifier<String?> {
+class CategoryNotifier extends Notifier<String> {
   @override
-  String? build() => null;
+  String build() => 'All Notes';
 
   void updateCategory(String category) {
-    state == category ? state = null : state = category;
+    state = category;
   }
 }
 
 final categoryProvider =
-    NotifierProvider<CategoryNotifier, String?>(CategoryNotifier.new);
+    NotifierProvider<CategoryNotifier, String>(CategoryNotifier.new);

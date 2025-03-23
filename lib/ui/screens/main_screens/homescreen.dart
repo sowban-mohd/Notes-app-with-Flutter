@@ -43,10 +43,10 @@ class HomeScreen extends ConsumerWidget {
     });
 
     // Display error message if there is an error in saving note
-    ref.listen<String?>(saveNoteProvider, (previous, next) {
+    ref.listen<String?>(noteCudProvider, (previous, next) {
       if (next != null) {
         showSnackbarMessage(context, message: next);
-        ref.read(saveNoteProvider.notifier).clearError();
+        ref.read(noteCudProvider.notifier).clearError();
       }
     });
 
@@ -98,23 +98,62 @@ class HomeScreen extends ConsumerWidget {
                 return EmptyNoteScreenBody(); // Screen to display if notes are empty
               }
 
-              final filteredNotes = filterNotes(notes, query);
+              final pinnedNotes =
+                  notes.where((note) => note['pinned'] == true).toList();
+              final otherNotes =
+                  notes.where((note) => note['pinned'] == false).toList();
+              final filteredPinnedNotes = filterNotes(pinnedNotes, query);
+              final filteredOtherNotes = filterNotes(otherNotes, query);
 
               // If notes are not empty
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SearchBarWidget(),
-                  CategoryGrid(),
-                  Padding(
-                    padding:
-                        EdgeInsets.only(top: 12.0, left: 16.0, bottom: 8.0),
-                    child: Text(
-                      category ?? 'Notes',
-                      style: Styles.boldTexts(fontSize: 14.0), 
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CategoryGrid(),
+                          if (filteredPinnedNotes.isNotEmpty) ...[
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: 12.0, left: 16.0, bottom: 8.0),
+                              child: Text(
+                                'Pinned Notes',
+                                style: Styles.noteSectionTitle(),
+                              ),
+                            ),
+                            NotesGridView(
+                                notes: filteredPinnedNotes, isNotePinned: true),
+                            if (filteredOtherNotes.isNotEmpty) ...[
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: 12.0, left: 16.0, bottom: 8.0),
+                                child: Text(
+                                  'Other Notes',
+                                  style: Styles.noteSectionTitle(),
+                                ),
+                              ),
+                            ]
+                          ],
+                          if (filteredPinnedNotes.isEmpty) ...[
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: 12.0, left: 16.0, bottom: 8.0),
+                              child: Text(
+                                category,
+                                style: Styles.noteSectionTitle(),
+                              ),
+                            ),
+                          ],
+                          NotesGridView(
+                              notes: filteredOtherNotes, isNotePinned: false),
+                        ],
+                      ),
                     ),
                   ),
-                  NoteGrid(notes: filteredNotes)
                 ],
               );
             }),

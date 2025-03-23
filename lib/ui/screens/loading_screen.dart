@@ -13,7 +13,6 @@ class LoadingScreen extends ConsumerWidget {
 
     return initialLocation.when(
         data: (location) {
-          print(location);
           // Navigate to the resolved location
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.go(location);

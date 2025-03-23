@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notetakingapp1/logic/providers/home_screen_providers/notes_provider.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
-import '../../../logic/providers/home_screen_providers/save_note_provider.dart';
+import '../../../logic/providers/home_screen_providers/note_cud_state_provider.dart';
 
 class NoteEditingscreen extends StatefulWidget {
   const NoteEditingscreen({super.key});
@@ -16,6 +16,7 @@ class _NoteEditingscreenState extends State<NoteEditingscreen> {
   late TextEditingController titleController;
   late TextEditingController contentController;
   String? noteId;
+  bool? pinned;
 
   @override
   void initState() {
@@ -37,6 +38,7 @@ class _NoteEditingscreenState extends State<NoteEditingscreen> {
         final note = notes.firstWhere((note) => note['noteId'] == noteId);
         titleController.text = note['title'];
         contentController.text = note['content'];
+        pinned = note['pinned'];
       }
       _initialized = true;
     }
@@ -51,7 +53,7 @@ class _NoteEditingscreenState extends State<NoteEditingscreen> {
 
   @override
   Widget build(BuildContext context) {
-    final saveNoteNotifier = ProviderScope.containerOf(context).read(saveNoteProvider.notifier);
+    final saveNoteNotifier = ProviderScope.containerOf(context).read(noteCudProvider.notifier);
 
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerLowest,
@@ -83,8 +85,8 @@ class _NoteEditingscreenState extends State<NoteEditingscreen> {
                     TextButton(
                         onPressed: () async {
                           await saveNoteNotifier.saveNote(
-                              titleController.text, contentController.text,
-                              noteId: noteId);
+                              title : titleController.text, content : contentController.text,
+                              noteId: noteId, pinned : pinned);
                           if (context.mounted) context.go('/home');
                         },
                         child: Text(
