@@ -3,87 +3,78 @@ import '../theme/styles.dart';
 
 /// Displays a confirmation dialog before actions like Log Out, Note deletion
 Future<bool?> showConfirmationDialog(BuildContext context,
-    {required String? type}) {
+    {required String type}) {
   return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          child: Container(
-            padding: EdgeInsets.only(top: 14),
-            width: 350,
-            height: 175,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.0),
-              color: colorScheme.surfaceContainer,
-            ),
+          backgroundColor: colorScheme.surfaceContainer,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 4, left: 20, right: 20),
-                  child: Column(children: [
-                    Text(
-                      type!,
-                      style: Styles.titleStyle(fontSize: 26.0),
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      type == 'Delete note'
-                          ? 'Are you sure you want to delete this note?'
-                          : type == 'Delete notes'
-                              ? 'Are you sure you want to delete these notes?'
-                              : 'Are you sure you want to log out?',
-                      textAlign: TextAlign.center,
-                      style: Styles.subtitleStyle(fontSize: 16.0),
-                    ),
-                  ]),
+                Text(
+                  type,
+                  style: Styles.titleStyle(fontSize: 26.0),
                 ),
-                const Spacer(),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6.0),
+                  child: Text(
+                    type == 'Quit App'
+                        ? 'Are you sure you want to quit the app?'
+                        : type == 'Log Out'
+                            ? 'Are you sure you want to log out?'
+                            : type == 'Delete Notes'
+                                ? 'Are you sure you want to delete these notes?'
+                                : 'Are you sure you want to delete this note?',
+                    style: Styles.subtitleStyle(fontSize: 16.0),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 20),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                                color: colorScheme.outline, width: 1.0),
-                      
-                          ),
-                        ),
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(false);
-                          },
-                          child: Text(
-                            'Cancel',
-                            style: Styles.w600texts(
-                                color: colorScheme.onSurface, fontSize: 16.0),
-                          ),
-                        ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFFf0f0f0),
+                          elevation: 0,
+                          fixedSize: Size(110, 40),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24))),
+                      child: Text(
+                        'Cancel',
+                        style: Styles.universalFont(
+                            color: colorScheme.onSurface, fontSize: 16),
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: colorScheme.error,
-                          borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(12.0)),
-                          border: Border(
-                            top: BorderSide(
-                                color: colorScheme.outline, width: 1.0),
-                          ),
-                        ),
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(true);
-                          },
-                          child: Text(type == 'Log out' ? type : 'Delete',
-                              style: Styles.w600texts(
-                                  color: colorScheme.onError, fontSize: 16.0)),
-                        ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFFf0f0f0),
+                          elevation: 0,
+                          fixedSize: Size(110, 40),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24))),
+                      child: Text(
+                        type == 'Log Out'
+                            ? 'Log out'
+                            : type == 'Quit App'
+                                ? 'Quit'
+                                : 'Delete',
+                        style: Styles.universalFont(
+                            color: colorScheme.error, fontSize: 16),
                       ),
-                    ),
+                    )
                   ],
                 )
               ],

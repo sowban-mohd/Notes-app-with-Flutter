@@ -104,7 +104,7 @@ class NoteAppBar extends ConsumerWidget implements PreferredSizeWidget {
                           onTap: () async {
                             bool? confirmation = await showConfirmationDialog(
                                 context,
-                                type: 'Log out');
+                                type: 'Log Out');
                             if (confirmation == true) {
                               await authNotifier.logOut();
                             }
@@ -115,8 +115,13 @@ class NoteAppBar extends ConsumerWidget implements PreferredSizeWidget {
                             'Quit app',
                             style: Styles.w500texts(fontSize: 15.0),
                           ),
-                          onTap: (){
-                            SystemNavigator.pop();
+                          onTap: () async {
+                            bool? confirmation = await showConfirmationDialog(
+                                context,
+                                type: 'Quit App');
+                            if (confirmation == true) {
+                              SystemNavigator.pop();
+                            }
                           },
                         ),
                       ]

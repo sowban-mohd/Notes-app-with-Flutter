@@ -20,7 +20,7 @@ class NoteFloatingButton extends ConsumerWidget {
             tooltip: 'Delete note',
             onPressed: () async {
               String type =
-                  selectedNotes.length > 1 ? 'Delete notes' : 'Delete note';
+                  selectedNotes.length > 1 ? 'Delete Notes' : 'Delete Note';
               bool? confirmed =
                   await showConfirmationDialog(context, type: type);
               if (confirmed == true) {
