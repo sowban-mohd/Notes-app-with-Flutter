@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:notetakingapp1/logic/providers/auth_change_provider.dart';
 import 'package:notetakingapp1/logic/providers/auth_screen_providers/auth_state_provider.dart';
 import 'package:notetakingapp1/logic/providers/home_screen_providers/category_provider.dart';
+import 'package:notetakingapp1/logic/providers/home_screen_providers/folders_provider.dart';
 import 'package:notetakingapp1/logic/providers/initial_location_provider.dart';
 import 'package:notetakingapp1/logic/providers/home_screen_providers.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
@@ -34,15 +35,7 @@ class HomeScreen extends ConsumerWidget {
       }
     });
 
-    // Display error messsage if there is any error in deleting note
-    ref.listen<String?>(deleteNoteProvider, (previous, next) {
-      if (next != null) {
-        showSnackbarMessage(context, message: next);
-        ref.read(deleteNoteProvider.notifier).clearError();
-      }
-    });
-
-    // Display error message if there is an error in saving note
+    // Display error message if there is an error in note cud operations
     ref.listen<String?>(noteCudProvider, (previous, next) {
       if (next != null) {
         showSnackbarMessage(context, message: next);
@@ -61,18 +54,24 @@ class HomeScreen extends ConsumerWidget {
                 left: 18.0, right: 18.0, top: 10.0, bottom: 16.0),
             child: Consumer(builder: (context, ref, child) {
               final notes = ref.watch(notesProvider);
-              final notesNotifier = ref.watch(notesProvider.notifier);
-              final query = ref.watch(searchProvider);
+              final notesNotifier = ref.read(notesProvider.notifier);
+              final folders = ref.watch(foldersProvider);
+              final foldersNotifier = ref.read(foldersProvider.notifier);
               final category = ref.watch(categoryProvider);
 
-              if (notesNotifier.isLoading) {
+              //When notes/folders are loading
+              if (notesNotifier.isLoading || foldersNotifier.isLoading) {
                 return Center(
                     child: CircularProgressIndicator(
                   color: colorScheme.primary,
                 ));
               }
 
-              if (notesNotifier.errorMessage != null) {
+              //Displays a snackbar if there is any error in loading notes
+              if (notesNotifier.errorMessage != null ||
+                  foldersNotifier.errorMessage != null) {
+                debugPrint(
+                    notesNotifier.errorMessage ?? foldersNotifier.errorMessage);
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       duration: Duration(days: 1),
@@ -82,7 +81,17 @@ class HomeScreen extends ConsumerWidget {
                           Text('An error occured',
                               style: Styles.universalFont(fontSize: 16.0)),
                           TextButton(
-                              onPressed: () => notesNotifier.retry(),
+                              onPressed: () {
+                                if (notesNotifier.errorMessage != null) {
+                                  notesNotifier.retry();
+                                } else if (foldersNotifier.errorMessage !=
+                                    null) {
+                                  foldersNotifier.retry();
+                                } else {
+                                  notesNotifier.retry();
+                                  foldersNotifier.retry();
+                                }
+                              },
                               child: Text(
                                 'Retry',
                                 style: Styles.textButtonStyle(fontSize: 16.0),
@@ -94,66 +103,23 @@ class HomeScreen extends ConsumerWidget {
                 return SizedBox.shrink();
               }
 
+              //When notes are empty
               if (notes.isEmpty) {
-                return EmptyNoteScreenBody(); // Screen to display if notes are empty
+                return Expanded(
+                    child:
+                        EmptyNoteScreenBody()); // Screen to display if notes are empty
               }
 
-              final pinnedNotes =
-                  notes.where((note) => note['pinned'] == true).toList();
-              final otherNotes =
-                  notes.where((note) => note['pinned'] == false).toList();
-              final filteredPinnedNotes = filterNotes(pinnedNotes, query);
-              final filteredOtherNotes = filterNotes(otherNotes, query);
-
-              // If notes are not empty
+              //When notes are not empty
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SearchBarWidget(),
+                  SearchBarWidget(), // A searchbar allowing user to filter notes
+                  CategoryList(), //A list displays multiple categories (All Notes, Folders)
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CategoryGrid(),
-                          if (filteredPinnedNotes.isNotEmpty) ...[
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 12.0, left: 16.0, bottom: 8.0),
-                              child: Text(
-                                'Pinned Notes',
-                                style: Styles.noteSectionTitle(),
-                              ),
-                            ),
-                            NotesGridView(
-                                notes: filteredPinnedNotes, isNotePinned: true),
-                            if (filteredOtherNotes.isNotEmpty) ...[
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: 12.0, left: 16.0, bottom: 8.0),
-                                child: Text(
-                                  'Other Notes',
-                                  style: Styles.noteSectionTitle(),
-                                ),
-                              ),
-                            ]
-                          ],
-                          if (filteredPinnedNotes.isEmpty) ...[
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 12.0, left: 16.0, bottom: 8.0),
-                              child: Text(
-                                category,
-                                style: Styles.noteSectionTitle(),
-                              ),
-                            ),
-                          ],
-                          NotesGridView(
-                              notes: filteredOtherNotes, isNotePinned: false),
-                        ],
-                      ),
-                    ),
-                  ),
+                      child: category == 'All Notes'
+                          ? AllNotesBody(notes: notes)
+                          : FoldersBody(folders: folders)),
                 ],
               );
             }),

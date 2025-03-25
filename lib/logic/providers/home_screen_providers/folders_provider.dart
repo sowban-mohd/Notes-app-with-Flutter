@@ -2,31 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notetakingapp1/logic/services/firestore_service.dart';
 
-class NotesNotifier extends Notifier<List<Map<String, dynamic>>> {
+class FoldersNotifier extends Notifier<List<Map<String, dynamic>>> {
   final FirestoreService _firestoreService = FirestoreService();
   late bool isLoading;
   String? errorMessage;
 
   @override
   List<Map<String, dynamic>> build() {
-    _listenToNotes();
+    _listenToFolders();
     return [];
   }
 
-  void _listenToNotes() {
+  void _listenToFolders() {
     isLoading = true;
-    _firestoreService.getCollectionStream('notes').listen((notes) {
-      state = notes;
+    _firestoreService.getCollectionStream('folders').listen((folders) {
+      state = folders;
       isLoading = false;
     }, onError: (e) {
       isLoading = false;
       errorMessage = e.toString();
-      debugPrint('Error fetching notes: $errorMessage');
+      debugPrint('Error fetching folders: $errorMessage');
     });
   }
 
   void retry() {
-    _listenToNotes();
+    _listenToFolders();
   }
 
   void clearError() {
@@ -34,6 +34,6 @@ class NotesNotifier extends Notifier<List<Map<String, dynamic>>> {
   }
 }
 
-final notesProvider =
-    NotifierProvider<NotesNotifier, List<Map<String, dynamic>>>(
-        NotesNotifier.new);
+final foldersProvider =
+    NotifierProvider<FoldersNotifier, List<Map<String, dynamic>>>(
+        FoldersNotifier.new);

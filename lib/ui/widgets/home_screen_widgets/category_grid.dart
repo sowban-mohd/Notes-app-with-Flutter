@@ -3,17 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notetakingapp1/logic/providers/home_screen_providers/category_provider.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 
-class CategoryGrid extends StatelessWidget {
-  const CategoryGrid({super.key});
+class CategoryList extends StatelessWidget {
+  const CategoryList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      crossAxisSpacing: 5.0,
-      childAspectRatio: 170 / 70,
+    return Row(
       children: [
         CategoryCard(
             categoryType: 'All Notes',
@@ -48,7 +43,7 @@ class CategoryCard extends ConsumerWidget {
       onTap: () => noteTypeNotifier.updateCategory(categoryType),
       child: SizedBox(
         width: 160,
-        height: 70,
+        height: 65,
         child: Card(
           color: categoryType == noteType
               ? categoryColor
