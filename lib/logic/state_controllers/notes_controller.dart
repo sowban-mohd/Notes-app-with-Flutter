@@ -72,12 +72,10 @@ class NotesController extends GetxController {
   Future<void> unPinNote(Set<int> keys) async {
     for (var key in keys) {
       var note = _hiveService.fetchfromPinnedNotes(key);
-      if (note != null) {
         var title = note['title'];
         var content = note['content'];
         await _hiveService.putInOtherNotes(
             key: key, title: title, content: content);
-      }
     }
     await _hiveService.deleteFromPinnedNotes(keys);
     loadNotes();

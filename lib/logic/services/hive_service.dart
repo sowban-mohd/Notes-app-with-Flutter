@@ -57,7 +57,7 @@ class HiveService {
   }
 
   ///Fetches note with the given key from 'PinnedNotes' box
-  Map<dynamic, dynamic>? fetchfromPinnedNotes(int key) {
+  Map<dynamic, dynamic> fetchfromPinnedNotes(int key) {
     return pinnedNotesBox.get(key);
   }
 
