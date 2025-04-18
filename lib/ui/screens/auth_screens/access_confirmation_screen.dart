@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:notetakingapp1/logic/providers/auth_screen_providers.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
-import '../../../logic/providers/auth_screen_providers.dart';
 
 class AccessConfirmationScreen extends ConsumerWidget {
   const AccessConfirmationScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //Provides access to email controller
     final emailController = ref.watch(authControllerProvider).emailController;
-
-    //Provides access to authentication state and notifier
-    final authState = ref.watch(authStateProvider);
     final authNotifier = ref.read(authStateProvider.notifier);
 
     return Scaffold(
@@ -24,7 +20,6 @@ class AccessConfirmationScreen extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //Text
               Expanded(
                 child: SizedBox(
                   width: 320,
@@ -36,7 +31,7 @@ class AccessConfirmationScreen extends ConsumerWidget {
                         'Access Confirmation',
                         style: Styles.titleStyle(fontSize: 40.0),
                       ),
-                      SizedBox(height: 18.0),
+                      const SizedBox(height: 18.0),
                       Text.rich(TextSpan(children: [
                         TextSpan(
                           text: 'We have sent a confirmation email to ',
@@ -47,7 +42,7 @@ class AccessConfirmationScreen extends ConsumerWidget {
                           style: Styles.boldTexts(fontSize: 16.0),
                         )
                       ])),
-                      SizedBox(height: 18.0),
+                      const SizedBox(height: 18.0),
                       Text(
                         'Kindly check your inbox and click on the link to reset your password',
                         style: Styles.subtitleStyle(fontSize: 16.0),
@@ -57,16 +52,16 @@ class AccessConfirmationScreen extends ConsumerWidget {
                 ),
               ),
 
-              SizedBox(height: 32.0),
+              const SizedBox(height: 32.0),
 
-              //Resend link button
               ElevatedButton(
                 onPressed: () {
                   authNotifier.passwordreset(emailController.text.trim());
                 },
                 style: Styles.elevatedButtonStyle(),
-                child: authState.isLoading
-                    ? SizedBox(
+                child: ref.watch(
+                        authStateProvider.select((state) => state.isLoading))
+                    ? const SizedBox(
                         width: 20,
                         height: 20,
                         child: CircularProgressIndicator(
@@ -82,7 +77,6 @@ class AccessConfirmationScreen extends ConsumerWidget {
 
               const SizedBox(height: 8.0),
 
-              //Textbuttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

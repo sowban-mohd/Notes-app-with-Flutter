@@ -2,25 +2,24 @@ import 'package:password_strength/password_strength.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 /// Manages password strength indicator
 class PasswordStrength {
-  final String? passwordStrength;
-  final Color? passwordStrengthColor;
+  final String passwordStrength;
+  final Color passwordStrengthColor;
 
-  PasswordStrength({this.passwordStrength, this.passwordStrengthColor});
+  PasswordStrength({required this.passwordStrength, required this.passwordStrengthColor});
 }
 
 /// Notifier which manages, exposes password strength indicator
-class PasswordStrengthNotifier extends Notifier<PasswordStrength> {
+class PasswordStrengthNotifier extends Notifier<PasswordStrength?> {
   @override
-  PasswordStrength build() => PasswordStrength();
+  PasswordStrength? build() => null;
 
   /// Evaluates password strength
   void evaluate(String password) {
     //Ensures strength message isn't displayed when password field is emptied
     if (password.isEmpty) {
-      state = PasswordStrength();
+      state = null;
       return;
     }
 
@@ -48,5 +47,5 @@ class PasswordStrengthNotifier extends Notifier<PasswordStrength> {
 
 /// Provider of PasswordStrengthNotifier
 final passwordStrengthProvider =
-    NotifierProvider<PasswordStrengthNotifier, PasswordStrength>(
+    NotifierProvider<PasswordStrengthNotifier, PasswordStrength?>(
         PasswordStrengthNotifier.new);

@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'ui/screens/screens.dart';
+import 'package:notetakingapp1/ui/screens/auth_screens/access_confirmation_screen.dart';
+import 'package:notetakingapp1/ui/screens/auth_screens/forgot_password_screen.dart';
+import 'package:notetakingapp1/ui/screens/auth_screens/login_screen.dart';
+import 'package:notetakingapp1/ui/screens/auth_screens/signup_screen.dart';
+import 'package:notetakingapp1/ui/screens/loading_screen.dart';
+import 'package:notetakingapp1/ui/screens/main_screens/homescreen.dart';
+import 'package:notetakingapp1/ui/screens/obpageview.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -61,11 +67,6 @@ class NoteApp extends StatelessWidget {
             builder: (context, state) =>
                 HomeScreen(), // Main notes listing screen
           ),
-          GoRoute(
-            path: '/note',
-            builder: (context, state) =>
-                NoteEditingscreen(), // Note editing screen
-          )
         ],
       ),
     );

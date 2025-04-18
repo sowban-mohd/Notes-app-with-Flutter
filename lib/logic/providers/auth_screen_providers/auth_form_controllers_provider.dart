@@ -13,11 +13,11 @@ class AuthFormControllers {
 }
 
 final authControllerProvider = Provider.autoDispose((ref) {
-  final authController = AuthFormControllers();
+  final authControllers = AuthFormControllers();
 
   ref.onDispose(() {
-    authController.dispose();
+    authControllers.dispose();
   });
 
-  return authController;
+  return authControllers;
 });

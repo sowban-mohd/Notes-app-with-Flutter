@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/styles.dart';
+import 'package:notetakingapp1/ui/theme/styles.dart';
 
 /// Displays a confirmation dialog before actions like Log Out, Note deletion
 Future<bool?> showConfirmationDialog(BuildContext context,
@@ -26,11 +26,15 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                   child: Text(
                     type == 'Quit App'
                         ? 'Are you sure you want to quit the app?'
-                        : type == 'Log Out'
-                            ? 'Are you sure you want to log out?'
+                        : type == 'Delete Note'
+                            ? 'Are you sure you want to delete this note?'
                             : type == 'Delete Notes'
                                 ? 'Are you sure you want to delete these notes?'
-                                : 'Are you sure you want to delete this note?',
+                                : type == 'Delete Folder'
+                                    ? 'Are you sure you want to delete this folder?'
+                                    : type == 'Delete Folders'
+                                        ? 'Are you sure you want to delete these folders?'
+                                        : 'Are you sure you want to log out?',
                     style: Styles.subtitleStyle(fontSize: 16.0),
                     textAlign: TextAlign.center,
                   ),
@@ -66,10 +70,10 @@ Future<bool?> showConfirmationDialog(BuildContext context,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(24))),
                       child: Text(
-                        type == 'Log Out'
-                            ? 'Log out'
-                            : type == 'Quit App'
-                                ? 'Quit'
+                        type == 'Quit App'
+                            ? 'Quit'
+                            : type == 'Log Out'
+                                ? 'Log out'
                                 : 'Delete',
                         style: Styles.universalFont(
                             color: colorScheme.error, fontSize: 16),

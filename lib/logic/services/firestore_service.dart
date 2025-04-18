@@ -6,64 +6,59 @@ class FirestoreService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String? get _uid => _auth.currentUser?.uid;
-  CollectionReference<Map<String, dynamic>> get _noteRef {
-    return _firestore.collection('users').doc(_uid).collection('notes');
-  }
 
-  /// Returns a stream of notes
-  Stream getNotesStream() {
+  /// Returns a stream of list of documents from specified collection
+  Stream<List<Map<String, dynamic>>> getCollectionStream(String collection) {
     if (_uid == null) {
       return Stream.empty();
     } // Return an empty stream when the user is logged out to prevent Firestore errors
 
-    return _noteRef
+    var collectionRef =
+        _firestore.collection('users').doc(_uid).collection(collection);
+
+    return collectionRef
         .orderBy('timestamp',
             descending: true) //Sorts based on created/updated time
         .snapshots() //Real-time updates
         .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
-    //Converts each note to a map and all the notes to list of maps
+    //Converts each document to a map and all the maps to list of maps
   }
-  
-  ///Adds note to the collection with the given title, content returns the related noteId for other operations
-  Future<String> addToCollection(String title, String content) async {
-    final docRef = await _noteRef.add({
-      'title': title,
-      'content': content,
-      'timestamp': FieldValue.serverTimestamp(),
-      'pinned' : false,
-    });
-    
+
+  ///Adds document to the collection with the given content and returns the related document id for other operations
+  Future<String> addToCollection(
+      {required String collection,
+      required Map<String, dynamic> content}) async {
+    final collectionRef =
+        _firestore.collection('users').doc(_uid).collection(collection);
+    final docRef = await collectionRef.add(content);
     return docRef.id;
   }
 
-  /// Updates the note of given noteId with the given title, content
-  Future<void> updateInCollection({String? title, String? content, required String noteId, required bool pinned }) async {
-    //Updates note
-    await _noteRef.doc(noteId).update({
-      'title': title,
-      'content': content,
-      'timestamp': FieldValue.serverTimestamp(),
-      'pinned': pinned,
-      'noteId': noteId,
-    });
+  /// Updates the document of given document id with the given content
+  Future<void> updateInCollection(
+      {required String collection,
+      required String docId,
+      required Map<String, dynamic> content}) async {
+    var collectionRef =
+        _firestore.collection('users').doc(_uid).collection(collection);
+    await collectionRef.doc(docId).set(content, SetOptions(merge : true));
   }
 
-  /// Deletes note from the collection with specific noteIds
-  Future<void> deleteFromCollection(Set<String> noteIds) async {
+  /// Deletes document from the collection with specified document Ids
+  Future<void> deleteFromCollection(
+      {required String collection, required Set<String> docIds}) async {
     //Enables firebase batch opeartions
-      final batch = _firestore.batch();
+    final batch = _firestore.batch();
+    final collectionRef =
+        _firestore.collection('users').doc(_uid).collection(collection);
 
-      for (final noteId in noteIds) {
-        final noteRef = _firestore
-            .collection('users')
-            .doc(_uid)
-            .collection('notes')
-            .doc(noteId);
+    for (final docId in docIds) {
+      final docRef = collectionRef.doc(docId);
 
-        //Queues delete operation for each notes with noteIds from the list inside user's notes collection
-        batch.delete(noteRef);
-      }
-      //Performs queued batch operations
-      await batch.commit();
+      //Queues delete operation for each documents with document Ids from specified collection
+      batch.delete(docRef);
+    }
+    //Performs queued batch operations
+    await batch.commit();
   }
 }

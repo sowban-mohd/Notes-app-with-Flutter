@@ -1,166 +1,93 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:notetakingapp1/logic/providers/auth_change_provider.dart';
 import 'package:notetakingapp1/logic/providers/auth_screen_providers/auth_state_provider.dart';
-import 'package:notetakingapp1/logic/providers/home_screen_providers/category_provider.dart';
+import 'package:notetakingapp1/logic/providers/folder_notes_selection_provider.dart';
+import 'package:notetakingapp1/logic/providers/category_provider.dart';
+import 'package:notetakingapp1/logic/providers/folders_providers.dart';
 import 'package:notetakingapp1/logic/providers/initial_location_provider.dart';
-import 'package:notetakingapp1/logic/providers/home_screen_providers.dart';
+import 'package:notetakingapp1/logic/providers/note_ops_state_provider.dart';
+import 'package:notetakingapp1/logic/providers/note_selection_provider.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
-import 'package:notetakingapp1/logic/utils/utils.dart';
-import 'package:notetakingapp1/ui/widgets/home_screen_widgets.dart';
+import 'package:notetakingapp1/ui/widgets/all_notes_body.dart';
+import 'package:notetakingapp1/ui/widgets/app_bar_with_all_notes_ops.dart';
+import 'package:notetakingapp1/ui/widgets/app_bar_with_folder_notes_ops.dart';
+import 'package:notetakingapp1/ui/widgets/app_bar_with_folders_ops.dart';
+import 'package:notetakingapp1/ui/widgets/category_list.dart';
+import 'package:notetakingapp1/ui/widgets/default_app_bar.dart';
+import 'package:notetakingapp1/ui/widgets/folder_notes_body.dart';
+import 'package:notetakingapp1/ui/widgets/folders_body.dart';
+import 'package:notetakingapp1/ui/widgets/home_fab.dart';
+import 'package:notetakingapp1/ui/widgets/search_bar.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final initialLocationNotifier = ref.read(initialLocationProvider.notifier);
-    final authChange = ref.watch(authChangeProvider);
+    // Listener for generalError
+    ref.listen(authStateProvider.select((state) => state.generalError),
+        (prev, next) async {
+      if (next != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next)),
+        );
+      }
+    });
 
-    // Navigate to login screen if the user is logged out
-    authChange.whenData((user) async {
-      if (user == null) {
+    // Listener for user state
+    ref.listen(authStateProvider.select((state) => state.user),
+        (prev, next) async {
+      if (next == null) {
+        final initialLocationNotifier =
+            ref.read(initialLocationProvider.notifier);
         await initialLocationNotifier.setInitialLocation('/login');
         if (context.mounted) context.go('/login');
       }
     });
 
-    //Displays authentication error messages if any
-    ref.listen<AuthState>(authStateProvider, (previous, next) {
-      if (next.generalError != null) {
-        showSnackbarMessage(context, message: next.generalError!);
-        ref.read(authStateProvider.notifier).clearState();
-      }
-    });
-
-    // Display error messsage if there is any error in deleting note
-    ref.listen<String?>(deleteNoteProvider, (previous, next) {
+    // Listener for note operation state
+    ref.listen<String?>(noteOpsStateProvider, (previous, next) {
       if (next != null) {
-        showSnackbarMessage(context, message: next);
-        ref.read(deleteNoteProvider.notifier).clearError();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(next)));
       }
     });
 
-    // Display error message if there is an error in saving note
-    ref.listen<String?>(noteCudProvider, (previous, next) {
-      if (next != null) {
-        showSnackbarMessage(context, message: next);
-        ref.read(noteCudProvider.notifier).clearError();
-      }
-    });
+    final category = ref.watch(categoryProvider);
+    final selectedNotes = ref.watch(noteSelectionProvider(NoteType.all));
+    final selectedFolders = ref.watch(folderSelectionProvider);
+    final selectedFolderNotes = ref.watch(folderNoteSelectionProvider);
 
-    //UI
     return Scaffold(
         backgroundColor: colorScheme.surface,
-        appBar: NoteAppBar(),
+        appBar: category == 'All Notes' && selectedNotes.isNotEmpty
+            ? AppBarWithAllNotesOps()
+            : category == 'Folders' && selectedFolders.isNotEmpty
+                ? AppBarWithFolderOps()
+                : selectedFolderNotes.isNotEmpty
+                    ? AppBarWithFolderNotesOps()
+                    : DefaultAppBar(),
         body: SafeArea(
-          // Main body of the screen
           child: Padding(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
                 left: 18.0, right: 18.0, top: 10.0, bottom: 16.0),
-            child: Consumer(builder: (context, ref, child) {
-              final notes = ref.watch(notesProvider);
-              final notesNotifier = ref.watch(notesProvider.notifier);
-              final query = ref.watch(searchProvider);
-              final category = ref.watch(categoryProvider);
-
-              if (notesNotifier.isLoading) {
-                return Center(
-                    child: CircularProgressIndicator(
-                  color: colorScheme.primary,
-                ));
-              }
-
-              if (notesNotifier.errorMessage != null) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      duration: Duration(days: 1),
-                      content: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('An error occured',
-                              style: Styles.universalFont(fontSize: 16.0)),
-                          TextButton(
-                              onPressed: () => notesNotifier.retry(),
-                              child: Text(
-                                'Retry',
-                                style: Styles.textButtonStyle(fontSize: 16.0),
-                              ))
-                        ],
-                      )));
-                  notesNotifier.clearError();
-                });
-                return SizedBox.shrink();
-              }
-
-              if (notes.isEmpty) {
-                return EmptyNoteScreenBody(); // Screen to display if notes are empty
-              }
-
-              final pinnedNotes =
-                  notes.where((note) => note['pinned'] == true).toList();
-              final otherNotes =
-                  notes.where((note) => note['pinned'] == false).toList();
-              final filteredPinnedNotes = filterNotes(pinnedNotes, query);
-              final filteredOtherNotes = filterNotes(otherNotes, query);
-
-              // If notes are not empty
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SearchBarWidget(),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CategoryGrid(),
-                          if (filteredPinnedNotes.isNotEmpty) ...[
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 12.0, left: 16.0, bottom: 8.0),
-                              child: Text(
-                                'Pinned Notes',
-                                style: Styles.noteSectionTitle(),
-                              ),
-                            ),
-                            NotesGridView(
-                                notes: filteredPinnedNotes, isNotePinned: true),
-                            if (filteredOtherNotes.isNotEmpty) ...[
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: 12.0, left: 16.0, bottom: 8.0),
-                                child: Text(
-                                  'Other Notes',
-                                  style: Styles.noteSectionTitle(),
-                                ),
-                              ),
-                            ]
-                          ],
-                          if (filteredPinnedNotes.isEmpty) ...[
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 12.0, left: 16.0, bottom: 8.0),
-                              child: Text(
-                                category,
-                                style: Styles.noteSectionTitle(),
-                              ),
-                            ),
-                          ],
-                          NotesGridView(
-                              notes: filteredOtherNotes, isNotePinned: false),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            }),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SearchBarWidget(),
+                CategoryList(),
+                Expanded(
+                  child: category == 'All Notes'
+                      ? AllNotesBody()
+                      : category == 'Folders'
+                          ? FoldersBody()
+                          : FolderNotesBody(),
+                ),
+              ],
+            ),
           ),
         ),
-        floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 12.0, right: 6.0),
-            child: NoteFloatingButton()));
+        floatingActionButton: HomeFAB());
   }
 }

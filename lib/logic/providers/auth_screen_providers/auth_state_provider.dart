@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notetakingapp1/logic/services/auth_service.dart';
 import 'package:notetakingapp1/logic/utils/auth_error_handler.dart';
 
 /// Manages the Authentication State
 class AuthState {
+  final User? user;
   final String? emailError;
   final String? passwordError;
   final String? generalError;
@@ -12,7 +13,8 @@ class AuthState {
   final bool isLoading;
 
   AuthState(
-      {this.emailError,
+      {this.user,
+      this.emailError,
       this.passwordError,
       this.generalError,
       this.successMessage,
@@ -21,16 +23,25 @@ class AuthState {
 
 // Notifier to handle authentication state and logic
 class AuthStateNotifier extends Notifier<AuthState> {
+  final _auth = FirebaseAuth.instance;
+  late final StreamSubscription<User?> _authSubscription;
+
   @override
-  AuthState build() => AuthState(isLoading: false);
+  AuthState build() {
+    _authSubscription = _auth.authStateChanges().listen((user) {
+      state = AuthState(isLoading: false, user: user);
+    });
 
-  final AuthService _authService = AuthService();
+    ref.onDispose(() {
+      _authSubscription.cancel();
+    });
 
-  /// Logins or Signups(when the isSignUp is true) with given email and apssword
-  Future<void> authenticate(String email, String password,
-      {bool isSignup = false}) async {
+    return AuthState(isLoading: false);
+  }
+
+  Future<void> signup(String email, String password) async {
     state = AuthState(isLoading: true);
-    
+
     if (email.isEmpty || password.isEmpty) {
       state = AuthState(
         emailError: email.isEmpty ? 'Email cannot be empty.' : null,
@@ -41,13 +52,27 @@ class AuthStateNotifier extends Notifier<AuthState> {
     }
 
     try {
-      if (isSignup) {
-        await _authService.signUp(email: email, password: password);
-        state = AuthState(isLoading: false, successMessage: 'Sign up is successful. Now login');
-      } else {
-        await _authService.login(email: email, password: password);
-        state = AuthState(isLoading: false);
-      }
+      await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      _handleAuthError(e);
+    }
+  }
+
+  Future<void> login(String email, String password) async {
+    state = AuthState(isLoading: true);
+
+    if (email.isEmpty || password.isEmpty) {
+      state = AuthState(
+        emailError: email.isEmpty ? 'Email cannot be empty.' : null,
+        passwordError: password.isEmpty ? 'Password cannot be empty.' : null,
+        isLoading: false,
+      );
+      return;
+    }
+
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       _handleAuthError(e);
     }
@@ -63,7 +88,7 @@ class AuthStateNotifier extends Notifier<AuthState> {
     }
 
     try {
-      await _authService.resetPassword(email);
+      await _auth.sendPasswordResetEmail(email: email);
       state = AuthState(
           successMessage: 'Password reset email sent', isLoading: false);
     } on FirebaseAuthException catch (e) {
@@ -74,9 +99,11 @@ class AuthStateNotifier extends Notifier<AuthState> {
   /// Logs out the user
   Future<void> logOut() async {
     try {
-      await _authService.logout();
+      await _auth.signOut();
     } catch (e) {
+      final currentUser = _auth.currentUser;
       state = AuthState(
+          user: currentUser,
           isLoading: false,
           generalError: 'Error signing out : ${e.toString()}');
     }

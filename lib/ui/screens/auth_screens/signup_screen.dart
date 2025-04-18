@@ -1,58 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:notetakingapp1/logic/providers/auth_screen_providers.dart';
+import 'package:notetakingapp1/logic/providers/initial_location_provider.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
-import 'package:notetakingapp1/logic/utils/utils.dart';
-import '../../widgets/authscreen_layout.dart';
-import '../../../logic/providers/auth_screen_providers.dart';
+import 'package:notetakingapp1/ui/reusable_screen_layouts/authscreen_layout.dart';
 
 class SignUpScreen extends ConsumerWidget {
   const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(
+      authStateProvider.select((state) => state.generalError),
+      (prev, next) {
+        if (next != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(next)),
+          );
+        }
+      },
+    );
+
+    ref.listen(
+      authStateProvider.select((state) => state.user),
+      (prev, next) async {
+        if (next != null) {
+          await ref
+              .read(initialLocationProvider.notifier)
+              .setInitialLocation('/home');
+          if (context.mounted) context.go('/home');
+        }
+      },
+    );
+
     final controllers = ref.watch(authControllerProvider);
-
-    //Gets access to authentication state and notifier
-    final signUpState = ref.watch(authStateProvider);
-    final signUpStateNotifier = ref.read(authStateProvider.notifier);
-
-    //Gets access to password strength message state
-    final passwordStrengthState = ref.watch(passwordStrengthProvider);
-
-    //Gets access to bool value which indicates if the password is hidden
-    final isPasswordHidden = ref.watch(passwordVisibilityProvider);
-
-    if (signUpState.generalError != null) {
-      showSnackbarMessage(context, message: signUpState.generalError!);
-    }
-
-    // Navigate to login screen on successful signup
-    ref.listen(authStateProvider, (previous, next) {
-      if (next.successMessage != null) {
-        context.go('/login');
-      }
-    });
 
     return AuthScreenLayout(
       emailController: controllers.emailController,
       passwordController: controllers.passwordController,
       title: 'Begin your notes taking adventure with us! Sign Up',
-      emailError: signUpState.emailError,
-      passwordError: signUpState.passwordError,
-      clearErrorFunction: signUpStateNotifier.clearState,
-      isPasswordHidden: isPasswordHidden,
+      emailError: ref
+          .watch(authStateProvider.select((authState) => authState.emailError)),
+      passwordError: ref.watch(
+          authStateProvider.select((authState) => authState.passwordError)),
+      clearErrorFunction: ref.read(authStateProvider.notifier).clearState,
+      isPasswordHidden: ref.watch(passwordVisibilityProvider),
       visibilityOnPressed: () {
-        ref.read(passwordVisibilityProvider.notifier).state = !isPasswordHidden;
+        ref.read(passwordVisibilityProvider.notifier).state =
+            !ref.read(passwordVisibilityProvider);
       },
       strengthEvaluateFunction: (password) {
-        /// Gets access to strength evaluate method
-        final passwordStrengthNotifier =
-            ref.read(passwordStrengthProvider.notifier);
-        passwordStrengthNotifier.evaluate(password);
+        ref.read(passwordStrengthProvider.notifier).evaluate(password);
       },
-      belowPassword: signUpState.passwordError == null &&
-              passwordStrengthState.passwordStrength != null
+      belowPassword: ref.watch(authStateProvider
+                      .select((authState) => authState.passwordError)) ==
+                  null &&
+              ref.watch(passwordStrengthProvider) != null
           ? Text.rich(
               TextSpan(
                 children: [
@@ -61,37 +65,41 @@ class SignUpScreen extends ConsumerWidget {
                     style: Styles.universalFont(color: colorScheme.onSurface),
                   ),
                   TextSpan(
-                    text: passwordStrengthState.passwordStrength!,
+                    text: ref.read(passwordStrengthProvider)!.passwordStrength,
                     style: Styles.universalFont(
-                        color: passwordStrengthState.passwordStrengthColor),
+                      color: ref
+                          .read(passwordStrengthProvider)!
+                          .passwordStrengthColor,
+                    ),
                   ),
                 ],
               ),
             )
           : const SizedBox.shrink(),
-      buttonWidget: signUpState.isLoading
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                color: colorScheme.onPrimary,
-                strokeWidth: 2,
-              ),
-            )
-          : Text(
-              'Sign Up',
-              style: Styles.elevatedButtonTextStyle(),
-            ),
+      buttonWidget:
+          ref.watch(authStateProvider.select((state) => state.isLoading))
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  ),
+                )
+              : Text(
+                  'Sign Up',
+                  style: Styles.elevatedButtonTextStyle(),
+                ),
       onSubmit: () {
-        signUpStateNotifier.authenticate(
-            controllers.emailController.text.trim(),
-            controllers.passwordController.text.trim(),
-            isSignup: true);
+        ref.read(authStateProvider.notifier).signup(
+              controllers.emailController.text.trim(),
+              controllers.passwordController.text.trim(),
+            );
       },
       bottomText: 'Already have an account?',
       toggleText: 'Login',
       onToggle: () {
-        signUpStateNotifier.clearState();
+        ref.read(authStateProvider.notifier).clearState();
         context.go('/login');
       },
     );
