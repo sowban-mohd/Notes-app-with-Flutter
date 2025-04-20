@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:notetakingapp1/logic/providers/search_provider.dart';
+import 'package:notetakingapp1/logic/providers/home_screen/search_provider.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 import 'package:notetakingapp1/logic/utils/utils.dart';
 

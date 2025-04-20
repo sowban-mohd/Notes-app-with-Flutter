@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:notetakingapp1/logic/providers/auth_screen_providers/auth_state_provider.dart';
+import 'package:notetakingapp1/logic/providers/auth_screen/auth_state_provider.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 import 'package:notetakingapp1/ui/widgets/confirmaton_dialog.dart';
 

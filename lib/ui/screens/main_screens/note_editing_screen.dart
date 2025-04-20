@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notetakingapp1/logic/providers/note_ops_state_provider.dart';
+import 'package:notetakingapp1/logic/providers/all_notes_category/note_ops_state_provider.dart';
 import 'package:notetakingapp1/ui/reusable_screen_layouts/note_editing_screen_layout.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 

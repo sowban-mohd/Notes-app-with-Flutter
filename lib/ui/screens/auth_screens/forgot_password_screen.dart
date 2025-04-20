@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:notetakingapp1/logic/providers/auth_screen_providers.dart';
+import 'package:notetakingapp1/logic/providers/auth_screen/auth_form_controllers_provider.dart';
+import 'package:notetakingapp1/logic/providers/auth_screen/auth_state_provider.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 
 class ForgotPasswordScreen extends ConsumerWidget {

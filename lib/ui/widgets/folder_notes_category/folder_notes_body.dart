@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notetakingapp1/logic/providers/category_provider.dart';
-import 'package:notetakingapp1/logic/providers/folder_notes_selection_provider.dart';
-import 'package:notetakingapp1/logic/providers/body_stream_provider.dart';
-import 'package:notetakingapp1/logic/providers/search_provider.dart';
+import 'package:notetakingapp1/logic/providers/home_screen/category_provider.dart';
+import 'package:notetakingapp1/logic/providers/folder_notes_category/folder_notes_list_provider.dart';
+import 'package:notetakingapp1/logic/providers/folder_notes_category/folder_notes_provider.dart';
+import 'package:notetakingapp1/logic/providers/folder_notes_category/folder_notes_selection_provider.dart';
+import 'package:notetakingapp1/logic/providers/home_screen/search_provider.dart';
 import 'package:notetakingapp1/logic/utils/utils.dart';
 import 'package:notetakingapp1/ui/screens/main_screens/folder_note_editing_screen.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
@@ -13,37 +14,42 @@ class FolderNotesBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final notesStream = ref.watch(bodyStreamProvider);
-    return notesStream.when(data: (notes) {
-      if (notes.isEmpty) {
-        return Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.edit_note,
-              size: 50.0,
-            ),
-            const SizedBox(
-              height: 4.0,
-            ),
-            Consumer(
-              builder: (context, ref, child) {
-                final folderName = ref.watch(categoryProvider);
-                return Text('$folderName is empty!\nCreate a note.',
-                  textAlign: TextAlign.center,
-                  style: Styles.universalFont(fontSize: 20.0));
-              }
-            ),
-          ],
-        ));
-      }
+    final folderName = ref.watch(categoryProvider);
 
-      final folderName = ref.watch(categoryProvider);
+    ref.listen(folderNotesProvider(folderName), (prev, next) {
+      next.whenData(
+          (notes) => ref.read(folderNotesListProvider.notifier).state = notes);
+    });
+
+    final notesStream = ref.watch(folderNotesProvider(folderName));
+    return notesStream.when(data: (notes) {
       final query = ref.watch(searchProvider);
-      final filteredNotes = filterNotes(notes, query);
+      final isSearching = query.isNotEmpty;
+      final filteredNotes = isSearching ? filterNotes(notes, query) : notes;
       final selectedNotes = ref.watch(folderNoteSelectionProvider);
       final selectionNotifier = ref.read(folderNoteSelectionProvider.notifier);
+
+      if (filteredNotes.isEmpty) {
+        final message = isSearching
+            ? 'No results!'
+            : '$folderName is empty!\nCreate a note.';
+        final icon = isSearching ? Icons.search_off : Icons.edit_note_sharp;
+
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 50.0, color: Colors.grey),
+              const SizedBox(height: 8.0),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: Styles.universalFont(fontSize: 20.0),
+              ),
+            ],
+          ),
+        );
+      }
 
       return SingleChildScrollView(
         child: Column(
@@ -148,24 +154,9 @@ class FolderNotesBody extends ConsumerWidget {
     }, error: (error, stacktrace) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          duration: Duration(days: 1),
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('An error occured',
-                  style: Styles.universalFont(fontSize: 16.0)),
-              TextButton(
-                onPressed: () {
-                  ref.refresh(bodyStreamProvider);
-                },
-                child: Text(
-                  'Retry',
-                  style: Styles.textButtonStyle(fontSize: 16.0),
-                ),
-              ),
-            ],
-          ),
-        ));
+            duration: Duration(days: 1),
+            content: Text('Error : ${error.toString()}',
+                style: Styles.universalFont(fontSize: 16.0))));
       });
       return SizedBox.shrink();
     }, loading: () {

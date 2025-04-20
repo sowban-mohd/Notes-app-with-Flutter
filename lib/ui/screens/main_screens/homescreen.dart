@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:notetakingapp1/logic/providers/auth_screen_providers/auth_state_provider.dart';
-import 'package:notetakingapp1/logic/providers/folder_notes_selection_provider.dart';
-import 'package:notetakingapp1/logic/providers/category_provider.dart';
-import 'package:notetakingapp1/logic/providers/folders_providers.dart';
+import 'package:notetakingapp1/logic/providers/auth_screen/auth_state_provider.dart';
+import 'package:notetakingapp1/logic/providers/home_screen/category_provider.dart';
+import 'package:notetakingapp1/logic/providers/folder_notes_category/folder_notes_selection_provider.dart';
+import 'package:notetakingapp1/logic/providers/folders_category/folder_selection_provider.dart';
+import 'package:notetakingapp1/logic/providers/all_notes_category/note_ops_state_provider.dart';
+import 'package:notetakingapp1/logic/providers/all_notes_category/note_selection_provider.dart';
 import 'package:notetakingapp1/logic/providers/initial_location_provider.dart';
-import 'package:notetakingapp1/logic/providers/note_ops_state_provider.dart';
-import 'package:notetakingapp1/logic/providers/note_selection_provider.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
-import 'package:notetakingapp1/ui/widgets/all_notes_body.dart';
-import 'package:notetakingapp1/ui/widgets/app_bar_with_all_notes_ops.dart';
-import 'package:notetakingapp1/ui/widgets/app_bar_with_folder_notes_ops.dart';
-import 'package:notetakingapp1/ui/widgets/app_bar_with_folders_ops.dart';
+import 'package:notetakingapp1/ui/widgets/all_notes_category/all_notes_body.dart';
+import 'package:notetakingapp1/ui/widgets/all_notes_category/app_bar_with_all_notes_ops.dart';
+import 'package:notetakingapp1/ui/widgets/folder_notes_category/app_bar_with_folder_notes_ops.dart';
+import 'package:notetakingapp1/ui/widgets/folders_category/app_bar_with_folders_ops.dart';
 import 'package:notetakingapp1/ui/widgets/category_list.dart';
 import 'package:notetakingapp1/ui/widgets/default_app_bar.dart';
-import 'package:notetakingapp1/ui/widgets/folder_notes_body.dart';
-import 'package:notetakingapp1/ui/widgets/folders_body.dart';
+import 'package:notetakingapp1/ui/widgets/folder_notes_category/folder_notes_body.dart';
+import 'package:notetakingapp1/ui/widgets/folders_category/folders_body.dart';
 import 'package:notetakingapp1/ui/widgets/home_fab.dart';
 import 'package:notetakingapp1/ui/widgets/search_bar.dart';
 
@@ -29,28 +29,33 @@ class HomeScreen extends ConsumerWidget {
     ref.listen(authStateProvider.select((state) => state.generalError),
         (prev, next) async {
       if (next != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next)),
-        );
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(next)),
+          );
+        });
       }
     });
 
-    // Listener for user state
     ref.listen(authStateProvider.select((state) => state.user),
         (prev, next) async {
       if (next == null) {
         final initialLocationNotifier =
             ref.read(initialLocationProvider.notifier);
         await initialLocationNotifier.setInitialLocation('/login');
+        await Future.delayed(Duration(seconds: 1));
         if (context.mounted) context.go('/login');
       }
     });
 
-    // Listener for note operation state
+    // Listener for note operation errors
     ref.listen<String?>(noteOpsStateProvider, (previous, next) {
       if (next != null) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(next)));
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(next)),
+          );
+        });
       }
     });
 
@@ -72,19 +77,40 @@ class HomeScreen extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.only(
                 left: 18.0, right: 18.0, top: 10.0, bottom: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SearchBarWidget(),
-                CategoryList(),
-                Expanded(
-                  child: category == 'All Notes'
-                      ? AllNotesBody()
-                      : category == 'Folders'
-                          ? FoldersBody()
-                          : FolderNotesBody(),
-                ),
-              ],
+            child: Consumer(
+              builder: (context, ref, child) {
+                final user =
+                    ref.watch(authStateProvider.select((state) => state.user));
+                if (user == null) {
+                  return Center(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        color: colorScheme.primary,
+                      ),
+                      Text(
+                        'Logging out...',
+                        style: Styles.universalFont(fontSize: 16.0),
+                      ),
+                    ],
+                  )); // Show spinner
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SearchBarWidget(),
+                    CategoryList(),
+                    Expanded(
+                      child: category == 'All Notes'
+                          ? AllNotesBody()
+                          : category == 'Folders'
+                              ? FoldersBody()
+                              : FolderNotesBody(),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),

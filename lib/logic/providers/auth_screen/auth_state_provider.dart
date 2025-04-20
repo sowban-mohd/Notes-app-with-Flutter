@@ -98,6 +98,7 @@ class AuthStateNotifier extends Notifier<AuthState> {
 
   /// Logs out the user
   Future<void> logOut() async {
+    state = AuthState(isLoading: true);
     try {
       await _auth.signOut();
     } catch (e) {

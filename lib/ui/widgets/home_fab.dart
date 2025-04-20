@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notetakingapp1/logic/providers/note_selection_provider.dart';
-import 'package:notetakingapp1/logic/providers/folder_notes_selection_provider.dart';
-import 'package:notetakingapp1/logic/providers/folder_selection_provider.dart';
-import 'package:notetakingapp1/logic/providers/category_provider.dart';
+import 'package:notetakingapp1/logic/providers/home_screen/category_provider.dart';
+import 'package:notetakingapp1/logic/providers/folder_notes_category/folder_notes_selection_provider.dart';
+import 'package:notetakingapp1/logic/providers/folders_category/folder_selection_provider.dart';
+import 'package:notetakingapp1/logic/providers/all_notes_category/note_selection_provider.dart';
 import 'package:notetakingapp1/ui/screens/main_screens/folder_note_editing_screen.dart';
 import 'package:notetakingapp1/ui/screens/main_screens/note_editing_screen.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
-import 'package:notetakingapp1/ui/widgets/save_folder_bottom_sheet.dart';
+import 'package:notetakingapp1/ui/widgets/folders_category/save_folder_bottom_sheet.dart';
 
 class HomeFAB extends ConsumerWidget {
   const HomeFAB({super.key});

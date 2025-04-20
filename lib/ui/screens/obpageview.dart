@@ -46,7 +46,6 @@ class _OnboardingPageViewState extends ConsumerState<OnboardingPageView> {
     return Scaffold(
       body: PageView(
         controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
         children: [
           OnboardingLayout(
             pageIndex: 0,

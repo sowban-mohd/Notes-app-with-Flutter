@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notetakingapp1/logic/providers/folder_ops_state_provider.dart';
+import 'package:notetakingapp1/logic/providers/folders_category/folder_ops_state_provider.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 
 void showSaveFolderSheet({required BuildContext context, Map? folder}) {

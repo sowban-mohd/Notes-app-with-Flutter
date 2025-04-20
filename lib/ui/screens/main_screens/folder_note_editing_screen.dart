@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notetakingapp1/logic/providers/note_ops_state_provider.dart';
-import 'package:notetakingapp1/logic/providers/category_provider.dart';
+import 'package:notetakingapp1/logic/providers/home_screen/category_provider.dart';
+import 'package:notetakingapp1/logic/providers/folder_notes_category/folder_notes_ops_state_provider.dart';
+import 'package:notetakingapp1/logic/providers/all_notes_category/note_ops_state_provider.dart';
 import 'package:notetakingapp1/ui/reusable_screen_layouts/note_editing_screen_layout.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 
@@ -49,6 +50,8 @@ class _FolderNoteEditingScreenState
   @override
   Widget build(BuildContext context) {
     final noteOpsNotifier = ref.read(noteOpsStateProvider.notifier);
+    final folderNoteOpsNotifier =
+        ref.read(folderNotesOpsProvider(folder).notifier);
 
     return NoteEditingScreenLayout(
       onBack: () => Navigator.pop(context),
@@ -56,16 +59,19 @@ class _FolderNoteEditingScreenState
         if (noteId == null) {
           await noteOpsNotifier.addNote(
               title: titleController.text, content: contentController.text);
-          await noteOpsNotifier.addNote(
-              title: titleController.text,
-              content: contentController.text,
-              folder: folder);
+          await folderNoteOpsNotifier.addToFolder(
+            title: titleController.text,
+            content: contentController.text,
+          );
         } else {
           await noteOpsNotifier.updateNote(
               title: titleController.text,
               content: contentController.text,
-              noteId: noteId!,
-              folder: folder);
+              noteId: noteId!);
+          await folderNoteOpsNotifier.updateInFolder(
+              title: titleController.text,
+              content: contentController.text,
+              noteId: noteId!);
         }
         if (context.mounted) Navigator.pop(context);
       },

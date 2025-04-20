@@ -23,6 +23,10 @@ class NoteSelectionNotifier extends FamilyNotifier<Set<String>, NoteType> {
   void clearSelection() {
     state = {};
   }
+
+  void selectAll(Set<String> noteIds) {
+    state = {...state, ...noteIds};
+  }
 }
 
 /// Provider of SelectionNotifier

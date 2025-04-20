@@ -66,7 +66,7 @@ class NoteApp extends StatelessWidget {
             path: '/home',
             builder: (context, state) =>
                 HomeScreen(), // Main notes listing screen
-          ),
+          )
         ],
       ),
     );

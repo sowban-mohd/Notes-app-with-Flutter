@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notetakingapp1/logic/providers/note_selection_provider.dart';
+import 'package:notetakingapp1/logic/providers/all_notes_category/note_selection_provider.dart';
+import 'package:notetakingapp1/logic/providers/all_notes_category/should_select_all_notes_provider.dart';
 import 'package:notetakingapp1/logic/utils/utils.dart';
 import 'package:notetakingapp1/ui/screens/main_screens/note_editing_screen.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
@@ -16,8 +17,26 @@ class NotesGridView extends ConsumerWidget {
     final selectedNotes = ref.watch(noteSelectionProvider(NoteType.all));
     final selectionNotifier =
         ref.read(noteSelectionProvider(NoteType.all).notifier);
-    final selectedPinnedNotifier =
-        ref.read(noteSelectionProvider(NoteType.pinned).notifier);
+
+    ref.listen<bool>(shouldSelectAllNotesProvider, (previous, next) {
+      if (next == true) {
+        final allNoteIds =
+            notes.map((note) => note['noteId'] as String).toSet();
+        selectionNotifier.selectAll(allNoteIds);
+        if (isNotePinned) {
+          ref
+              .read(noteSelectionProvider(NoteType.pinned).notifier)
+              .selectAll(allNoteIds);
+        }
+      } else if (next == false) {
+        selectionNotifier.clearSelection();
+        if (isNotePinned) {
+          ref
+              .read(noteSelectionProvider(NoteType.pinned).notifier)
+              .clearSelection();
+        }
+      }
+    });
 
     //Notes grid
     return GridView.builder(
@@ -52,10 +71,12 @@ class NotesGridView extends ConsumerWidget {
             },
             //When long pressed
             onLongPress: () {
-              if (isNotePinned) {
-                selectedPinnedNotifier.toggleSelection(noteId);
-              }
               selectionNotifier.toggleSelection(noteId);
+              if (isNotePinned) {
+                ref
+                    .read(noteSelectionProvider(NoteType.pinned).notifier)
+                    .toggleSelection(noteId);
+              }
             },
             child: Card(
               elevation: selectedNotes.contains(noteId) ? 3.0 : 1.0,
