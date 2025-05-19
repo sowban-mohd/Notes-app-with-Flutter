@@ -18,6 +18,7 @@ class DefaultAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
     return AppBar(
         elevation: 0,
+        centerTitle: false,
         backgroundColor: colorScheme.surface,
         title: Padding(
           padding: EdgeInsets.only(left: 4.0, top: 10.0),
@@ -34,7 +35,7 @@ class DefaultAppBar extends ConsumerWidget implements PreferredSizeWidget {
               ),
               Text(
                 'Notes',
-                style: Styles.titleStyle(fontSize: 24.0),
+                style: Styles.titleStyle(fontSize: 22.0),
               ),
             ],
           ),

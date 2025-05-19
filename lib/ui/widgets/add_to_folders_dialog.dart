@@ -4,7 +4,8 @@ import 'package:notetakingapp1/logic/providers/folders_category/folders_list_pro
 import 'package:notetakingapp1/ui/theme/styles.dart';
 
 Future<List<String>?> showAddToFoldersDialog(
-    BuildContext context, WidgetRef ref, {String? currentFolder}) {
+    BuildContext context, WidgetRef ref,
+    {String? currentFolder}) {
   final List<String> folders = ref
       .read(foldersListProvider)
       .map((folder) => folder['name'].toString())
@@ -25,7 +26,8 @@ Future<List<String>?> showAddToFoldersDialog(
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
         child: StatefulBuilder(builder: (context, setState) {
-          return Padding(
+          return Container(
+            constraints: BoxConstraints(maxWidth: 300, minWidth: 200),
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
             child: Column(
               mainAxisSize: MainAxisSize.min,

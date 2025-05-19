@@ -41,7 +41,7 @@ class Styles {
   /// Style for elevated buttons
   static ButtonStyle elevatedButtonStyle() {
     return ElevatedButton.styleFrom(
-      minimumSize: const Size(304, 56),
+      minimumSize: const Size(250, 50),
       backgroundColor: colorScheme.primary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
@@ -52,7 +52,7 @@ class Styles {
   /// Style for texts in elevatedbuttons
   static TextStyle elevatedButtonTextStyle() {
     return w700texts(
-      fontSize: 17,
+      fontSize: 16,
       color: colorScheme.onPrimary,
     );
   }
@@ -81,7 +81,7 @@ class Styles {
 
   ///Style for notes sections
   static TextStyle noteSectionTitle(){
-    return boldTexts(fontSize: 14.0);
+    return boldTexts(fontSize: 12.0);
   }
 
   ///Theme for selection inside a textfield

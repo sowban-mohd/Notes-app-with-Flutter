@@ -1,13 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:notetakingapp1/logic/providers/firebase_providers.dart';
 
 class NoteOpsStateNotifier extends Notifier<String?> {
-  @override
-  String? build() => null;
+  FirebaseAuth get _auth => ref.read(authProvider);
+  FirebaseFirestore get _firestore => ref.read(firestoreProvider);
+  String? get _uid => _auth.currentUser?.uid;
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final String? _uid = FirebaseAuth.instance.currentUser?.uid;
+  @override
+  String? build() {
+    return null;
+  }
 
   ///Adds note
   Future<void> addNote({required String title, required String content}) async {
@@ -73,6 +77,19 @@ class NoteOpsStateNotifier extends Notifier<String?> {
       await batch.commit();
     } on FirebaseException catch (e) {
       state = 'Failed to delete notes : ${e.toString()}';
+    }
+  }
+
+  Future<void> copyNote(String noteId) async {
+    final collectionRef =
+        _firestore.collection('users').doc(_uid).collection('notes');
+
+    try {
+      final docRef = await collectionRef.doc(noteId).get()..data();
+      final noteData = docRef.data()!;
+      await addNote(title: noteData['title'], content: noteData['content']);
+    } on FirebaseException catch (e) {
+      state = 'Failed to copy note : ${e.toString()}';
     }
   }
 

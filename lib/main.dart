@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +22,11 @@ void main() async {
   );
 
   // Wraps the app with Riverpod's ProviderScope for state management
-  runApp(ProviderScope(child: NoteApp()));
+  runApp(DevicePreview(builder: (context) {
+    return ProviderScope(child: NoteApp());
+  },
+  enabled: false,
+  ));
 }
 
 class NoteApp extends StatelessWidget {
@@ -30,6 +35,8 @@ class NoteApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      locale: DevicePreview.locale(context), // Sets the locale for the app
+      builder: DevicePreview.appBuilder, // Enables device preview
       debugShowCheckedModeBanner: false, // Hides debug banner
       routerConfig: GoRouter(
         initialLocation: '/', // Starting screen of the app

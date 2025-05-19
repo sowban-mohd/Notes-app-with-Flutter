@@ -23,6 +23,7 @@ void showSaveFolderSheet({required BuildContext context, Map? folder}) {
           child: Container(
             margin: EdgeInsets.all(16),
             padding: EdgeInsets.all(24),
+            constraints: BoxConstraints(maxWidth: 400, minWidth: 200),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(24)),

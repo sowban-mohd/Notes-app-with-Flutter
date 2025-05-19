@@ -36,7 +36,7 @@ class FoldersBody extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.search_off, size: 50.0, color: Colors.grey),
+              Icon(query.isEmpty ? Icons.folder_outlined :   Icons.search_off, size: 50.0, color: Colors.grey),
               const SizedBox(height: 8.0),
               Text(
                 query.isEmpty
@@ -104,7 +104,7 @@ class FoldersBody extends ConsumerWidget {
                             : BorderSide.none,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(12.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

@@ -11,7 +11,8 @@ Future<bool?> showConfirmationDialog(BuildContext context,
           backgroundColor: colorScheme.surfaceContainer,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-          child: Padding(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 200, minWidth: 100),
             padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
             child: Column(
               mainAxisSize: MainAxisSize.min,

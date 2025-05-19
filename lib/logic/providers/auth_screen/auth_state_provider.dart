@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notetakingapp1/logic/providers/firebase_providers.dart';
 import 'package:notetakingapp1/logic/utils/auth_error_handler.dart';
 
 /// Manages the Authentication State
@@ -23,7 +24,7 @@ class AuthState {
 
 // Notifier to handle authentication state and logic
 class AuthStateNotifier extends Notifier<AuthState> {
-  final _auth = FirebaseAuth.instance;
+  FirebaseAuth get _auth => ref.read(authProvider);
   late final StreamSubscription<User?> _authSubscription;
 
   @override
@@ -42,12 +43,9 @@ class AuthStateNotifier extends Notifier<AuthState> {
   Future<void> signup(String email, String password) async {
     state = AuthState(isLoading: true);
 
-    if (email.isEmpty || password.isEmpty) {
-      state = AuthState(
-        emailError: email.isEmpty ? 'Email cannot be empty.' : null,
-        passwordError: password.isEmpty ? 'Password cannot be empty.' : null,
-        isLoading: false,
-      );
+    final errorState = _validateCredentials(email, password);
+    if (errorState != null) {
+      state = errorState;
       return;
     }
 
@@ -56,18 +54,19 @@ class AuthStateNotifier extends Notifier<AuthState> {
           email: email, password: password);
     } on FirebaseAuthException catch (e) {
       _handleAuthError(e);
+    } catch (e) {
+      state = AuthState(
+          generalError: 'An unexpected error occurred: ${e.toString()}',
+          isLoading: false);
     }
   }
 
   Future<void> login(String email, String password) async {
     state = AuthState(isLoading: true);
 
-    if (email.isEmpty || password.isEmpty) {
-      state = AuthState(
-        emailError: email.isEmpty ? 'Email cannot be empty.' : null,
-        passwordError: password.isEmpty ? 'Password cannot be empty.' : null,
-        isLoading: false,
-      );
+    final errorState = _validateCredentials(email, password);
+    if (errorState != null) {
+      state = errorState;
       return;
     }
 
@@ -75,6 +74,10 @@ class AuthStateNotifier extends Notifier<AuthState> {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       _handleAuthError(e);
+    } catch (e) {
+      state = AuthState(
+          generalError: 'An unexpected error occurred: ${e.toString()}',
+          isLoading: false);
     }
   }
 
@@ -87,12 +90,21 @@ class AuthStateNotifier extends Notifier<AuthState> {
       return;
     }
 
+    if (!isValidEmail(email)) {
+      state = AuthState(emailError: 'Invalid email format.', isLoading: false);
+      return;
+    }
+
     try {
       await _auth.sendPasswordResetEmail(email: email);
       state = AuthState(
           successMessage: 'Password reset email sent', isLoading: false);
     } on FirebaseAuthException catch (e) {
       _handleAuthError(e);
+    } catch (e) {
+      state = AuthState(
+          generalError: 'An unexpected error occurred: ${e.toString()}',
+          isLoading: false);
     }
   }
 
@@ -126,6 +138,37 @@ class AuthStateNotifier extends Notifier<AuthState> {
       isLoading: false,
     );
   }
+}
+
+AuthState? _validateCredentials(String email, String password) {
+  if (email.isEmpty || password.isEmpty) {
+    return AuthState(
+      emailError: email.isEmpty ? 'Email cannot be empty.' : null,
+      passwordError: password.isEmpty ? 'Password cannot be empty.' : null,
+      isLoading: false,
+    );
+  }
+
+  if (!isValidEmail(email)) {
+    return AuthState(
+      emailError: 'Invalid email format.',
+      isLoading: false,
+    );
+  }
+
+  if (password.length < 6) {
+    return AuthState(
+      passwordError: 'Password must be at least 6 characters long.',
+      isLoading: false,
+    );
+  }
+
+  return null; // Valid
+}
+
+bool isValidEmail(String email) {
+  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  return emailRegex.hasMatch(email);
 }
 
 ///Provider of AuthStateNotifier

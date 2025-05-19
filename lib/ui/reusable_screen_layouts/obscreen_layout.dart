@@ -25,82 +25,86 @@ class OnboardingLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    print("Screen Width: $screenWidth, Screen Height: $screenHeight");
+
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerLowest,
       body: SafeArea(
-        child: Column(
-          children: [
-            // Top navigation bar with Back and Skip buttons
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Back button (only if onBack is provided)
-                  onBack != null
-                      ? TextButton.icon(
-                          onPressed: onBack,
-                          icon: Icon(
-                            Icons.arrow_back_ios_new,
-                            color: colorScheme.primary,
-                          ),
-                          label: Text(
-                            "Back",
-                            style: Styles.textButtonStyle(fontSize: 16.0),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                  // Skip button (only if onSkip is provided)
-                  onSkip != null
-                      ? TextButton(
-                          onPressed: onSkip,
-                          child: Text("Skip",
-                              style: Styles.textButtonStyle(fontSize: 16.0)),
-                        )
-                      : const SizedBox.shrink(),
-                ],
-              ),
+        child: Column(children: [
+          // Top navigation bar with Back and Skip buttons
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Back button (only if onBack is provided)
+                onBack != null
+                    ? TextButton.icon(
+                        onPressed: onBack,
+                        icon: Icon(
+                          Icons.arrow_back_ios_new,
+                          color: colorScheme.primary,
+                        ),
+                        label: Text(
+                          "Back",
+                          style: Styles.textButtonStyle(fontSize: 14.0),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+                // Skip button (only if onSkip is provided)
+                onSkip != null
+                    ? TextButton(
+                        onPressed: onSkip,
+                        child: Text("Skip",
+                            style: Styles.textButtonStyle(fontSize: 14.0)),
+                      )
+                    : const SizedBox.shrink(),
+              ],
             ),
+          ),
 
-            // Onboarding image section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          Flexible(
               child: SizedBox(
-                width: 360.0,
-                height: 360.0,
-                child: image,
-              ),
-            ),
+                  height:
+                      screenHeight * 0.1)), // Space between top bar and image
 
-            // Progress indicator bar
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                3,
-                (index) => Container(
-                  height: 5,
-                  width: 99,
-                  decoration: BoxDecoration(
-                    color: pageIndex == index
-                        ? const Color.fromRGBO(58, 133, 247, 1) // Active step
-                        : const Color.fromRGBO(
-                            206, 203, 211, 1), // Inactive steps
-                    borderRadius: index == 0
-                        ? const BorderRadius.only(
-                            topLeft: Radius.circular(5),
-                            bottomLeft: Radius.circular(5),
-                          )
-                        : index == 2
-                            ? const BorderRadius.only(
-                                topRight: Radius.circular(5),
-                                bottomRight: Radius.circular(5),
-                              )
-                            : null,
+          
+              // Onboarding image section
+              SizedBox(height: 300.0, width: 300.0, child: image),
+
+              SizedBox(height: 20),
+
+              // Progress indicator bar
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  3,
+                  (index) => Container(
+                    height: 5,
+                    width: 88,
+                    decoration: BoxDecoration(
+                      color: pageIndex == index
+                          ? const Color.fromRGBO(58, 133, 247, 1) // Active step
+                          : const Color.fromRGBO(
+                              206, 203, 211, 1), // Inactive steps
+                      borderRadius: index == 0
+                          ? const BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              bottomLeft: Radius.circular(5),
+                            )
+                          : index == 2
+                              ? const BorderRadius.only(
+                                  topRight: Radius.circular(5),
+                                  bottomRight: Radius.circular(5),
+                                )
+                              : null,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 36),
+              SizedBox(height: 28),
 
             // Title and description text
             Padding(
@@ -121,22 +125,44 @@ class OnboardingLayout extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 36),
 
-            // Navigation button
-            ElevatedButton(
-              onPressed: onNext,
-              style: Styles.elevatedButtonStyle(),
-              child: Text(
-                pageIndex == 2
-                    ? "Get Started"
-                    : 'Next', // Last screen shows "Get Started"
-                style: Styles.elevatedButtonTextStyle(),
+              SizedBox(
+                width: 260,
+                height: 200,
+                child:  Column(
+                    children: [
+                      Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        style: Styles.titleStyle(fontSize: 24.0),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        description,
+                        textAlign: TextAlign.center,
+                        style: Styles.subtitleStyle(fontSize: 12.0),
+                      ),
+                  Spacer(),
+                      // Navigation button
+                                ElevatedButton(
+                  onPressed: onNext,
+                  style: Styles.elevatedButtonStyle(),
+                  child: Text(
+                    pageIndex == 2
+                        ? "Get Started"
+                        : 'Next', // Last screen shows "Get Started"
+                    style: Styles.elevatedButtonTextStyle(),
+                  ),
+                                ),
+                             
+                    ],
+                  ),
               ),
-            ),
-            const SizedBox(height: 42),
-          ],
-        ),
+
+              
+          Flexible(child: const SizedBox(height: 60)),
+        ]),
       ),
     );
   }

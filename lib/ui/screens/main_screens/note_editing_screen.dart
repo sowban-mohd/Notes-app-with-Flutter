@@ -64,15 +64,7 @@ class _NoteEditingscreenState extends ConsumerState<NoteEditingscreen> {
       },
       titleController: titleController,
       contentController: contentController,
-      titleTextStyle:
-          Styles.titleStyle(fontSize: 24.0, color: colorScheme.onSurface),
-      titleHintStyle: Styles.titleStyle(
-          fontSize: 24.0, color: colorScheme.onSurface.withAlpha(66)),
-      contentTextStyle:
-          Styles.w400texts(fontSize: 16.0, color: colorScheme.onSurface),
-      contentHintStyle: Styles.w400texts(
-          fontSize: 16.0, color: colorScheme.onSurface.withAlpha(66)),
-      buttonTextStyle: Styles.textButtonStyle(fontSize: 16.0),
+      buttonTextStyle: Styles.textButtonStyle(fontSize: 14.0),
       iconColor: colorScheme.primary,
       textSelectionTheme: Styles.textSelectionTheme(),
       backgroundColor: colorScheme.surfaceContainerLowest,

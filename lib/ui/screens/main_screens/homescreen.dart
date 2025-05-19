@@ -25,6 +25,9 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+   final screenWidth = MediaQuery.sizeOf(context).width;
+   final screenHeight = MediaQuery.sizeOf(context).height;
+
     // Listener for generalError
     ref.listen(authStateProvider.select((state) => state.generalError),
         (prev, next) async {
@@ -42,9 +45,9 @@ class HomeScreen extends ConsumerWidget {
       if (next == null) {
         final initialLocationNotifier =
             ref.read(initialLocationProvider.notifier);
-        await initialLocationNotifier.setInitialLocation('/login');
+        await initialLocationNotifier.setInitialLocation('/welcome');
         await Future.delayed(Duration(seconds: 1));
-        if (context.mounted) context.go('/login');
+        if (context.mounted) context.go('/welcome');
       }
     });
 
@@ -97,10 +100,11 @@ class HomeScreen extends ConsumerWidget {
                   )); // Show spinner
                 }
                 return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SearchBarWidget(),
                     CategoryList(),
+                    SizedBox(height: screenHeight * 0.01),
                     Expanded(
                       child: category == 'All Notes'
                           ? AllNotesBody()

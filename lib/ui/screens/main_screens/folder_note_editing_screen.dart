@@ -77,14 +77,6 @@ class _FolderNoteEditingScreenState
       },
       titleController: titleController,
       contentController: contentController,
-      titleTextStyle:
-          Styles.titleStyle(fontSize: 24.0, color: colorScheme.onSurface),
-      titleHintStyle: Styles.titleStyle(
-          fontSize: 24.0, color: colorScheme.onSurface.withAlpha(66)),
-      contentTextStyle:
-          Styles.w400texts(fontSize: 16.0, color: colorScheme.onSurface),
-      contentHintStyle: Styles.w400texts(
-          fontSize: 16.0, color: colorScheme.onSurface.withAlpha(66)),
       buttonTextStyle:
           Styles.boldTexts(fontSize: 16.0, color: Color(0xFFA67B5B)),
       iconColor: Color(0xFFA67B5B),

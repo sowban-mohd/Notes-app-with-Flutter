@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notetakingapp1/logic/providers/firebase_providers.dart';
 
 class FolderNotesOpsStateNotifier extends FamilyNotifier<String?, String> {
-  late final FirebaseFirestore _firestore;
-  late final String? _uid;
+   FirebaseAuth get _auth => ref.read(authProvider);
+  FirebaseFirestore get _firestore => ref.read(firestoreProvider);
+  String? get _uid => _auth.currentUser?.uid;
   late final String folderName;
   late final CollectionReference<Map<String, dynamic>> collectionRef;
 
   @override
   String? build(String arg) {
-    _firestore = FirebaseFirestore.instance;
-    _uid = FirebaseAuth.instance.currentUser?.uid;
     folderName = arg.replaceAll(' ', '').toLowerCase();
     collectionRef = _firestore
         .collection('users')

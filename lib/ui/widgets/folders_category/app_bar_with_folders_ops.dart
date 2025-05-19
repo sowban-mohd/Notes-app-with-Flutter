@@ -23,6 +23,7 @@ class AppBarWithFolderOps extends ConsumerWidget
 
     return AppBar(
       elevation: 0,
+      centerTitle: false,
       backgroundColor: colorScheme.surface,
       title: Padding(
         padding: const EdgeInsets.only(top: 10.0),

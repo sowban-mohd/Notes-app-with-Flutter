@@ -10,7 +10,7 @@ class AccessConfirmationScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emailController = ref.watch(authControllerProvider).emailController;
+    final emailController = ref.read(passwordResetFormProvider);
     final authNotifier = ref.read(authStateProvider.notifier);
 
     return Scaffold(

@@ -13,6 +13,7 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     ref.listen(
       authStateProvider.select((authState) => authState.generalError),
       (prev, next) {
@@ -38,7 +39,7 @@ class LoginScreen extends ConsumerWidget {
       },
     );
 
-    final controllers = ref.watch(authControllerProvider);
+    final controllers = ref.watch(loginFormProvider);
 
     return AuthScreenLayout(
       emailController: controllers.emailController,

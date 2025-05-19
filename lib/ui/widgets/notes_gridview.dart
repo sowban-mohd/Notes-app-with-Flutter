@@ -97,7 +97,7 @@ class NotesGridView extends ConsumerWidget {
                         title,
                         style: Styles.w600texts(
                           color: colorScheme.onSurface,
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
@@ -112,14 +112,14 @@ class NotesGridView extends ConsumerWidget {
                         ? Flexible(
                             child: Text(content,
                                 style: Styles.w300texts(
-                                    color: colorScheme.onSurface, fontSize: 14),
+                                    color: colorScheme.onSurface, fontSize: 12),
                                 overflow: TextOverflow.fade),
                           )
                         : Text(
                             'No content',
                             style: Styles.w300texts(
                                 color: colorScheme.onSurface.withAlpha(102),
-                                fontSize: 14),
+                                fontSize: 12),
                           ),
                   ],
                 ),

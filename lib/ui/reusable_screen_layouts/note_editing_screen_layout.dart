@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:notetakingapp1/ui/theme/styles.dart';
 
 class NoteEditingScreenLayout extends StatelessWidget {
   final VoidCallback onBack;
   final VoidCallback onSave;
   final TextEditingController titleController;
   final TextEditingController contentController;
-  final TextStyle titleTextStyle;
-  final TextStyle titleHintStyle;
-  final TextStyle contentTextStyle;
-  final TextStyle contentHintStyle;
   final TextStyle buttonTextStyle;
   final Color iconColor;
   final ThemeData textSelectionTheme;
@@ -20,10 +17,6 @@ class NoteEditingScreenLayout extends StatelessWidget {
     required this.onSave,
     required this.titleController,
     required this.contentController,
-    required this.titleTextStyle,
-    required this.titleHintStyle,
-    required this.contentTextStyle,
-    required this.contentHintStyle,
     required this.buttonTextStyle,
     required this.iconColor,
     required this.textSelectionTheme,
@@ -39,8 +32,8 @@ class NoteEditingScreenLayout extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding:
-                  const EdgeInsets.only(left: 2.0, right: 10.0, top: 8.0, bottom: 24.0),
+              padding: const EdgeInsets.only(
+                  left: 2.0, right: 10.0, top: 8.0, bottom: 24.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -60,12 +53,15 @@ class NoteEditingScreenLayout extends StatelessWidget {
               data: textSelectionTheme,
               child: TextField(
                 controller: titleController,
-                style: titleTextStyle,
+                style: Styles.titleStyle(
+                    fontSize: 22.0, color: colorScheme.onSurface),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(horizontal: 22.0),
                   hintText: 'Page Title',
-                  hintStyle: titleHintStyle,
+                  hintStyle: Styles.titleStyle(
+                      fontSize: 22.0,
+                      color: colorScheme.onSurface.withAlpha(66)),
                 ),
               ),
             ),
@@ -74,13 +70,16 @@ class NoteEditingScreenLayout extends StatelessWidget {
                 data: textSelectionTheme,
                 child: TextField(
                   controller: contentController,
-                  style: contentTextStyle,
+                  style: Styles.w400texts(
+                      fontSize: 14.0, color: colorScheme.onSurface),
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.only(
                         left: 24.0, right: 24.0, top: 12.0, bottom: 20.0),
                     hintText: 'Notes goes here...',
-                    hintStyle: contentHintStyle,
+                    hintStyle: Styles.w400texts(
+                        fontSize: 14.0,
+                        color: colorScheme.onSurface.withAlpha(66)),
                   ),
                   maxLines: null,
                   expands: true,

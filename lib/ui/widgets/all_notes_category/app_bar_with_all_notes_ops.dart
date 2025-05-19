@@ -5,11 +5,19 @@ import 'package:notetakingapp1/logic/providers/all_notes_category/note_ops_state
 import 'package:notetakingapp1/logic/providers/all_notes_category/note_selection_provider.dart';
 import 'package:notetakingapp1/logic/providers/all_notes_category/notes_list_provider.dart';
 import 'package:notetakingapp1/logic/providers/all_notes_category/should_select_all_notes_provider.dart';
+import 'package:notetakingapp1/logic/providers/folders_category/folders_list_provider.dart';
 import 'package:notetakingapp1/ui/theme/styles.dart';
 import 'package:notetakingapp1/ui/widgets/add_to_folders_dialog.dart';
 import 'package:notetakingapp1/ui/widgets/confirmaton_dialog.dart';
 
-enum NoteMenuAction { pin, unpin, delete, addToFolders, selectOrDeselectAll }
+enum NoteMenuAction {
+  pin,
+  unpin,
+  delete,
+  addToFolders,
+  selectOrDeselectAll,
+  copyNote
+}
 
 class AppBarWithAllNotesOps extends ConsumerWidget
     implements PreferredSizeWidget {
@@ -26,9 +34,12 @@ class AppBarWithAllNotesOps extends ConsumerWidget
     final selectedPinnedNotifer =
         ref.read(noteSelectionProvider(NoteType.pinned).notifier);
     final noteCudNotifier = ref.read(noteOpsStateProvider.notifier);
+    final notMultipleSelected = selectedNotes.length == 1;
+    final foldersList = ref.read(foldersListProvider);
 
     return AppBar(
         elevation: 0,
+        centerTitle: false,
         backgroundColor: colorScheme.surface,
         title: Padding(
           padding: EdgeInsets.only(top: 10.0),
@@ -50,57 +61,6 @@ class AppBarWithAllNotesOps extends ConsumerWidget
           Padding(
             padding: EdgeInsets.only(right: 20.0, top: 8.0),
             child: PopupMenuButton<NoteMenuAction>(
-              onSelected: (value) async {
-                switch (value) {
-                  case NoteMenuAction.delete:
-                    String type = selectedNotes.length > 1
-                        ? 'Delete Notes'
-                        : 'Delete Note';
-                    bool? confirmed =
-                        await showConfirmationDialog(context, type: type);
-                    if (confirmed == true) {
-                      await ref
-                          .read(noteOpsStateProvider.notifier)
-                          .deleteNote(noteIds: selectedNotes);
-                    }
-                    selectedPinnedNotifer.clearSelection();
-                    selectionNotifier.clearSelection();
-                    break;
-                  case NoteMenuAction.selectOrDeselectAll:
-                    ref
-                        .read(shouldSelectAllNotesProvider.notifier)
-                        .toggleSelection();
-                  case NoteMenuAction.addToFolders:
-                    final addedFolders =
-                        await showAddToFoldersDialog(context, ref);
-                    if (addedFolders == null || addedFolders.isEmpty) return;
-                    final listOfNotes = ref.read(notesListProvider);
-                    for (var noteId in selectedNotes) {
-                      final note = listOfNotes
-                          .firstWhere((note) => note['noteId'] == noteId);
-                      final title = note['title'];
-                      final content = note['content'];
-                      for (var folder in addedFolders) {
-                        ref
-                            .read(folderNotesOpsProvider(folder).notifier)
-                            .addToFolder(title: title, content: content);
-                      }
-                    }
-                    selectedPinnedNotifer.clearSelection();
-                    selectionNotifier.clearSelection();
-                    break;
-                  case NoteMenuAction.pin:
-                    await noteCudNotifier.pinNote(selectedNotes);
-                    selectedPinnedNotifer.clearSelection();
-                    selectionNotifier.clearSelection();
-                    break;
-                  case NoteMenuAction.unpin:
-                    await noteCudNotifier.unPinNote(selectedPinnedNotes);
-                    selectedPinnedNotifer.clearSelection();
-                    selectionNotifier.clearSelection();
-                    break;
-                }
-              },
               icon: Container(
                 width: 25,
                 height: 25,
@@ -155,14 +115,77 @@ class AppBarWithAllNotesOps extends ConsumerWidget
                       },
                     ),
                   ),
-                  PopupMenuItem(
-                    value: NoteMenuAction.addToFolders,
-                    child: Text(
-                      'Add to folders',
-                      style: Styles.w500texts(fontSize: 15.0),
+                  if (foldersList.isNotEmpty)
+                    PopupMenuItem(
+                      value: NoteMenuAction.addToFolders,
+                      child: Text(
+                        'Add to folders',
+                        style: Styles.w500texts(fontSize: 15.0),
+                      ),
                     ),
-                  ),
+                  if (notMultipleSelected)
+                    PopupMenuItem(
+                      value: NoteMenuAction.copyNote,
+                      child: Text(
+                        'Copy note',
+                        style: Styles.w500texts(fontSize: 15.0),
+                      ),
+                    ),
                 ];
+              },
+              onSelected: (value) async {
+                switch (value) {
+                  case NoteMenuAction.delete:
+                    String type = selectedNotes.length > 1
+                        ? 'Delete Notes'
+                        : 'Delete Note';
+                    bool? confirmed =
+                        await showConfirmationDialog(context, type: type);
+                    if (confirmed == true) {
+                      await ref
+                          .read(noteOpsStateProvider.notifier)
+                          .deleteNote(noteIds: selectedNotes);
+                    }
+                    selectedPinnedNotifer.clearSelection();
+                    selectionNotifier.clearSelection();
+                    break;
+                  case NoteMenuAction.selectOrDeselectAll:
+                    ref
+                        .read(shouldSelectAllNotesProvider.notifier)
+                        .toggleSelection();
+                  case NoteMenuAction.addToFolders:
+                    final addedFolders =
+                        await showAddToFoldersDialog(context, ref);
+                    if (addedFolders == null || addedFolders.isEmpty) return;
+                    final listOfNotes = ref.read(notesListProvider);
+                    for (var noteId in selectedNotes) {
+                      final note = listOfNotes
+                          .firstWhere((note) => note['noteId'] == noteId);
+                      final title = note['title'];
+                      final content = note['content'];
+                      for (var folder in addedFolders) {
+                        ref
+                            .read(folderNotesOpsProvider(folder).notifier)
+                            .addToFolder(title: title, content: content);
+                      }
+                    }
+                    selectedPinnedNotifer.clearSelection();
+                    selectionNotifier.clearSelection();
+                    break;
+                  case NoteMenuAction.pin:
+                    await noteCudNotifier.pinNote(selectedNotes);
+                    selectedPinnedNotifer.clearSelection();
+                    selectionNotifier.clearSelection();
+                    break;
+                  case NoteMenuAction.unpin:
+                    await noteCudNotifier.unPinNote(selectedPinnedNotes);
+                    selectedPinnedNotifer.clearSelection();
+                    selectionNotifier.clearSelection();
+                    break;
+                  case NoteMenuAction.copyNote:
+                    await noteCudNotifier.copyNote(selectedNotes.first);
+                    break;
+                }
               },
             ),
           ),

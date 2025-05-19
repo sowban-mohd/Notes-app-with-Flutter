@@ -10,7 +10,7 @@ class ForgotPasswordScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emailController = ref.watch(authControllerProvider).emailController;
+    final emailController = ref.watch(passwordResetFormProvider);
     final authStateNotifier = ref.read(authStateProvider.notifier);
     final emailErrorState =
         ref.watch(authStateProvider.select((state) => state.emailError));

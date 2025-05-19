@@ -115,11 +115,13 @@ class AuthScreenLayout extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     passwordError != null
-                                        ? Text(
-                                            passwordError!,
-                                            style: TextStyle(
-                                                color: colorScheme.error),
-                                          )
+                                        ? Flexible(
+                                          child: Text(
+                                              passwordError!,
+                                              style: TextStyle(
+                                                  color: colorScheme.error),
+                                            ),
+                                        )
                                         : SizedBox.shrink(),
                                     belowPassword
                                   ],

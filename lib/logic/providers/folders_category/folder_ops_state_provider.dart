@@ -1,13 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:notetakingapp1/logic/providers/firebase_providers.dart';
 
 class FolderOpsStateNotifier extends Notifier<String?> {
-  @override
-  String? build() => null;
+  FirebaseAuth get _auth => ref.read(authProvider);
+  FirebaseFirestore get _firestore => ref.read(firestoreProvider);
+  String? get _uid => _auth.currentUser?.uid;
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final String? _uid = FirebaseAuth.instance.currentUser?.uid;
+  @override
+  String? build() {
+    return null;
+  }
 
   Future<void> addFolder(String folderName) async {
     final collectionRef =

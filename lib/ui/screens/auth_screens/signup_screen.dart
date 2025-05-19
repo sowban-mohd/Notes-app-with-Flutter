@@ -37,7 +37,7 @@ class SignUpScreen extends ConsumerWidget {
       },
     );
 
-    final controllers = ref.watch(authControllerProvider);
+    final controllers = ref.watch(signupFormProvider);
 
     return AuthScreenLayout(
       emailController: controllers.emailController,

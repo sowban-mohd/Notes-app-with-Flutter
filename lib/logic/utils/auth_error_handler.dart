@@ -5,10 +5,6 @@ Map<String, String?> handleAuthError(String errorCode) {
       return {'emailError': 'This email is already in use.'};
     case 'invalid-credential':
       return {'generalError': 'Invalid credentials'};
-    case 'invalid-email':
-      return {'emailError': 'Please enter a valid email.'};
-    case 'weak-password':
-      return {'passwordError': 'Password is too weak.'};
     case 'user-not-found':
       return {'emailError': 'No account found with this email.'};
     case 'wrong-password':

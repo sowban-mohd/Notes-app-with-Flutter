@@ -38,7 +38,7 @@ class _OnboardingPageViewState extends ConsumerState<OnboardingPageView> {
     await ref
         .read(initialLocationProvider.notifier)
         .setInitialLocation('/login');
-    if (context.mounted) context.go('/login');
+    if (mounted) context.go('/login');
   }
 
   @override

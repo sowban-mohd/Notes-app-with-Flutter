@@ -4,13 +4,14 @@ import 'package:notetakingapp1/logic/providers/home_screen/category_provider.dar
 import 'package:notetakingapp1/ui/theme/styles.dart';
 
 class CategoryList extends ConsumerWidget {
-  const CategoryList({super.key});
+  const CategoryList({super.key, });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final noteType = ref.watch(categoryProvider);
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CategoryCard(
             categoryType: 'All Notes',
@@ -47,8 +48,8 @@ class CategoryCard extends ConsumerWidget {
     return GestureDetector(
       onTap: () => noteTypeNotifier.state = categoryType,
       child: SizedBox(
-        width: 160,
-        height: 65,
+        width: 140,
+        height: 60,
         child: Card(
           color: isSelected ? selectedColor : colorScheme.surfaceContainer,
           shape:
@@ -67,7 +68,7 @@ class CategoryCard extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 8.0,
+                  width: 6.0,
                 ),
                 Text(
                   categoryType,
@@ -75,7 +76,7 @@ class CategoryCard extends ConsumerWidget {
                       color: isSelected
                           ? colorScheme.onInverseSurface
                           : colorScheme.inverseSurface,
-                      fontSize: 14.0),
+                      fontSize: 12.0),
                 )
               ],
             ),

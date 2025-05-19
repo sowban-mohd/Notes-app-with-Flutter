@@ -1,23 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AuthFormControllers {
+class LoginFormControllers {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  /// Disposes both the controllers
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
   }
 }
 
-final authControllerProvider = Provider.autoDispose((ref) {
-  final authControllers = AuthFormControllers();
+class SignupFormControllers {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
-  ref.onDispose(() {
-    authControllers.dispose();
-  });
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+  }
+}
 
-  return authControllers;
+
+final loginFormProvider = Provider.autoDispose((ref) {
+  final controllers = LoginFormControllers();
+  ref.onDispose(controllers.dispose);
+  return controllers;
+});
+
+final signupFormProvider = Provider.autoDispose((ref) {
+  final controllers = SignupFormControllers();
+  ref.onDispose(controllers.dispose);
+  return controllers;
+});
+
+final passwordResetFormProvider = Provider.autoDispose((ref) {
+  final passwordController = TextEditingController();
+  ref.onDispose(passwordController.dispose);
+  return passwordController;
 });
