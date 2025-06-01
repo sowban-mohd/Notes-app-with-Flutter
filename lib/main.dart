@@ -1,8 +1,18 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'ui/screens/screens.dart';
+import 'package:notetakingapp1/core/constants/constants.dart';
+import 'package:notetakingapp1/core/constants/routes.dart';
+import 'package:notetakingapp1/core/providers/shared_prefs_provider.dart';
+import 'package:notetakingapp1/features/auth/ui/screens/access_confirmation_screen.dart';
+import 'package:notetakingapp1/features/auth/ui/screens/forgot_password_screen.dart';
+import 'package:notetakingapp1/features/auth/ui/screens/login_screen.dart';
+import 'package:notetakingapp1/features/auth/ui/screens/signup_screen.dart';
+import 'package:notetakingapp1/features/notes/ui/screens/homescreen.dart';
+import 'package:notetakingapp1/features/onboarding/ui/screens/obpageview.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -14,57 +24,60 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  final prefs = await SharedPreferences.getInstance();
+
   // Wraps the app with Riverpod's ProviderScope for state management
-  runApp(ProviderScope(child: NoteApp()));
+  runApp(DevicePreview(
+    builder: (context) {
+      return ProviderScope(
+          overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+          child: NoteApp());
+    },
+    enabled: false,
+  ));
 }
 
-class NoteApp extends StatelessWidget {
+class NoteApp extends ConsumerWidget {
   const NoteApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final prefs = ref.read(sharedPreferencesProvider);
     return MaterialApp.router(
+      locale: DevicePreview.locale(context), // Sets the locale for the app
+      builder: DevicePreview.appBuilder, // Enables device preview
       debugShowCheckedModeBanner: false, // Hides debug banner
       routerConfig: GoRouter(
-        initialLocation: '/', // Starting screen of the app
+        initialLocation: prefs.getString(Constants.initialLocationKey) ??
+            Routes.onBoardingScreen.path, // Starting screen of the app
         routes: [
           GoRoute(
-            path: '/',
-            builder: (context, state) =>
-                LoadingScreen(), // A fallback Loading screen till initial screen loads
-          ),
-          GoRoute(
-            path: '/welcome',
+            path: Routes.onBoardingScreen.path,
             builder: (context, state) =>
                 OnboardingPageView(), // Onboarding screen for new users
           ),
           GoRoute(
-            path: '/login',
+            path: Routes.loginScreen.path,
             builder: (context, state) => LoginScreen(), // Login screen
           ),
           GoRoute(
-            path: '/signup',
+            path: Routes.signUpScreen.path,
             builder: (context, state) => SignUpScreen(), // Signup screen
           ),
           GoRoute(
-            path: '/password-reset',
+            path: Routes.passwordResetScreen.path,
             builder: (context, state) =>
                 ForgotPasswordScreen(), // Password reset screen
           ),
           GoRoute(
-            path: '/access-confirm',
+            path: Routes.accessConfirmationScreen.path,
             builder: (context, state) =>
                 AccessConfirmationScreen(), // Access confirmation screen
           ),
           GoRoute(
-            path: '/home',
+            path: Routes.homeScreen.path,
             builder: (context, state) =>
                 HomeScreen(), // Main notes listing screen
-          ),
-          GoRoute(
-            path: '/note',
-            builder: (context, state) =>
-                NoteEditingscreen(), // Note editing screen
           )
         ],
       ),
