@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notetakingapp1/core/constants/constants.dart';
 import 'package:notetakingapp1/core/constants/routes.dart';
 import 'package:notetakingapp1/core/providers/shared_prefs_provider.dart';
-import 'package:notetakingapp1/features/onboarding/ui/screens/components/obscreen_layout.dart';
+import 'package:notetakingapp1/features/onboarding/ui/components/obscreen_layout.dart';
 
 class OnboardingPageView extends ConsumerStatefulWidget {
   const OnboardingPageView({super.key});

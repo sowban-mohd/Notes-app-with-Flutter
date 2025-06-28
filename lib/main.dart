@@ -10,7 +10,7 @@ import 'package:notetakingapp1/features/auth/ui/screens/access_confirmation_scre
 import 'package:notetakingapp1/features/auth/ui/screens/forgot_password_screen.dart';
 import 'package:notetakingapp1/features/auth/ui/screens/login_screen.dart';
 import 'package:notetakingapp1/features/auth/ui/screens/signup_screen.dart';
-import 'package:notetakingapp1/features/notes/ui/screens/homescreen.dart';
+import 'package:notetakingapp1/features/note/ui/screens/homescreen.dart';
 import 'package:notetakingapp1/features/onboarding/ui/screens/obpageview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';

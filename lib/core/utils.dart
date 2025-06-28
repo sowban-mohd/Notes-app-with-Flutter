@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notetakingapp1/features/notes/models/note.dart';
+import 'package:notetakingapp1/features/note/models/note.dart';
 
 class Utils {
   /// Filters the list of notes based on search query

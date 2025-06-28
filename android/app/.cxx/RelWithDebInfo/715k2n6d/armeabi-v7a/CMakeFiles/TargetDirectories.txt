@@ -1,0 +1,2 @@
+C:/Users/sowba/notetakingapp1/android/app/.cxx/RelWithDebInfo/715k2n6d/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/sowba/notetakingapp1/android/app/.cxx/RelWithDebInfo/715k2n6d/armeabi-v7a/CMakeFiles/rebuild_cache.dir
